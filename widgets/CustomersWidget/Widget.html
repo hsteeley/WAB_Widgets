@@ -1,0 +1,101 @@
+<div id="overlay">
+  <div id="CustDiv">
+    <div id="loading"><img src="./widgets/DeviceWidget/images/loadingGif.gif" alt="Loading" style="width:50px;height:50px;"></div>
+  </div>
+<div>
+<div id="CustomerDiv">
+  <div id="ServiceCalls">
+    <input type="radio" name="CQSelected" id="AllCustomers" checked="checked">All Customers</input>
+    <input type="checkbox" id="viewExtent" checked="checked"> Use View Extent</input>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="SelectCustomer">Select Customer</input>
+    <select id="Customers" style="width: 175px">
+    </select>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="ByNameFilter">By Name Filter</input>
+    <input type="text" id="compName"/>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="ByRoute">By Route</input>
+    <select id="Routes" style="width: 175px">
+    </select>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="ByGroup">By Group</input>
+    <select id="Groups" style="width: 175px">
+    </select>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="ByShipCity">By Ship City</input>
+    <select id="ShipCities" style="width: 175px">
+    </select>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="ByShipZip">By Ship Zip</input>
+    <select id="ShipZips" style="width: 175px">
+    </select>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="ByInvoiceDates">By Invoice Dates</input>
+    <div id="invoiceDateBegin"></div><br>
+    <p>to</p>
+    <div id="invoiceDateEnd"></div>
+
+    <br><hr>
+
+    <input type="radio" name="CQSelected" id="ByNoInvoicesIn">By No Invoices In</input>
+    <input type="text" value=10 id="numbDays" size="1"> Days</input>
+  </div>
+
+  <hr><br>
+
+  <div>
+    <input type="checkbox" id="toggleCustLayer" data-dojo-attach-point="CustLayerCheck" checked="checked"> Visible   </input>
+    <input type="checkbox" id="toggleCustTextLayer" data-dojo-attach-point="CustTextLayerCheck" checked="checked"> Names</input>
+    <input id="opacity_control" type="range" max='100' min='0' value='100' data-dojo-attach-point="CustSlider"/>
+
+    <img src="./widgets/CustomersWidget/images/EditMode.png" alt="EditMode" style="width:40px;height:40px;" data-dojo-attach-point="EditMode" id="EditButton">
+  </div>
+
+  <br><hr><br>
+
+  <button type="button" data-dojo-attach-point="ShowMe" class = "my-btn">Show me</button>
+  <div id="showAndZoomDiv"><input type="checkbox" id="showAndZoomCust" data-dojo-attach-point="ZoomExtent" checked="checked"> Zoom</input></div>
+
+  <div id="CustIncluded">
+    <h5>Customers To Include</h5>
+    <input type="radio" name="CustIncluded" id="Active" checked="checked">Active</input>
+    <input type="radio" name="CustIncluded" id="Inactive">Inactive</input>
+    <input type="radio" name="CustIncluded" id="All">All</input>
+  </div>
+
+</div>
+
+
+<div id="EditDiv">
+  <div id="editMode">
+    <h3>Edit Mode</h3><br>
+    <img src="./widgets/CustomersWidget/images/Storeyellow.png" alt="Yellow Store" style="width:40px;height:40px;">
+    <h6 id="yellowStoreText">= Unmoved Customer</h6>
+    <br><br>
+
+    <img src="./widgets/CustomersWidget/images/StoreGreen.png" alt="Yellow Store" style="width:40px;height:40px;">
+    <h6 id="greenStoreText">= Moved Customer</h6>
+    <br><br>
+
+    <button type="button" data-dojo-attach-point="Save" class = "my-btn">Save Changes</button>
+
+    <button type="button" data-dojo-attach-point="Cancel" class = "my-btn" id="cancelEdit">Cancel</button>
+  </div>
+</div>
+</div>
+</div>

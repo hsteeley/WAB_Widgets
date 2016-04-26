@@ -1,0 +1,169 @@
+.customers-widget h3 {
+  font-size: 1.2em;
+}
+.customers-widget h3, p {
+  margin-top: 0;
+}
+.customers-widget .my-btn {
+   cursor: pointer;
+   min-width: 70px;
+   display: inline-block;
+   padding: 7px;
+   font-size: 15px;
+   text-align: center;
+   background: none repeat scroll 0% 0% #528CC9;
+   vertical-align: middle;
+   color: #FFF;
+   border-radius: 5px;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+ }
+.customers-widget #CustIncluded {
+  margin-left: 156px;
+  margin-top: -44px;
+}
+.customers-widget #opacity_control {
+    margin-left: 5px;
+    margin-top: -5px;
+}
+.customers-widget #toggleCustTextLayer {
+    margin-left: 3px;
+    margin-top: 0px;
+}
+.customers-widget #showAndZoomDiv {
+     margin-left: 90px;
+     margin-top: -26px;
+ }
+.customers-widget #cancelEdit {
+  margin-left: 7px;
+}
+.customers-widget #EditButton {
+  float: right;
+  margin-right: 13px;
+  margin-top: -10px;
+}
+.customers-widget #ServiceCalls {
+  overflow: auto;
+  height: 250px;
+  margin-bottom: 25px ;
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 7px;
+}
+.customers-widget #EditDiv {
+  display: none;
+}
+.customers-widget #yellowStoreText {
+    margin-left: 46px;
+    margin-top: -26px;
+}
+.customers-widget #greenStoreText {
+    margin-left: 46px;
+    margin-top: -26px;
+}
+.customers-widget #CustDiv {
+    display: none;
+    position: absolute;
+    left: -14px;
+    top: -15px;
+    bottom: -169px;
+    right: -14px;
+    background: #000;
+    opacity: 0.75;
+    filter: alpha(opacity=75);
+}
+.customers-widget #overlay {
+    position: relative;
+}
+.customers-widget #loading {
+    text-align: center;
+    margin-top: 150px;
+}
+input[type=range] {
+    /*removes default webkit styles*/
+    -webkit-appearance: none;
+
+    /*fix for FF unable to apply focus style bug */
+    border: 1px solid white;
+
+    /*required for proper track sizing in FF*/
+    width: 135px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 135px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: dodgerblue;
+    margin-top: -4px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+input[type=range]::-moz-range-track {
+    width: 135px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: dodgerblue;
+}
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+input[type=range]::-ms-track {
+    width: 135px;
+    height: 5px;
+
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: dodgerblue;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+/* add additional custom styles */

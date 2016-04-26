@@ -1,0 +1,76 @@
+.settings-widget h3 {
+  font-size: 1.2em;
+}
+.settings-widget h3, p {
+  margin-top: 0;
+}
+.settings-widget .my-btn {
+  cursor: pointer;
+  min-width: 70px;
+  display: inline-block;
+  padding: 12px;
+  font-size: 15px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #528CC9;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.header img {
+  float: left;
+  width: 100px;
+  height: 100px;
+}
+.settings-widget #toHeader {
+   margin-left: 0px;
+   margin-top: 0px;
+ }
+.settings-widget #search {
+  margin-left: 103px;
+  margin-top: 17px;
+}
+.settings-widget #deviceSettingsDiv {
+  display: none;
+  margin-left: 0px;
+  margin-top: 0px;
+}
+.header h3 {
+  position: relative;
+  top: 18px;
+  left: 10px;
+}
+.settings-widget #SettingsDiv {
+  float:left;
+  width:335px;
+  overflow: auto;
+  height: 340px;
+  margin-bottom: 25px;
+  overflow-x: hidden;
+}
+.settings-widget #changesSaved {
+  display: none;
+  float: right;
+  margin-right: 72px;
+  margin-top: 15px;
+}
+.settings-widget #devSettings {
+  -webkit-column-count: 2; /* Chrome, Safari, Opera */
+  -moz-column-count: 2; /* Firefox */
+  column-count: 2;
+}
+.settings-widget .setHeader {
+  text-align: center;
+}
+.settings-widget #deviceSettings {
+  overflow: auto;
+  height: 250px;
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 7px;
+  padding-top: 0px;
+  margin-top: 20px;
+}
+/* add additional custom styles */

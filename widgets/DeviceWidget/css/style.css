@@ -1,0 +1,287 @@
+.device-widget h3 {
+  font-size: 1.2em;
+}
+.device-widget h3, p {
+  margin-top: 0;
+}
+.device-widget .my-btn {
+  cursor: pointer;
+  min-width: 70px;
+  display: inline-block;
+  padding: 7px;
+  font-size: 15px;
+  text-align: center;
+  background: none repeat scroll 0% 0% #528CC9;
+  vertical-align: middle;
+  color: #FFF;
+  border-radius: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.device-widget #BCTDiv {
+  display: none;
+  margin-left: 37px;
+}
+.device-widget #BCTDateRange {
+  display: none;
+}
+.device-widget #DevDiv {
+  background-color: lightgray;
+  border-radius: 10px;
+  padding: 7px;
+}
+.device-widget #devOpacity_control {
+  margin-left: 12px;
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+.device-widget #toggleDevTextLayer {
+  margin-left: 13px;
+  margin-top: 0px;
+}
+.device-widget #visibleDiv {
+  margin-left: 0px;
+  margin-top: 0px;
+}
+.device-widget #speedOverDiv {
+   display: none;
+ }
+.device-widget #routeAnimation {
+  display: none;
+}
+.device-widget #playRouteButton {
+  padding: 5px;
+}
+.device-widget #stopRouteButton {
+   padding: 5px;
+  float: right;
+  margin-right: 80px;
+  margin-bottom: 0px;
+  margin-top: 0px;
+ }
+.device-widget #routeButtons {
+  margin-left: 20px;
+  margin-top: 5px;
+}
+.device-widget #timerRoute {
+  margin-left: 13px;
+  margin-top: 9px;
+}
+.device-widget #routeTime {
+  margin-left: 80px;
+  margin-top: -18px;
+}
+.device-widget #playRouteText {
+  margin-left: 0px;
+  margin-top: 0px;
+  display: none;
+}
+.device-widget #playRouteTextDiv {
+  margin-left: 0px;
+  margin-top: 0px;
+}
+.device-widget #routeSeconds {
+  margin-right: 40px;
+  margin-top: -24px;
+  margin-bottom: 0px;
+  float: right;
+}
+.device-widget #SODiv {
+  margin-right: 28px;
+  margin-top: -62px;
+  float: right;
+}
+.device-widget #speedForSO {
+  width: 25px;
+  margin-left: 12px;
+  margin-bottom: 0px;
+}
+.device-widget #SOText {
+  margin-left: 50px;
+  margin-top: -18px;
+}
+.device-widget #checkDevicesTitle {
+  margin-left: 34px;
+  margin-top: 5px;
+}
+.device-widget #showButton {
+  margin-left: 5px;
+  margin-top: 0px;
+}
+.device-widget #toggleDeviceLayer {
+  margin-left: 20px;
+}
+.device-widget #showAndZoom {
+  margin-left: 10px;
+}
+.device-widget #CheckAll {
+  float: right;
+  margin-top: -23px;
+  padding: 5px;
+}
+.device-widget #DeviceChecks {
+  -webkit-column-count: 2; /* Chrome, Safari, Opera */
+  -moz-column-count: 2; /* Firefox */
+  column-count: 2;
+}
+.device-widget #showAndZoomDiv {
+  margin-left: 76px;
+  margin-top: -27px;
+  margin-bottom: 16px;
+}
+.device-widget #reportSinceTime {
+  display: none;
+  margin-left: 0px;
+  margin-top: 18px;
+  margin-bottom: -8px;
+}
+.device-widget #lastReportSince {
+  margin-left: 145px;
+  margin-top: -32px;
+}
+.device-widget #stoppedOverDiv{
+  display: none;
+  margin-right: 0px;
+  margin-top: 0px;
+  float: right;
+}
+.device-widget #stoppedOver {
+   margin-left: 0px;
+   margin-top: 0px;
+ }
+.device-widget #stoppedDiv {
+  margin-right: 16px;
+  margin-top: -25px;
+  float: right;
+}
+.device-widget #stoppedForSO {
+  margin-left: -38px;
+  margin-top: 0px;
+  width: 25px;
+}
+.device-widget #stoppedText {
+  margin-right: 0px;
+  margin-top: -18px;
+}
+.device-widget #showMeButton {
+  margin-left: -11px;
+  margin-top: 0px;
+}
+.device-widget .currentVersion {
+  color: black !important;
+}
+.device-widget .futureVersion {
+  color: green !important;
+}
+.device-widget .outdatedVersion{
+  color: red !important;
+}
+.device-widget #DevicesDiv {
+  display: none;
+  position: absolute;
+  left: -14px;
+  top: -15px;
+  bottom: -169px;
+  right: -14px;
+  background: #000;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
+ }
+.device-widget #overlay {
+  position: relative;
+}
+.device-widget #loading {
+  text-align: center;
+  margin-top: 150px;
+}
+.device-widget #theStartInputDate {
+
+}
+input[type=range] {
+  /*removes default webkit styles*/
+  -webkit-appearance: none;
+
+  /*fix for FF unable to apply focus style bug */
+  border: 1px solid white;
+
+  /*required for proper track sizing in FF*/
+  width: 135px;
+}
+input[type=range]::-webkit-slider-runnable-track {
+  width: 135px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: dodgerblue;
+  margin-top: -4px;
+}
+input[type=range]:focus {
+  outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: #ccc;
+}
+input[type=range]::-moz-range-track {
+  width: 135px;
+  height: 5px;
+  background: #ddd;
+  border: none;
+  border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: dodgerblue;
+}
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+  outline: 1px solid white;
+  outline-offset: -1px;
+}
+input[type=range]::-ms-track {
+  width: 135px;
+  height: 5px;
+
+  /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+  background: transparent;
+
+  /*leave room for the larger thumb to overflow with a transparent border */
+  border-color: transparent;
+  border-width: 6px 0;
+
+  /*remove default tick marks*/
+  color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+  background: #777;
+  border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+  background: #ddd;
+  border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+  border: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: dodgerblue;
+}
+input[type=range]:focus::-ms-fill-lower {
+  background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+  background: #ccc;
+}
+/* add additional custom styles */

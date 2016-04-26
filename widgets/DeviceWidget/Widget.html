@@ -1,0 +1,111 @@
+<div id="overlay">
+<div id="DevicesDiv">
+  <div id="loading"><img src="./widgets/DeviceWidget/images/loadingGif.gif" alt="Loading" style="width:80px;height:80px;"></div>
+</div>
+  <div id="DevDiv">
+  <input type="radio" name="Devices" id="LastKnownLocation" checked="checked" data-dojo-attach-point="LKLRadio">Last Known Location<br>
+
+  <hr>
+
+  <input type="radio" name="Devices" id="LastInvoiceCreated" data-dojo-attach-point="LICRadio">Last Invoice Created<br>
+
+  <hr>
+
+  <input type="radio" name="Devices" id="BreadCrumbTrail" data-dojo-attach-point="BCTRadio">Bread Crumb Trail
+
+  <div id="BCTDiv">
+
+    <input type="radio" name="DateSelect" id="SingleDateSelect" checked="checked" data-dojo-attach-point="BCTSingleDate">Select Single Date<br>
+
+    <input type="radio" name="DateSelect" id="DateRangeSelect" data-dojo-attach-point="BCTRangeDate">Select Date Range<br><br>
+
+    <div id="SODiv">
+      <input type="checkbox" id="speedOver" data-dojo-attach-point="speedOverTog"> Speed Over</input>
+
+      <div id="speedOverDiv">
+        <input type="text" value="0" id="speedForSO"/>
+        <p id="SOText">MPH</p>
+      </div>
+    </div>
+
+    <div id="stoppedDiv">
+      <input type="checkbox" id="stoppedOver" data-dojo-attach-point="stoppedOverTog"> Stopped Over</input><br>
+
+      <div id="stoppedOverDiv">
+        <input type="text" value="0" id="stoppedForSO"/>
+        <p id="stoppedText">Minute(s)</p>
+      </div>
+    </div>
+
+    <p id="PickStart">Pick Date</p>
+    <div id="theStartInputDate"></div>
+    <div id="BCTDateRange">
+      <p>Pick End Date</p>
+      <div id="theEndInputDate"></div>
+    </div>
+
+    <div id="routeAnimation">
+      <br><p>Total Seconds:</p>
+      <Select id="routeSeconds">
+        <option value="10">10 Seconds</option>
+        <option value="20">20 Seconds</option>
+        <option value="30" selected="selected">30 Seconds</option>
+        <option value="40">40 Seconds</option>
+        <option value="50">50 Seconds</option>
+        <option value="60">60 Seconds</option>
+        <option value="90">90 Seconds</option>
+        <option value="120">120 Seconds</option>
+        <option value="180">180 Seconds</option>
+      </Select><br>
+
+      <div id="routeButtons">
+        <button type="button" data-dojo-attach-point="PlayRoute" class = "my-btn" id="playRouteButton">Play</button>
+
+        <button type="button" data-dojo-attach-point="StopRoute" class = "my-btn" id="stopRouteButton">Stop</button>
+      </div>
+      <div id="playRouteTextDiv">
+        <div id="playRouteText">
+          <h6 id="timerRoute"></h6>
+          <h6 id="routeTime"></h6>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <hr>
+
+  <div id="visibleDiv">
+    <input type="checkbox" id="toggleDeviceLayer" Checked="checked" data-dojo-attach-point="DeviceLayerCheck"> Visible</input>
+    <input type="checkbox" id="toggleDevTextLayer" data-dojo-attach-point="DevTextLayerCheck" checked="checked"> Names</input>
+    <input id="devOpacity_control" type="range" max='100' min='0' value='100' data-dojo-attach-point="DeviceSlider"/>
+  </div>
+
+  <hr>
+
+  <div id="showButton">
+    <button type="button" data-dojo-attach-point="ShowMe" class = "my-btn" id="showMeButton">Show me</button>
+    <div id="showAndZoomDiv"><input type="checkbox" id="showAndZoom" data-dojo-attach-point="ZoomExtent" checked="checked"> Zoom</input></div>
+
+    <div id="lastReportSince">
+      <input type="checkbox" id="lastReport" data-dojo-attach-point="lastReportCheck"> Last report</input>
+
+      <select id="reportSinceTime">
+        <option value="2">2 Minutes</option>
+        <option value="5">5 Minutes</option>
+        <option value="10">10 Minutes</option>
+        <option value="15">15 Minutes</option>
+        <option value="20">20 Minutes</option>
+        <option value="30">30 Minutes</option>
+        <option value="45">45 Minutes</option>
+      </select>
+    </div>
+  </div><br>
+
+  <hr>
+
+  <h4 id="checkDevicesTitle">Check Devices to include</h4>
+  <img src="./widgets/DeviceWidget/images/checkedBox.png" alt="Checkbox" style="width:40px;height:40px;" data-dojo-attach-point="UncheckAll" id="CheckAll">
+  <div id="DeviceChecks" class="DevCheckBoxes"></div>
+</div>

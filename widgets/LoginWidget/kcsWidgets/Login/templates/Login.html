@@ -1,0 +1,27 @@
+<div class="module">
+    <div class="loginForm">
+    <div class=" form-module">
+        <div class="form">
+            <img src="widgets/LoginWidget/kcsWidgets/Login/images/RouteManShield.png" alt="RouteMan" style="width:80px;height:80px;" id="RMShield">
+            <img src="widgets/LoginWidget/kcsWidgets/Login/images/KCSFullLogo.PNG" alt="KCS" style="height:80px;" id="KCSFullLogo">
+            <h3>${i18n.loginTitle.label}</h3>
+            <br>
+            <form>
+                <input id="usernameBox" type="text" data-dojo-type="dijit/form/TextBox"><br><br>
+                <input id="passwordBox" type="password" placeholder="Password"  data-dojo-type="dijit/form/TextBox"><br><br>
+                <p class="remember_me">
+                    <label>
+                        <label>
+                            <input type="checkbox" name="remember_me" id="remember_me">
+                            Remember me on this computer
+                        </label>
+                    </label>
+                </p>
+                <div data-dojo-attach-point="btnLogin" class="login-btn"> ${i18n.activateButton.label}</div>
+            </form>
+        </div>
+        <div class="form-bottom">Powered by KCS and RouteMan</div>
+        <div id="versionNumber">V 2.0</div>
+    </div>
+    </div>
+</div>
