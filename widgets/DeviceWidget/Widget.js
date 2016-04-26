@@ -1,6 +1,5 @@
 define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'jimu/utils',
-      //'jimu/loaderplugins/jquery-loader!https://code.jquery.com/jquery-1.11.2.min.js',
       'jimu/loaderplugins/jquery-loader!./widgets/DeviceWidget/Resources/libraries/jquery-2.1.0.min.js',
       'dojo/parser',
       'dojo/_base/lang',
@@ -45,7 +44,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
   return declare([BaseWidget], {
 
     // Custom widget code goes here
-
+  // Testing github commits
     baseClass: 'device-widget',
     deviceGraphicsLayer: null,
     wDevices: null,
