@@ -83,23 +83,29 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     },
 
     _addGraphicsLayers: function(){
+      devTextGraphicsLayer = new GraphicsLayer({
+        id: 'devTextGraphicsLayer',
+        title: 'webServiceGraphics'
+      });
+      this.map.addLayer(devTextGraphicsLayer, 7);
+
       deviceGraphicsLayer = new GraphicsLayer({
         id: 'deviceGraphicsLayer',
         title: 'webServiceGraphics'
       });
-      this.map.addLayer(deviceGraphicsLayer);
+      this.map.addLayer(deviceGraphicsLayer, 0);
 
       playRouteGraphicsLayer = new GraphicsLayer({
         id: 'playRouteGraphicsLayer',
         title: 'webServiceGraphics'
       });
-      this.map.addLayer(playRouteGraphicsLayer);
+      this.map.addLayer(playRouteGraphicsLayer, 10);
 
-      devTextGraphicsLayer = new GraphicsLayer({
-        id: 'devTextGraphicsLayer',
+      invoicesGraphicsLayer = new GraphicsLayer({
+        id: 'invoicesGraphicsLayer',
         title: 'webServiceGraphics'
       });
-      this.map.addLayer(devTextGraphicsLayer);
+      this.map.addLayer(invoicesGraphicsLayer, 1);
     },
 
     _bindEvents: function(){
@@ -496,6 +502,17 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           wDevices.RunDevices();
           wDevices.firstLoad = false;
         }
+
+        index = 0;
+        wDevices.devicesArray.forEach(loadDropDown);
+
+        function loadDropDown(){
+          var option = document.createElement("option");
+          option.text = wDevices.devicesArray[index].DeviceDescription;
+          option.value = wDevices.devicesArray[index].DeviceID;
+          document.getElementById("deviceSelection").appendChild(option);
+          index = index + 1;
+        }
       }
       function ServiceFailed(result) {
         console.log('Service call failed: ' + result.status + '  ' + result.statusText);
@@ -596,11 +613,13 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       if (document.getElementById("BreadCrumbTrail").checked)
       {
         document.body.style.cursor = 'progress';
+        var BCTDev = document.getElementById("deviceSelection");
+        var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
         $.ajax({
           type: "GET",
           dataType: "jsonp",
           url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetDevicesBreadCrumbTrail",
-          data: {"RMID": RMID, "DevIDs": DevIDs, "startDate": wDevices.startDate, "endDate": wDevices.endDate, "username": loginWidget.loginInfo.UserName},
+          data: {"RMID": RMID, "DevIDs": BreadDevice, "startDate": wDevices.startDate, "endDate": wDevices.endDate, "username": loginWidget.loginInfo.UserName},
           contentType: "application/json; charset=utf-8",
           success: wDevices.GetDevicesBreadCrumbTrailSucceeded,
           error: wDevices.ServiceFailed
@@ -623,6 +642,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     }
     deviceGraphicsLayer.clear();
     devTextGraphicsLayer.clear();
+    invoicesGraphicsLayer.clear();
     var resultObject = result.GetDevicesLastLocationResult;
     console.log(resultObject);
     wDevices._PlotPointsLKL(resultObject);
@@ -649,6 +669,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     }
     deviceGraphicsLayer.clear();
     devTextGraphicsLayer.clear();
+    invoicesGraphicsLayer.clear();
     var resultObject = result.GetDevicesLastInvoiceResult;
     wDevices._PlotPointsInvoice(resultObject);
     document.body.style.cursor = 'default';
@@ -669,31 +690,32 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     }
     deviceGraphicsLayer.clear();
     devTextGraphicsLayer.clear();
+    invoicesGraphicsLayer.clear();
     var resultObject = result.GetDevicesBreadCrumbTrailResult;
-    var indexIDs = 0;
-    var listOfDevs = [];
+    //var indexIDs = 0;
+    //var listOfDevs = [];
     console.log(wDevices.devCheckedArray);
     console.log(resultObject);
-
-    while (indexIDs < wDevices.devCheckedArray.length)
-    {
-      var list = [];
-      var indexResults = 0;
-      while (indexResults < resultObject.length)
-      {
-        if (wDevices.devCheckedArray[indexIDs] == resultObject[indexResults].DeviceID)
-        {
-          list.push(resultObject[indexResults]);
-        }
-        indexResults = indexResults + 1;
-      }
-      if (list.length != 0)
-      {
-        listOfDevs.push(list);
-      }
-      indexIDs = indexIDs + 1;
-    }
-    console.log(listOfDevs);
+    //
+    //while (indexIDs < wDevices.devCheckedArray.length)
+    //{
+    //  var list = [];
+    //  var indexResults = 0;
+    //  while (indexResults < resultObject.length)
+    //  {
+    //    if (wDevices.devCheckedArray[indexIDs] == resultObject[indexResults].DeviceID)
+    //    {
+    //      list.push(resultObject[indexResults]);
+    //    }
+    //    indexResults = indexResults + 1;
+    //  }
+    //  if (list.length != 0)
+    //  {
+    //    listOfDevs.push(list);
+    //  }
+    //  indexIDs = indexIDs + 1;
+    //}
+    //console.log(listOfDevs);
     var colorNumber = 0;
     var rainbow = new Rainbow();
     var maxNumber = resultObject.length;
@@ -701,15 +723,22 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     rainbow.setSpectrum(wDevices.toColor, wDevices.fromColor);
     rainbow.setNumberRange(0, maxNumber);
 
+    var BCTDev = document.getElementById("deviceSelection");
+    var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
 
-    var index = 0;
-      wDevices.devCheckedArray.forEach(displayDevs);
-    function displayDevs(){
-      console.log(wDevices.devCheckedArray[index]);
-      wDevices._PlotPointsBreadInv(listOfDevs, wDevices.startDate, wDevices.endDate, wDevices.devCheckedArray[index]);
-      index = index + 1;
-    }
-    wDevices._PlotPointsBCT(resultObject, colorNumber, rainbow, listOfDevs);
+    //var index = 0;
+    //  wDevices.devCheckedArray.forEach(displayDevs);
+    //function displayDevs(){
+    //  console.log(wDevices.devCheckedArray[index]);
+      wDevices._PlotPointsBreadInv(wDevices.startDate, wDevices.endDate, BreadDevice);
+    //  index = index + 1;
+    //}
+    wDevices._PlotPointsBCT(resultObject, colorNumber, rainbow);
+
+    var truck = deviceGraphicsLayer.graphics[0];
+    deviceGraphicsLayer.remove(truck);
+    deviceGraphicsLayer.add(truck);
+
     document.body.style.cursor = 'default';
     document.getElementById("DevicesDiv").style.display = "none";
   },
@@ -903,112 +932,117 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       }
     },
 
-    _PlotPointsBreadInv: function(listOfDevs, startDate, endDate, device){
+    _PlotPointsBreadInv: function(startDate, endDate, BreadDevice){
       var RMID = loginWidget.loginInfo.RMID;
-      var index = 0;
 
       $.ajax({
         type: "GET",
         dataType: "jsonp",
         url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetBCTInvoices",
-        data: {"RMID": RMID, "devID": device, "startDate": startDate, "endDate": endDate},
+        data: {"RMID": RMID, "devID": BreadDevice, "startDate": startDate, "endDate": endDate},
         contentType: "application/json; charset=utf-8",
         success: GetBCTInvoicesSucceeded,
         error: ServiceFailed
       });
       function GetBCTInvoicesSucceeded(result){
         var resultInvObject = result.GetBCTInvoicesResult;
-        resultInvObject.forEach(PlotInvoices);
+        console.log(resultInvObject);
+        var index = 0;
+
+        resultInvObject.forEach(PlotBreadInvoices);
+
+        function PlotBreadInvoices(){
+          var long = resultInvObject[index].Longitude;
+          var lat = resultInvObject[index].Latitude;
+
+          var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
+
+          var BCTInvText = new TextSymbol(index + 1);
+          BCTInvText.setHaloColor(new Color([0, 0, 0]));
+          BCTInvText.setHaloSize(2);
+          BCTInvText.setOffset(-14, -16);
+          var font  = new Font();
+          font.setSize("16pt");
+          font.setWeight(Font.WEIGHT_BOLD);
+          BCTInvText.setFont(font);
+          BCTInvText.setColor(new Color([255, 255, 255]));
+
+          wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
+
+          var str = resultInvObject[index].GPSTimeStamp;
+          var TimeStamp = str.substring(6, 16);
+          var d = new Date(TimeStamp * 1000);
+          var format = 'M/d/yy hh:mm:ss tt';
+          var GTimeStamp = wijmo.Globalize.format(d, format);
+
+          var invGraphic = new Graphic(wDevices.pt, sms);
+          var attributes = {
+            "CompanyName": resultInvObject[index].CompanyName,
+            "GPSTimeStamp": GTimeStamp,
+            "InvoiceNo": resultInvObject[index].InvoiceNo,
+            "Latitude": resultInvObject[index].Latitude,
+            "Longitude": resultInvObject[index].Longitude,
+            "Accuracy": resultInvObject[index].Accuracy,
+            "Bearing": resultInvObject[index].Bearing,
+            "Speed": resultInvObject[index].Speed,
+            "DeviceDescription": resultInvObject[index].DeviceDescription,
+            "DeviceID": resultInvObject[index].DeviceID
+          };
+          invGraphic.setAttributes(attributes);
+          var template = new InfoTemplate();
+          var content = "<b>Device ID</b>: ${DeviceID}" +
+              "<br><b>GPS Time Stamp</b>: ${GPSTimeStamp}" +
+              "<br/><b>Longitude</b>: ${Longitude}" +
+              "<br/><b>Latitude</b>: ${Latitude}" +
+              "<br/><b>Accuracy</b>: ${Accuracy}" +
+              "<br/><b>Bearing</b>: ${Bearing}" +
+              "<br/><b>Speed</b>: ${Speed}" +
+              "<hr/><b>Company Name</b>: ${CompanyName}" +
+              "<br/><b>Invoice Number</b>: ${InvoiceNo}";
+          template.setTitle("<b>${DeviceDescription}</b>");
+          template.setContent(content);
+          invGraphic.infoTemplate = template;
+
+          invoicesGraphicsLayer.add(invGraphic);
+
+          var BCTInvGraphic = new Graphic(wDevices.pt, BCTInvText);
+          invoicesGraphicsLayer.add(BCTInvGraphic);
+
+          index = index + 1;
+        }
       }
       function ServiceFailed() {
         console.log('Service call failed: ' + result.status + '  ' + result.statusText);
       }
-      function PlotInvoices(resultInvObject){
-        console.log(resultInvObject);
-        var long = resultInvObject.Longitude;
-        var lat = resultInvObject.Latitude;
-
-        var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
-
-        var BCTInvText = new TextSymbol(index + 1);
-        BCTInvText.setHaloColor(new Color([0, 0, 0]));
-        BCTInvText.setHaloSize(2);
-        BCTInvText.setOffset(-14, -16);
-        var font  = new Font();
-        font.setSize("16pt");
-        font.setWeight(Font.WEIGHT_BOLD);
-        BCTInvText.setFont(font);
-        BCTInvText.setColor(new Color([255, 255, 255]));
-
-        wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
-
-        var str = resultInvObject.GPSTimeStamp;
-        var TimeStamp = str.substring(6, 16);
-        var d = new Date(TimeStamp * 1000);
-        var format = 'M/d/yy hh:mm:ss tt';
-        var GTimeStamp = wijmo.Globalize.format(d, format);
-
-        var invGraphic = new Graphic(wDevices.pt, sms);
-        var attributes = {
-          "CompanyName": resultInvObject.CompanyName,
-          "GPSTimeStamp": GTimeStamp,
-          "InvoiceNo": resultInvObject.InvoiceNo,
-          "Latitude": resultInvObject.Latitude,
-          "Longitude": resultInvObject.Longitude,
-          "Accuracy": resultInvObject.Accuracy,
-          "Bearing": resultInvObject.Bearing,
-          "Speed": resultInvObject.Speed,
-          "DeviceDescription": resultInvObject.DeviceDescription,
-          "DeviceID": resultInvObject.DeviceID
-        };
-        invGraphic.setAttributes(attributes);
-        var template = new InfoTemplate();
-        var content = "<b>Device ID</b>: ${DeviceID}" +
-            "<br><b>GPS Time Stamp</b>: ${GPSTimeStamp}" +
-            "<br/><b>Longitude</b>: ${Longitude}" +
-            "<br/><b>Latitude</b>: ${Latitude}" +
-            "<br/><b>Accuracy</b>: ${Accuracy}" +
-            "<br/><b>Bearing</b>: ${Bearing}" +
-            "<br/><b>Speed</b>: ${Speed}" +
-            "<hr/><b>Company Name</b>: ${CompanyName}" +
-            "<br/><b>Invoice Number</b>: ${InvoiceNo}";
-        template.setTitle("<b>${DeviceDescription}</b>");
-        template.setContent(content);
-        invGraphic.infoTemplate = template;
-
-        devTextGraphicsLayer.add(invGraphic);
-
-        var BCTInvGraphic = new Graphic(wDevices.pt, BCTInvText);
-        devTextGraphicsLayer.add(BCTInvGraphic);
-
-
-
-        index = index + 1;
-      }
     },
 
-    _PlotPointsBCT: function(resultObject, colorNumber, rainbow, listOfDevs){
+    _PlotPointsBCT: function(resultObject, colorNumber, rainbow){
       var index = 0;
-      wDevices.showRouteAnimation(listOfDevs[0]);
+      wDevices.showRouteAnimation(resultObject);
       var pt = [];
-      var devsIndex = 0;
+      //var devsIndex = 0;
 
-      while (devsIndex < listOfDevs.length)
-      {
+      //while (devsIndex < listOfDevs.length)
+      //{
         colorNumber = 0;
-        listOfDevs[devsIndex].forEach(PlotPoints);
+      //  listOfDevs[devsIndex].forEach(PlotPoints);
+      //
+      //  devsIndex = devsIndex + 1;
+      //  index = 0;
+      //}
 
-        devsIndex = devsIndex + 1;
-        index = 0;
-      }
 
-      function PlotPoints() {
-        var long = listOfDevs[devsIndex][index].Longitude;
-        var lat = listOfDevs[devsIndex][index].Latitude;
+      while (index < resultObject.length)
+      {
+      //function PlotPoints() {
+        var long = resultObject[index].Longitude;
+        var lat = resultObject[index].Latitude;
+        var StopText;
+        var SOText;
         if (index == 0)
         {
           var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", 40, 40);
-          var BCTText = new TextSymbol(listOfDevs[devsIndex][index].DeviceDescription);
+          var BCTText = new TextSymbol(resultObject[index].DeviceDescription);
           BCTText.setHaloColor(new Color([0, 0, 0]));
           BCTText.setHaloSize(2);
           BCTText.setOffset(16, 6);
@@ -1043,7 +1077,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               var stopMin = (timedifference/60) % 60;
               var stopHours = Math.floor(stopMin/60);
               var stopSec = Math.floor(timedifference % 60);
-              var StopText;
 
               if (stopSec <= 9)
               {
@@ -1064,22 +1097,18 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               {
                 StopText = new TextSymbol(stopMin + ":" + stopSec);
               }
-               StopText.setHaloColor(new Color([0, 0, 0]));
+              StopText.setHaloColor(new Color([0, 0, 0]));
               StopText.setHaloSize(1);
-              //StopText.setOffset(14, 4);
               var font  = new Font();
               font.setSize("12pt");
               font.setWeight(Font.WEIGHT_BOLD);
               StopText.setFont(font);
               StopText.setColor(new Color([255, 255, 0]));
-              wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
-              var stopGraphic = new Graphic(wDevices.pt, StopText);
-              devTextGraphicsLayer.add(stopGraphic);
             }
             else
             {
               var sms = new SimpleMarkerSymbol();
-              var bearing = listOfDevs[devsIndex][index].Bearing;
+              var bearing = resultObject[index].Bearing;
               sms.setStyle(SimpleMarkerSymbol.STYLE_PATH);
               sms.setPath("M150 0 L75 200 L225 200 Z");
               sms.setColor(new Color(rainbow.colourAt(colorNumber)));
@@ -1091,7 +1120,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           else
           {
             var sms = new SimpleMarkerSymbol();
-            var bearing = listOfDevs[devsIndex][index].Bearing;
+            var bearing = resultObject[index].Bearing;
             sms.setStyle(SimpleMarkerSymbol.STYLE_PATH);
             sms.setPath("M150 0 L75 200 L225 200 Z");
             sms.setColor(new Color(rainbow.colourAt(colorNumber)));
@@ -1101,9 +1130,9 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         }
         if (document.getElementById("speedOver").checked == true)
         {
-          if (listOfDevs[devsIndex][index].Speed >= document.getElementById('speedForSO').value)
+          if (resultObject[index].Speed >= document.getElementById('speedForSO').value)
           {
-            var SOText = new TextSymbol(listOfDevs[devsIndex][index].Speed);
+            SOText = new TextSymbol(resultObject[index].Speed);
             SOText.setHaloColor(new Color([0, 0, 0]));
             SOText.setHaloSize(1);
             SOText.setOffset(14, 4);
@@ -1117,24 +1146,25 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
         var graphic = new Graphic(wDevices.pt, sms);
         var textGraphic = new Graphic(wDevices.pt, SOText);
+        var stopGraphic = new Graphic(wDevices.pt, StopText);
 
-        var str = listOfDevs[devsIndex][index].GPSTimeStamp;
+        var str = resultObject[index].GPSTimeStamp;
         var TimeStamp = str.substring(6, 16);
         var d = new Date(TimeStamp * 1000);
         var format = 'M/d/yy hh:mm:ss tt';
         var GTimeStamp = wijmo.Globalize.format(d, format);
         var attributes = {
-            "Accuracy": listOfDevs[devsIndex][index].Accuracy,
-            "AssignedGraphic": listOfDevs[devsIndex][index].AssignedGraphic,
-            "Bearing": listOfDevs[devsIndex][index].Bearing,
-            "CompanyName": listOfDevs[devsIndex][index].CompanyName,
-            "DeviceDescription": listOfDevs[devsIndex][index].DeviceDescription,
-            "DeviceID": listOfDevs[devsIndex][index].DeviceID,
+            "Accuracy": resultObject[index].Accuracy,
+            "AssignedGraphic": resultObject[index].AssignedGraphic,
+            "Bearing": resultObject[index].Bearing,
+            "CompanyName": resultObject[index].CompanyName,
+            "DeviceDescription": resultObject[index].DeviceDescription,
+            "DeviceID": resultObject[index].DeviceID,
             "GPSTimeStamp": GTimeStamp,
-            "InvoiceNo": listOfDevs[devsIndex][index].InvoiceNo,
-            "Latitude": listOfDevs[devsIndex][index].Latitude,
-            "Longitude": listOfDevs[devsIndex][index].Longitude,
-            "Speed": listOfDevs[devsIndex][index].Speed
+            "InvoiceNo": resultObject[index].InvoiceNo,
+            "Latitude": resultObject[index].Latitude,
+            "Longitude": resultObject[index].Longitude,
+            "Speed": resultObject[index].Speed
           };
         graphic.setAttributes(attributes);
         var template = new InfoTemplate();
@@ -1186,14 +1216,17 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           });
 
           deviceGraphicsLayer.add(graphic);
-          deviceGraphicsLayer.add(textGraphic);
+          devTextGraphicsLayer.add(textGraphic);
+          devTextGraphicsLayer.add(stopGraphic);
+
+          textGraphic = "";
+          stopGraphic = "";
 
 
           console.log("Bread Crumb Trail Retrieved: " + long + "," + lat);
           index = index + 1;
           colorNumber = colorNumber + 1;
       }
-
       if (document.getElementById("showAndZoom").checked == true)
       {
         if (deviceGraphicsLayer.graphics.length == 1)

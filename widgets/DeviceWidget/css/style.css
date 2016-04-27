@@ -196,7 +196,18 @@
   margin-top: 150px;
 }
 .device-widget #theStartInputDate {
-
+   width: 115px;
+ }
+.device-widget #theEndInputDate {
+  width: 115px;
+}
+.device-widget #deviceDropDiv {
+   margin-left: 125px;
+   margin-top: -43px;
+ }
+.device-widget #pickDateDiv {
+  margin-left: -20px;
+  margin-top: 10px;
 }
 input[type=range] {
   /*removes default webkit styles*/
