@@ -50,8 +50,12 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     wDevices: null,
     theStartDate: null,
     theEndDate: null,
+    theStartDateInv: null,
+    theEndDateInv: null,
     inputStartDate: null,
     inputEndDate: null,
+    inputStartDateInv: null,
+    inputEndDateInv: null,
     editGraphicsLayer: null,
     devicesArray: null,
     fromColor: null,
@@ -68,7 +72,11 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     devCheckedArray: [],
     startDate: null,
     endDate: null,
+    startDateInv: null,
+    endDateInv: null,
     namesLayerOn: true,
+    invoiceIndex: null,
+    indexInvoice: null,
     // this property is set by the framework when widget is loaded.
     // name: 'DeviceWidget',
     // add additional properties here
@@ -114,12 +122,20 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       this.own(on(this.BCTRadio, 'click', lang.hitch(this.showBCT)));
       this.own(on(this.LKLRadio, 'click', lang.hitch(this.hideBCT)));
       this.own(on(this.LICRadio, 'click', lang.hitch(this.hideBCT)));
+      this.own(on(this.InvRadio, 'click', lang.hitch(this.hideBCT)));
+      this.own(on(this.LICRadio, 'click', lang.hitch(this.hideInv)));
+      this.own(on(this.InvRadio, 'click', lang.hitch(this.hideInv)));
+      this.own(on(this.BCTRadio, 'click', lang.hitch(this.hideInv)));
       this.own(on(this.LKLRadio, 'click', lang.hitch(this.hideRouteAnimation)));
       this.own(on(this.LICRadio, 'click', lang.hitch(this.hideRouteAnimation)));
+      this.own(on(this.InvRadio, 'click', lang.hitch(this.hideRouteAnimation)));
+      this.own(on(this.InvRadio, 'click', lang.hitch(this.showInv)));
       this.own(on(this.DeviceLayerCheck, 'click', lang.hitch(this.toggleDevLayer)));
       this.own(on(this.DeviceSlider, 'input', lang.hitch(this.onChange)));
       this.own(on(this.BCTSingleDate, 'click', lang.hitch(this.hideBCTDateRange)));
       this.own(on(this.BCTRangeDate, 'click', lang.hitch(this.showBCTDateRange)));
+      this.own(on(this.InvSingleDate, 'click', lang.hitch(this.hideInvDateRange)));
+      this.own(on(this.InvRangeDate, 'click', lang.hitch(this.showInvDateRange)));
       this.own(on(this.UncheckAll, 'click', lang.hitch(this.toggleCheckDevices)));
       this.own(on(this.speedOverTog, 'click', lang.hitch(this.toggleSpeedOver)));
       this.own(on(this.PlayRoute, 'click', lang.hitch(this.routeTimer)));
@@ -149,6 +165,28 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         wDevices.graphicSize = Settings[3];
         console.log(Settings[3])
       });
+    },
+
+    showInvDateRange: function(){
+      console.log("Date Range Shown");
+      document.getElementById("InvDateRange").style.display = "block";
+      document.getElementById("PickStartInv").innerHTML = "Pick Start Date";
+    },
+
+    hideInvDateRange: function(){
+      console.log("Date Range Hidden");
+      document.getElementById("InvDateRange").style.display = "none";
+      document.getElementById("PickStartInv").innerHTML = "Pick Date";
+    },
+
+    showInv: function(){
+      console.log("Invoice Shown");
+      document.getElementById("InvoiceQuery").style.display = "block";
+    },
+
+    hideInv: function(){
+      console.log("Invoice Hidden");
+      document.getElementById("InvoiceQuery").style.display = "none";
     },
 
     loadDevCookies: function(){
@@ -532,6 +570,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       var RMID = loginWidget.loginInfo.RMID;
       var format = 'M/d/yy ';
       wDevices.startDate = wijmo.Globalize.format(wDevices.inputStartDate.value, format);
+      wDevices.startDateInv = wijmo.Globalize.format(wDevices.inputStartDateInv.value, format);
       var DevIDs = "";
       wDevices.devCheckedArray = [];
 
@@ -544,7 +583,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           numDevChecked = numDevChecked + 1;
         }
       });
-      console.log(numDevChecked);
 
       arrayUtils.forEach(inputs, function(input) {
         if (numDevChecked == 1)
@@ -581,6 +619,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       {
         wDevices.endDate = wijmo.Globalize.format(wDevices.inputEndDate.value, format);
       }
+      if (document.getElementById("SingleDateSelectInv").checked)
+      {
+        wDevices.endDateInv = wDevices.startDateInv;
+      }
+      if (document.getElementById("DateRangeSelectInv").checked)
+      {
+        wDevices.endDateInv = wijmo.Globalize.format(wDevices.inputEndDateInv.value, format);
+      }
 
       if (document.getElementById("LastKnownLocation").checked)
       {
@@ -613,6 +659,9 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       if (document.getElementById("BreadCrumbTrail").checked)
       {
         document.body.style.cursor = 'progress';
+        invoicesGraphicsLayer.clear();
+        deviceGraphicsLayer.clear();
+        devTextGraphicsLayer.clear();
         var BCTDev = document.getElementById("deviceSelection");
         var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
         $.ajax({
@@ -625,6 +674,30 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           error: wDevices.ServiceFailed
         });
         console.log('Hunterswidget::GetDevicesBreadCrumbTrailButton');
+      }
+      if (document.getElementById("Invoices").checked)
+      {
+        document.body.style.cursor = 'progress';
+        wDevices.invoiceIndex = 0;
+        wDevices.indexInvoice = 0;
+        invoicesGraphicsLayer.clear();
+        deviceGraphicsLayer.clear();
+        devTextGraphicsLayer.clear();
+        while (wDevices.invoiceIndex < wDevices.devCheckedArray.length)
+        {
+          document.body.style.cursor = 'progress';
+          document.getElementById("DevicesDiv").style.display = "block";
+          $.ajax({
+            type: "GET",
+            dataType: "jsonp",
+            url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetBCTInvoices",
+            data: {"RMID": RMID, "devID": wDevices.devCheckedArray[wDevices.invoiceIndex], "startDate": wDevices.startDateInv, "endDate": wDevices.endDateInv, "username": loginWidget.loginInfo.UserName},
+            contentType: "application/json; charset=utf-8",
+            success: wDevices.GetBCTInvoicesSucceeded,
+            error: wDevices.ServiceFailed
+          });
+          wDevices.invoiceIndex = wDevices.invoiceIndex + 1;
+        }
       }
     },
 
@@ -692,30 +765,10 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     devTextGraphicsLayer.clear();
     invoicesGraphicsLayer.clear();
     var resultObject = result.GetDevicesBreadCrumbTrailResult;
-    //var indexIDs = 0;
-    //var listOfDevs = [];
+
     console.log(wDevices.devCheckedArray);
     console.log(resultObject);
-    //
-    //while (indexIDs < wDevices.devCheckedArray.length)
-    //{
-    //  var list = [];
-    //  var indexResults = 0;
-    //  while (indexResults < resultObject.length)
-    //  {
-    //    if (wDevices.devCheckedArray[indexIDs] == resultObject[indexResults].DeviceID)
-    //    {
-    //      list.push(resultObject[indexResults]);
-    //    }
-    //    indexResults = indexResults + 1;
-    //  }
-    //  if (list.length != 0)
-    //  {
-    //    listOfDevs.push(list);
-    //  }
-    //  indexIDs = indexIDs + 1;
-    //}
-    //console.log(listOfDevs);
+
     var colorNumber = 0;
     var rainbow = new Rainbow();
     var maxNumber = resultObject.length;
@@ -726,13 +779,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     var BCTDev = document.getElementById("deviceSelection");
     var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
 
-    //var index = 0;
-    //  wDevices.devCheckedArray.forEach(displayDevs);
-    //function displayDevs(){
-    //  console.log(wDevices.devCheckedArray[index]);
-      wDevices._PlotPointsBreadInv(wDevices.startDate, wDevices.endDate, BreadDevice);
-    //  index = index + 1;
-    //}
+    wDevices._PlotPointsBreadInv(wDevices.startDate, wDevices.endDate, BreadDevice);
+
     wDevices._PlotPointsBCT(resultObject, colorNumber, rainbow);
 
     var truck = deviceGraphicsLayer.graphics[0];
@@ -939,19 +987,40 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         type: "GET",
         dataType: "jsonp",
         url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetBCTInvoices",
-        data: {"RMID": RMID, "devID": BreadDevice, "startDate": startDate, "endDate": endDate},
+        data: {"RMID": RMID, "devID": BreadDevice, "startDate": startDate, "endDate": endDate, "username": loginWidget.loginInfo.UserName},
         contentType: "application/json; charset=utf-8",
-        success: GetBCTInvoicesSucceeded,
-        error: ServiceFailed
+        success: wDevices.GetBCTInvoicesSucceeded,
+        error: wDevices.ServiceFailed
       });
-      function GetBCTInvoicesSucceeded(result){
-        var resultInvObject = result.GetBCTInvoicesResult;
-        console.log(resultInvObject);
-        var index = 0;
+      document.body.style.cursor = 'default';
+      document.getElementById("DevicesDiv").style.display = "none";
+    },
 
+    GetBCTInvoicesSucceeded: function(result){
+      if (result.GetBCTInvoicesResult === null)
+      {
+        if (wDevices.indexInvoice == (wDevices.devCheckedArray.length - 1))
+        {
+          document.body.style.cursor = 'default';
+          document.getElementById("DevicesDiv").style.display = "none";
+        }
+        wDevices.indexInvoice = wDevices.indexInvoice + 1;
+        return;
+      }
+      if (result.GetBCTInvoicesResult[0].ValidUserName == false)
+      {
+        location.reload();
+      }
+      var resultInvObject = result.GetBCTInvoicesResult;
+      console.log(resultInvObject);
+      var index = 0;
+
+      if (resultInvObject != "")
+      {
         resultInvObject.forEach(PlotBreadInvoices);
 
-        function PlotBreadInvoices(){
+      function PlotBreadInvoices(){
+
           var long = resultInvObject[index].Longitude;
           var lat = resultInvObject[index].Latitude;
 
@@ -1011,30 +1080,36 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           index = index + 1;
         }
       }
-      function ServiceFailed() {
-        console.log('Service call failed: ' + result.status + '  ' + result.statusText);
+      if (wDevices.indexInvoice == (wDevices.devCheckedArray.length - 1))
+      {
+        document.body.style.cursor = 'default';
+        document.getElementById("DevicesDiv").style.display = "none";
       }
-    },
+      wDevices.indexInvoice = wDevices.indexInvoice + 1;
+
+      if (document.getElementById("showAndZoom").checked == true)
+      {
+        if (invoicesGraphicsLayer.graphics.length == 1)
+        {
+          wDevices.map.centerAndZoom(wDevices.pt, 16);
+        }
+        else if (invoicesGraphicsLayer.graphics.length >= 2)
+        {
+          var newExtent = graphicsUtils.graphicsExtent(invoicesGraphicsLayer.graphics);
+          console.log(newExtent);
+          wDevices.map.setExtent(newExtent, true);
+        }
+      }
+  },
 
     _PlotPointsBCT: function(resultObject, colorNumber, rainbow){
       var index = 0;
       wDevices.showRouteAnimation(resultObject);
       var pt = [];
-      //var devsIndex = 0;
-
-      //while (devsIndex < listOfDevs.length)
-      //{
-        colorNumber = 0;
-      //  listOfDevs[devsIndex].forEach(PlotPoints);
-      //
-      //  devsIndex = devsIndex + 1;
-      //  index = 0;
-      //}
-
+      colorNumber = 0;
 
       while (index < resultObject.length)
       {
-      //function PlotPoints() {
         var long = resultObject[index].Longitude;
         var lat = resultObject[index].Latitude;
         var StopText;
@@ -1074,7 +1149,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               sms.setColor(new Color([255, 0, 0]));
               sms.setSize(60);
 
-              var stopMin = (timedifference/60) % 60;
+              var stopMin = Math.floor((timedifference/60) % 60);
               var stopHours = Math.floor(stopMin/60);
               var stopSec = Math.floor(timedifference % 60);
 
@@ -1219,8 +1294,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           devTextGraphicsLayer.add(textGraphic);
           devTextGraphicsLayer.add(stopGraphic);
 
-          textGraphic = "";
-          stopGraphic = "";
+          SOText = null;
+          StopText = null;
 
 
           console.log("Bread Crumb Trail Retrieved: " + long + "," + lat);
@@ -1259,6 +1334,26 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       // create InputDate control
       if (EndElement ) {
         wDevices.inputEndDate = new wijmo.input.InputDate(EndElement, {
+          min: new Date(2010, 1, 1),
+          format: 'M/d/yyyy',
+          value: wDevices.theEndDate
+        });
+      }
+
+      var StartElement = document.getElementById("theStartInputDateInv");
+      // create InputDate control
+      if (StartElement ) {
+        wDevices.inputStartDateInv = new wijmo.input.InputDate(StartElement, {
+          min: new Date(2010, 1, 1),
+          format: 'M/d/yyyy',
+          value: wDevices.theStartDate
+        });
+      }
+      wDevices.theEndDate = new Date();
+      var EndElement = document.getElementById("theEndInputDateInv");
+      // create InputDate control
+      if (EndElement ) {
+        wDevices.inputEndDateInv = new wijmo.input.InputDate(EndElement, {
           min: new Date(2010, 1, 1),
           format: 'M/d/yyyy',
           value: wDevices.theEndDate

@@ -209,6 +209,19 @@
   margin-left: -20px;
   margin-top: 10px;
 }
+.device-widget #InvoiceQuery {
+  display: none;
+  margin-left: 37px;
+}
+.device-widget #theStartInputDateInv {
+  width: 115px;
+}
+.device-widget #theEndInputDateInv {
+  width: 115px;
+}
+.device-widget #InvDateRange {
+  display: none;
+}
 input[type=range] {
   /*removes default webkit styles*/
   -webkit-appearance: none;
