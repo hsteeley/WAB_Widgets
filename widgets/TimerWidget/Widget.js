@@ -11,10 +11,7 @@ define(['dojo/_base/declare',
   'jimu/BaseWidget',
   'jimu/PanelManager'],
 function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, Point, webMercatorUtils, BaseWidget) {
-  //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
-
-    // Custom widget code goes here
 
     baseClass: 'timer-widget',
     counter: null,
@@ -25,19 +22,12 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
     refreshTime: null,
     count: null,
     firstThrough: true,
-    //refreshTime: null,
-    // this property is set by the framework when widget is loaded.
-    // name: 'TimerWidget',
-    // add additional properties here
 
-    //methods to communication with app container:
     postCreate: function() {
       this.inherited(arguments);
       timerWidget = this;
       this._bindEvents();
       this.timer();
-
-      console.log('TimerWidget::postCreate');
     },
 
     _bindEvents: function(){
@@ -45,7 +35,6 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
       this.own(on(this.timerButton, 'click', lang.hitch(this.checkPause)));
       var handle = topic.subscribe("SettingsWidget", function (Settings) {
         timerWidget.refreshTime = Settings[0];
-        console.log(Settings[0]);
         timerWidget.isChanged = true;
       });
       var handle = topic.subscribe("CustomerWidget", function (EditMode) {
@@ -79,13 +68,11 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
           timerWidget.isChanged = true;
           RefreshWidget = "";
         }
-        console.log("Timer Refreshed");
       });
     },
 
     var: isPaused = false,
     var: refreshWidget = "RefreshWidget",
-
 
     checkPause: function(){
       if (timerWidget.inEditMode == false)
@@ -101,7 +88,6 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
             var minutes = Math.floor(timerWidget.count / 60);
             if (timerWidget.count <= 0) {
               topic.publish("TimerWidget", (refreshWidget));
-              console.log('Data Published');
               timerWidget.count = timerWidget.refreshTime;
               var seconds = (timerWidget.count % 60);
               var minutes = Math.floor(timerWidget.count / 60);
@@ -121,7 +107,7 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
             }
             timerWidget.count = timerWidget.count - 1;
             document.getElementById("timer").innerHTML = minutes.toString() + ":" + seconds.toString();
-          }, 1000); //1000 will  run it every 1 second
+          }, 1000);
           isPaused = false;
           return;
         }
@@ -145,7 +131,6 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
         if (timerWidget.count <= 0)
         {
           topic.publish("TimerWidget", (refreshWidget));
-          console.log('Data Published');
           timerWidget.count = timerWidget.refreshTime;
           var seconds = (timerWidget.count % 60);
           var minutes = Math.floor(timerWidget.count/60);
@@ -167,7 +152,7 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
         }
         timerWidget.count = timerWidget.count-1;
         document.getElementById("timer").innerHTML = minutes.toString() + ":" + seconds.toString();
-      }, 1000); //1000 will  run it every 1 second
+      }, 1000);
     },
 
     SetExtent: function(){
@@ -185,7 +170,6 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
         {
           topLeftPoint = [cookie("topLeftPointX"), cookie("topLeftPointY")];
           bottomRightPoint = [cookie("bottomRightPointX"), cookie("bottomRightPointY")];
-          console.log(topLeftPoint)
         }
         else
         {
@@ -195,11 +179,9 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
           BRPLong = loginWidget.loginInfo.X2;
           topLeftPoint = webMercatorUtils.xyToLngLat(TLPLong, TLPLat);
           bottomRightPoint = webMercatorUtils.xyToLngLat(BRPLong, BRPLat);
-          console.log(topLeftPoint);
         }
 
         var newExtent = new Extent(topLeftPoint[0], topLeftPoint[1], bottomRightPoint[0], bottomRightPoint[1], new SpatialReference({wkid:4326}));
-        console.log(newExtent);
         timerWidget.map.setExtent(newExtent, true);
       }
     },
@@ -214,50 +196,5 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
         timerWidget.refreshTime = 300;
       }
     }
-
-    //onOpen: function(){
-    //  this.loadCookies();
-    //}
-
-    //onClose: function(){
-    //  clearInterval(counter);
-    //  document.getElementById("timer").innerHTML = "Paused";
-    //  PanelManager.getInstance().openWidget(TimerWidget);
-    //}
-
-     //startup: function() {
-     //  this.inherited(arguments);
-     //  this.fetchDataByName("SettingsWidget");
-     //  console.log(settingsWidget.Settings[0]);
-     //  console.log('TimerWidget::startup');
-     //}
-
-    // onMinimize: function(){
-    //   console.log('TimerWidget::onMinimize');
-    // },
-
-    // onMaximize: function(){
-    //   console.log('TimerWidget::onMaximize');
-    // },
-
-    // onSignIn: function(credential){
-    //   console.log('TimerWidget::onSignIn', credential);
-    // },
-
-    // onSignOut: function(){
-    //   console.log('TimerWidget::onSignOut');
-    // }
-
-    // onPositionChange: function(){
-    //   console.log('TimerWidget::onPositionChange');
-    // },
-
-    // resize: function(){
-    //   console.log('TimerWidget::resize');
-    // }
-
-    //methods to communication between widgets:
-
   });
-
 });

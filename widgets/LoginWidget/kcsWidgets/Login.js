@@ -24,23 +24,21 @@ define([
              _WidgetsInTemplateMixin, cookie, json, topic, lang, registry,
              on, jimuUtils, $, BaseWidget, i18n) {
   return declare([_WidgetBase, _TemplatedMixin, _WidgetsInTemplateMixin], {
-    // description:
-    //    WAB login form
     templateString: template,
     baseClass: 'wab-login',
     widgetsInTemplate: true,
     i18n: i18n,
     loginWidget: null,
     loginInfo: null,
-    // Properties to be sent into constructor
+
     postCreate: function () {
       this.inherited(arguments);
-      console.log('app.WabLogin::postCreate', arguments);
       this.setupConnections();
       loginWidget = this;
       this.checkForUserName();
       this._bindEvents();
     },
+
     setupConnections: function () {
       console.log('app.WabLogin::setupConnections', arguments);
     },
@@ -106,18 +104,12 @@ define([
 
           _saveRoleCookie(userRole);
 
-          console.log(results.LoginResult);
           var resultObject = results.LoginResult;
           _saveTokenCookie(resultObject);
           topic.publish("/app/login", (username, resultObject));
 
-          console.log('app.WabLogin::_login: onClick: ', username);
-
-
-          console.log("Login Successful RMID: " + resultObject.RMID);
           loginWidget.loginInfo = resultObject;
           topic.publish("loginWidget", (username));
-          //LoadTheData();
         }
         else
         {
@@ -135,7 +127,6 @@ define([
         cookie(cookieName, username, {
           path: '/'
         });
-        console.log(cookie(cookieName));
       }
 
       function  _saveRoleCookie  (role) {

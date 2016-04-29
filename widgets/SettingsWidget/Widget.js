@@ -17,10 +17,7 @@ define(['dojo/_base/declare',
         'xstyle/css!./Resources/wijmo/wijmo.min.css'
 ],
 function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseWidget, jimuUtils, webMercatorUtils, Map, $) {
-  //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
-
-    // Custom widget code goes here
 
     baseClass: 'settings-widget',
     //settingsWidget: null,
@@ -35,17 +32,12 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
     maxLong: null,
     topLeftPoint: null,
     bottomRightPoint: null,
-    // this property is set by the framework when widget is loaded.
-    // name: 'SettingsWidget',
-    // add additional properties here
 
-    //methods to communication with app container:
     postCreate: function() {
       this.inherited(arguments);
       settingsWidget = this;
       this.map1 = this.map;
       this._bindEvents();
-      console.log('SettingsWidget::postCreate');
     },
 
     _bindEvents: function(){
@@ -59,9 +51,7 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       if (document.getElementById("setExtent").checked == true)
       {
         settingsWidget.topLeftPoint = webMercatorUtils.xyToLngLat(settingsWidget.map.extent.xmin, settingsWidget.map.extent.ymin);
-        console.log(settingsWidget.topLeftPoint);
         settingsWidget.bottomRightPoint = webMercatorUtils.xyToLngLat(settingsWidget.map.extent.xmax, settingsWidget.map.extent.ymax);
-        console.log(settingsWidget.bottomRightPoint);
         settingsWidget.minLat = settingsWidget.topLeftPoint[1];
         settingsWidget.maxLat = settingsWidget.bottomRightPoint[1];
         settingsWidget.minLong = settingsWidget.topLeftPoint[0];
@@ -96,7 +86,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       var DevID = null;
       var devIndex = 0;
       var count = 0;
-      console.log(settingsWidget.devicesArraySet);
       arrayUtils.forEach(inputs, function(input) {
         if (input.checked)
         {
@@ -118,8 +107,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       });
 
       function GetDevSettingsSucceeded(result){
-        console.log(result.GetDeviceSettingsResult);
-
         var str = settingsWidget.devicesArraySet[devIndex].LastDownload;
         var TimeStamp = str.substring(6, 16);
         var d = new Date(TimeStamp * 1000);
@@ -157,7 +144,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         function displaySetting(){
           var name = result.GetDeviceSettingsResult[index].SettingName;
           var value = result.GetDeviceSettingsResult[index].SettingValue;
-          console.log(name, value);
 
           $("#theDeviceSettings").append(name + " " + value);
           document.getElementById('theDeviceSettings').appendChild(document.createElement('br'));
@@ -187,7 +173,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       function GetSetDevicesSucceeded(result) {
         var index = 0;
         settingsWidget.devicesArraySet = result.GetDevicesResult;
-        console.log(settingsWidget.devicesArraySet);
         settingsWidget.devicesArraySet.forEach(createCheckboxSet);
 
         function createCheckboxSet(){
@@ -199,9 +184,9 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
           var description = document.createTextNode(devDesc);
           var Radio = document.createElement("input");
 
-          Radio.type = "radio";    // make the element a checkbox
+          Radio.type = "radio";
           Radio.name = "radioB";
-          Radio.value = devID;         // make its value "pair"
+          Radio.value = devID;
           Radio.id = "CB" + index;
           if (index == 0)
           {
@@ -213,10 +198,9 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
           }
           Radio.className = "list_itemSet";
 
-          label.appendChild(Radio);   // add the box to the element
-          label.appendChild(description);// add the description to the element
+          label.appendChild(Radio);
+          label.appendChild(description);
 
-          // add the label element to your div
           var devContainer = document.getElementById('devSettings');
           devContainer.appendChild(label);
 
@@ -264,9 +248,7 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
 
       var BCSize = document.getElementById("BCTSize").value;
 
-      console.log(ReloadTime);
       topic.publish("SettingsWidget", [ReloadTime, BCSize]);
-      console.log('Data Published');
 
       _saveReloadTimeCookie(ReloadTime);
       //_saveFromColorCookie(fromColor);
@@ -279,7 +261,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         cookie(cookieName, ReloadTime, {
           path: '/'
         });
-        console.log(cookie(cookieName));
       }
       //function  _saveFromColorCookie  (fromColor) {
       //  var cookieName = "fromColor";
@@ -303,7 +284,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         cookie(cookieName, topLeftPointX, {
           path: '/'
         });
-        console.log(cookie(cookieName));
       }
       function  _saveTLPYViewExtentCookie  (topLeftPointY) {
         var cookieName = "topLeftPointY";
@@ -311,7 +291,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         cookie(cookieName, topLeftPointY, {
           path: '/'
         });
-        console.log(cookie(cookieName));
       }
       function  _saveBRPXViewExtentCookie  (bottomRightPointX) {
         var cookieName = "bottomRightPointX";
@@ -319,7 +298,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         cookie(cookieName, bottomRightPointX, {
           path: '/'
         });
-        console.log(cookie(cookieName));
       }
       function  _saveBRPYViewExtentCookie  (bottomRightPointY) {
         var cookieName = "bottomRightPointY";
@@ -327,7 +305,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         cookie(cookieName, bottomRightPointY, {
           path: '/'
         });
-        console.log(cookie(cookieName));
       }
       function  _saveBCSizeCookie  (BCSize) {
         var cookieName = "BCSize";
@@ -335,7 +312,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         cookie(cookieName, BCSize, {
           path: '/'
         });
-        console.log(cookie(cookieName));
       }
       function  removeCookie  (cookieName) {
         var path = '/';
@@ -362,52 +338,13 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       }
     },
 
-     onClose: function(){
-       console.log('SettingsWidget::onClose');
+    onClose: function(){
        document.getElementById("changesSaved").style.display = "none";
      },
 
     onOpen: function(){
       this.loadDevices();
       this.loadCookies();
-      console.log('SettingsWidget::onOpen');
     }
-
-    // startup: function() {
-    //   this.inherited(arguments);
-    //   console.log('SettingsWidget::startup');
-    // },
-
-
-
-
-
-    // onMinimize: function(){
-    //   console.log('SettingsWidget::onMinimize');
-    // },
-
-    // onMaximize: function(){
-    //   console.log('SettingsWidget::onMaximize');
-    // },
-
-    // onSignIn: function(credential){
-    //   console.log('SettingsWidget::onSignIn', credential);
-    // },
-
-    // onSignOut: function(){
-    //   console.log('SettingsWidget::onSignOut');
-    // }
-
-    // onPositionChange: function(){
-    //   console.log('SettingsWidget::onPositionChange');
-    // },
-
-    // resize: function(){
-    //   console.log('SettingsWidget::resize');
-    // }
-
-    //methods to communication between widgets:
-
   });
-
 });

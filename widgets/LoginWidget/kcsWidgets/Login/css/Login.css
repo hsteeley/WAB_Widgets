@@ -159,7 +159,6 @@ input[type=range]::-moz-range-thumb {
     border-radius: 50%;
     background: dodgerblue;
 }
-/*hide the outline behind the border*/
 input[type=range]:-moz-focusring{
     outline: 1px solid white;
     outline-offset: -1px;

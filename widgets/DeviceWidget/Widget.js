@@ -26,9 +26,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'esri/graphicsUtils',
       'esri/symbols/TextSymbol',
       'esri/symbols/Font',
-      'dijit/Menu',
-      'dijit/Toolbar',
-      'dijit/registry',
       'dijit/layout/BorderContainer',
       'dijit/layout/ContentPane',
       'dijit/TitlePane',
@@ -39,12 +36,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'xstyle/css!./Resources/wijmo/wijmo.min.css'
       ],
 function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, arrayUtils, topic, domClass, cookie, Map, BasemapGallery, arcgisUtils, Search, PictureMarkerSymbol, SimpleMarkerSymbol, Graphic, Color, Point,
-         SpatialReference, GraphicsLayer, OpacitySlider, InfoTemplate, Edit, Extent, graphicsUtils, TextSymbol, Font, Menu, Toolbar, registry) {
-  //To create a widget, you need to derive from BaseWidget.
+         SpatialReference, GraphicsLayer, OpacitySlider, InfoTemplate, Edit, Extent, graphicsUtils, TextSymbol, Font) {
   return declare([BaseWidget], {
-
-    // Custom widget code goes here
-  // Testing github commits
     baseClass: 'device-widget',
     deviceGraphicsLayer: null,
     wDevices: null,
@@ -79,17 +72,12 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     indexInvoice: null,
     plotInvoiceIndex: null,
     totalInvoices: null,
-    // this property is set by the framework when widget is loaded.
-    // name: 'DeviceWidget',
-    // add additional properties here
 
-    //methods to communication with app container:
     postCreate: function() {
       this.inherited(arguments);
       wDevices = this;
       this._addGraphicsLayers();
       this._bindEvents();
-      console.log('DeviceWidget::postCreate');
     },
 
     _addGraphicsLayers: function(){
@@ -151,7 +139,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           wDevices.RunDevices();
           RefreshWidget = "";
         }
-        console.log("Devices Refreshed");
       });
       var handle = topic.subscribe("RefreshWidget", function (RefreshWidget) {
         if (RefreshWidget == "RefreshWidget")
@@ -159,34 +146,27 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           wDevices.RunDevices();
           RefreshWidget = "";
         }
-        console.log("Devices Refreshed");
       });
       var handle = topic.subscribe("SettingsWidget", function (Settings) {
-        //wDevices.fromColor = Settings[1];
-        //wDevices.toColor = Settings[2];
-        wDevices.graphicSize = Settings[3];
+        wDevices.graphicSize = Settings[1];
       });
     },
 
     showInvDateRange: function(){
-      console.log("Date Range Shown");
       document.getElementById("InvDateRange").style.display = "block";
       document.getElementById("PickStartInv").innerHTML = "Pick Start Date";
     },
 
     hideInvDateRange: function(){
-      console.log("Date Range Hidden");
       document.getElementById("InvDateRange").style.display = "none";
       document.getElementById("PickStartInv").innerHTML = "Pick Date";
     },
 
     showInv: function(){
-      console.log("Invoice Shown");
       document.getElementById("InvoiceQuery").style.display = "block";
     },
 
     hideInv: function(){
-      console.log("Invoice Hidden");
       document.getElementById("InvoiceQuery").style.display = "none";
     },
 
@@ -303,9 +283,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
         playRouteGraphicsLayer.add(graphic);
 
-        //playRouteGraphicsLayer.bringToFront(BCTGraphic);
-        //playRouteGraphicsLayer.bringToFront(graphic);
-
         var str = wDevices.playRouteObject[index].GPSTimeStamp;
         var TimeStamp = str.substring(6, 16);
         var d = new Date(TimeStamp * 1000);
@@ -352,7 +329,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         if (count <= 0)
         {
           wDevices.stopTimer();
-          //clearInterval(wDevices.counter);
         }
         if (seconds <= 9)
         {
@@ -362,7 +338,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         }
         count = count-1;
         document.getElementById("timerRoute").innerHTML = minutes.toString() + ":" + seconds.toString();
-      }, 1000); //1000 will  run it every 1 second
+      }, 1000);
 
 
     },
@@ -375,7 +351,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       else if (document.getElementById("speedOver").checked == false)
       {
         document.getElementById("speedOverDiv").style.display = "none";
-
       }
     },
 
@@ -384,18 +359,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       var inputs = query(".list_item");
       if  (wDevices.isChecked == false)
       {
-        console.log('1');
         wDevices.isChecked = true;
         document.getElementById('CheckAll').src = "./widgets/DeviceWidget/images/uncheckedBox.png";
         arrayUtils.forEach(inputs, function(input) {
           input.checked = false;
           index = index + 1;
         });
-        return;
       }
       else if  (wDevices.isChecked == true)
       {
-        console.log('2');
         wDevices.isChecked = false;
         document.getElementById('CheckAll').src = "./widgets/DeviceWidget/images/checkedBox.png";
         arrayUtils.forEach(inputs, function(input) {
@@ -430,23 +402,19 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     },
 
     showBCT: function(){
-      console.log("Bread Crumb Trail Shown");
       document.getElementById("BCTDiv").style.display = "block";
     },
 
     hideBCT: function(){
-      console.log("Bread Crumb Trail Hidden");
       document.getElementById("BCTDiv").style.display = "none";
     },
 
     showBCTDateRange: function(){
-      console.log("Date Range Shown");
       document.getElementById("BCTDateRange").style.display = "block";
       document.getElementById("PickStart").innerHTML = "Pick Start Date";
     },
 
     hideBCTDateRange: function(){
-      console.log("Date Range Hidden");
       document.getElementById("BCTDateRange").style.display = "none";
       document.getElementById("PickStart").innerHTML = "Pick Date";
     },
@@ -486,7 +454,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       function GetDevicesSucceeded(result) {
         wDevices.devicesArray = result.GetDevicesResult;
         var index = 0;
-        console.log(wDevices.devicesArray);
 
         wDevices.devicesArray.forEach(createCheckbox);
 
@@ -499,17 +466,16 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           var description = document.createTextNode(devDesc);
           var checkbox = document.createElement("input");
 
-          checkbox.type = "checkbox";    // make the element a checkbox
-          checkbox.name = devDesc;      // give it a name we can check on the server side
-          checkbox.value = devID;         // make its value "pair"
+          checkbox.type = "checkbox";
+          checkbox.name = devDesc;
+          checkbox.value = devID;
           checkbox.id = "CB" + index;
           checkbox.checked = true;
           checkbox.className = "list_item";
 
-          label.appendChild(checkbox);   // add the box to the element
-          label.appendChild(description);// add the description to the element
+          label.appendChild(checkbox);
+          label.appendChild(description);
 
-          // add the label element to your div
           document.getElementById('DeviceChecks').appendChild(label);
 
           var devIndex = 0;
@@ -558,11 +524,10 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       }
     },
 
-    onRevieceData: function(name, widgetId, data, historyData) {
+    onRevieceData: function(name) {
       if(name !== 'GetData'){
         return;
       }
-      console.log(data.message);
     },
 
     RunDevices: function() {
@@ -632,16 +597,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       if (document.getElementById("LastKnownLocation").checked)
       {
         document.body.style.cursor = 'progress';
-          $.ajax({
-        type: "GET",
-        dataType: "jsonp",
-        url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetDevicesLastLocation",
-        data: {"RMID": RMID, "ids": DevIDs, "username": loginWidget.loginInfo.UserName},
-        contentType: "application/json; charset=utf-8",
-        success: wDevices.GetDevicesLastLocationSucceeded,
-        error: wDevices.ServiceFailed
-      });
-          console.log('Hunterswidget::GetDevicesLastLocationButton');
+        $.ajax({
+          type: "GET",
+          dataType: "jsonp",
+          url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetDevicesLastLocation",
+          data: {"RMID": RMID, "ids": DevIDs, "username": loginWidget.loginInfo.UserName},
+          contentType: "application/json; charset=utf-8",
+          success: wDevices.GetDevicesLastLocationSucceeded,
+          error: wDevices.ServiceFailed
+        });
       }
       if (document.getElementById("LastInvoiceCreated").checked)
       {
@@ -655,7 +619,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           success: wDevices.GetDevicesLastInvoiceSucceeded,
           error: wDevices.ServiceFailed
         });
-        console.log('Hunterswidget::GetDevicesLastInvoiceButton');
       }
       if (document.getElementById("BreadCrumbTrail").checked)
       {
@@ -674,7 +637,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           success: wDevices.GetDevicesBreadCrumbTrailSucceeded,
           error: wDevices.ServiceFailed
         });
-        console.log('Hunterswidget::GetDevicesBreadCrumbTrailButton');
       }
       if (document.getElementById("Invoices").checked)
       {
@@ -719,11 +681,11 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     devTextGraphicsLayer.clear();
     invoicesGraphicsLayer.clear();
     var resultObject = result.GetDevicesLastLocationResult;
-    console.log(resultObject);
     wDevices._PlotPointsLKL(resultObject);
     document.body.style.cursor = 'default';
     document.getElementById("DevicesDiv").style.display = "none";
   },
+
     ServiceFailed: function(result) {
     console.log('Service call failed: ' + result.status + '  ' + result.statusText);
     document.body.style.cursor = 'default';
@@ -768,13 +730,9 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     invoicesGraphicsLayer.clear();
     var resultObject = result.GetDevicesBreadCrumbTrailResult;
 
-    console.log(wDevices.devCheckedArray);
-    console.log(resultObject);
-
     var colorNumber = 0;
     var rainbow = new Rainbow();
     var maxNumber = resultObject.length;
-    console.log(wDevices.fromColor, wDevices.toColor);
     rainbow.setSpectrum(wDevices.toColor, wDevices.fromColor);
     rainbow.setNumberRange(0, maxNumber);
 
@@ -793,7 +751,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     document.getElementById("DevicesDiv").style.display = "none";
   },
 
-    _PlotPointsLKL: function(resultObject, context){
+    _PlotPointsLKL: function(resultObject){
       wDevices.hideRouteAnimation();
       var index = 0;
       var pt = [];
@@ -880,7 +838,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
         deviceGraphicsLayer.add(graphic);
 
-        console.log("Last Location Retrieved: " + long + "," + lat);
         index = index + 1;
       }
       if (document.getElementById("showAndZoom").checked == true)
@@ -892,13 +849,12 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         else if (deviceGraphicsLayer.graphics.length >= 2)
         {
           var newExtent = graphicsUtils.graphicsExtent(deviceGraphicsLayer.graphics);
-          console.log(newExtent);
           wDevices.map.setExtent(newExtent, true);
         }
       }
     },
 
-    _PlotPointsInvoice: function(resultObject, context){
+    _PlotPointsInvoice: function(resultObject){
       wDevices.hideRouteAnimation();
       var index = 0;
       var pt = [];
@@ -964,7 +920,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
         deviceGraphicsLayer.add(graphic);
 
-        console.log("Last Invoice Retrieved: " + long + "," + lat);
         index = index + 1;
       }
       if (document.getElementById("showAndZoom").checked == true)
@@ -976,7 +931,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         else if (deviceGraphicsLayer.graphics.length >= 2)
         {
           var newExtent = graphicsUtils.graphicsExtent(deviceGraphicsLayer.graphics);
-          console.log(newExtent);
           wDevices.map.setExtent(newExtent, true);
         }
       }
@@ -984,7 +938,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
     _PlotPointsBreadInv: function(startDate, endDate, BreadDevice){
       var RMID = loginWidget.loginInfo.RMID;
-
       $.ajax({
         type: "GET",
         dataType: "jsonp",
@@ -1014,7 +967,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         location.reload();
       }
       var resultInvObject = result.GetBCTInvoicesResult;
-      console.log(resultInvObject);
 
       wDevices.PlotBreadInvoices(resultInvObject);
 
@@ -1029,8 +981,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     PlotBreadInvoices: function(resultInvObject){
       if (resultInvObject != "") {
         wDevices.plotInvoiceIndex = 0;
-        console.log(resultInvObject);
-        //resultInvObject.forEach(invPlotPoints);
 
         while (wDevices.plotInvoiceIndex < resultInvObject.length)
         {
@@ -1111,7 +1061,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         location.reload();
       }
       var resultInvObject = result.GetBCTInvoicesResult;
-      console.log(resultInvObject);
 
       wDevices.totalInvoices = wDevices.totalInvoices + resultInvObject.length;
       document.getElementById("totalInvoices").innerHTML = wDevices.totalInvoices;
@@ -1133,7 +1082,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         else if (invoicesGraphicsLayer.graphics.length >= 2)
         {
           var newExtent = graphicsUtils.graphicsExtent(invoicesGraphicsLayer.graphics);
-          console.log(newExtent);
           wDevices.map.setExtent(newExtent, true);
         }
       }
@@ -1142,8 +1090,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     PlotInvoices: function(resultInvObject){
         if (resultInvObject != "") {
           wDevices.plotInvoiceIndex = 0;
-          console.log(resultInvObject);
-          //resultInvObject.forEach(invPlotPoints);
 
           while (wDevices.plotInvoiceIndex < resultInvObject.length)
           {
@@ -1151,16 +1097,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             var lat = resultInvObject[wDevices.plotInvoiceIndex].Latitude;
 
             var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
-
-            //var BCTInvText = new TextSymbol(wDevices.plotInvoiceIndex + 1);
-            //BCTInvText.setHaloColor(new Color([0, 0, 0]));
-            //BCTInvText.setHaloSize(2);
-            //BCTInvText.setOffset(-14, -16);
-            //var font  = new Font();
-            //font.setSize("16pt");
-            //font.setWeight(Font.WEIGHT_BOLD);
-            //BCTInvText.setFont(font);
-            //BCTInvText.setColor(new Color([255, 255, 255]));
 
             wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
 
@@ -1199,9 +1135,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             invGraphic.infoTemplate = template;
 
             invoicesGraphicsLayer.add(invGraphic);
-
-            //var BCTInvGraphic = new Graphic(wDevices.pt, BCTInvText);
-            //invoicesGraphicsLayer.add(BCTInvGraphic);
 
             wDevices.plotInvoiceIndex = wDevices.plotInvoiceIndex + 1;
           }
@@ -1403,8 +1336,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           SOText = null;
           StopText = null;
 
-
-          console.log("Bread Crumb Trail Retrieved: " + long + "," + lat);
           index = index + 1;
           colorNumber = colorNumber + 1;
       }
@@ -1417,17 +1348,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         else if (deviceGraphicsLayer.graphics.length >= 2)
         {
           var newExtent = graphicsUtils.graphicsExtent(deviceGraphicsLayer.graphics);
-          console.log(newExtent);
           wDevices.map.setExtent(newExtent, true);
         }
       }
     },
 
     onOpen: function(){
-      // the date/time being edited
       wDevices.theStartDate = new Date();
       var StartElement = document.getElementById("theStartInputDate");
-      // create InputDate control
       if (StartElement ) {
         wDevices.inputStartDate = new wijmo.input.InputDate(StartElement, {
           min: new Date(2010, 1, 1),
@@ -1437,7 +1365,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       }
       wDevices.theEndDate = new Date();
       var EndElement = document.getElementById("theEndInputDate");
-      // create InputDate control
       if (EndElement ) {
         wDevices.inputEndDate = new wijmo.input.InputDate(EndElement, {
           min: new Date(2010, 1, 1),
@@ -1447,7 +1374,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       }
 
       var StartElement = document.getElementById("theStartInputDateInv");
-      // create InputDate control
       if (StartElement ) {
         wDevices.inputStartDateInv = new wijmo.input.InputDate(StartElement, {
           min: new Date(2010, 1, 1),
@@ -1457,7 +1383,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       }
       wDevices.theEndDate = new Date();
       var EndElement = document.getElementById("theEndInputDateInv");
-      // create InputDate control
       if (EndElement ) {
         wDevices.inputEndDateInv = new wijmo.input.InputDate(EndElement, {
           min: new Date(2010, 1, 1),
@@ -1465,50 +1390,17 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           value: wDevices.theEndDate
         });
       }
-      //this._loadDevices();
       wDevices._getVersion();
-      console.log('DeviceWidget::onOpen');
-      console.log(loginWidget.loginInfo);
     },
 
     onClose: function(){
       wDevices.inputStartDate.dispose();
       wDevices.inputEndDate.dispose();
-      console.log('DeviceWidget::onClose');
     },
 
     startup: function() {
        this.inherited(arguments);
        wDevices.firstLoad = true;
-       console.log('DeviceWidget::startup');
      }
-
-    // onMinimize: function(){
-    //   console.log('DeviceWidget::onMinimize');
-    // },
-
-    // onMaximize: function(){
-    //   console.log('DeviceWidget::onMaximize');
-    // },
-
-    // onSignIn: function(credential){
-    //   console.log('DeviceWidget::onSignIn', credential);
-    // },
-
-    // onSignOut: function(){
-    //   console.log('DeviceWidget::onSignOut');
-    // }
-
-    // onPositionChange: function(){
-    //   console.log('DeviceWidget::onPositionChange');
-    // },
-
-    // resize: function(){
-    //   console.log('DeviceWidget::resize');
-    // }
-
-    //methods to communication between widgets:
-
   });
-
 });

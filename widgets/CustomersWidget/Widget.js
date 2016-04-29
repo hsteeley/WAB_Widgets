@@ -23,9 +23,6 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'esri/graphicsUtils',
       'esri/symbols/TextSymbol',
       'esri/symbols/Font',
-      'dijit/Menu',
-      'dijit/Toolbar',
-      'dijit/registry',
       'dijit/layout/BorderContainer',
       'dijit/layout/ContentPane',
       'dijit/TitlePane',
@@ -35,11 +32,8 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'xstyle/css!./Resources/wijmo/wijmo.min.css'
       ],
 function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event, Map, BasemapGallery, arcgisUtils, Search, PictureMarkerSymbol, Graphic, Color, Point,
-         SpatialReference, GraphicsLayer, webMercatorUtils, OpacitySlider, InfoTemplate, Edit, Extent, graphicsUtils, TextSymbol, Font, Menu, Toolbar, registry) {
-  //To create a widget, you need to derive from BaseWidget.
+         SpatialReference, GraphicsLayer, webMercatorUtils, OpacitySlider, InfoTemplate, Edit, Extent, graphicsUtils, TextSymbol, Font) {
   return declare([BaseWidget], {
-
-    // Custom widget code goes here
 
     baseClass: 'customers-widget',
     customerGraphicsLayer: null,
@@ -56,11 +50,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
     isClicked: false,
     custHidden: false,
     context: null,
-    // this property is set by the framework when widget is loaded.
-    // name: 'CustomersWidget',
-    // add additional properties here
 
-    //methods to communication with app container:
     postCreate: function () {
       this.inherited(arguments);
       this.handlers = [];
@@ -68,7 +58,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       wCustomers.map1 = this.map;
       this._addGraphicsLayers();
       this._bindEvents();
-      console.log('CustomersWidget::postCreate');
     },
 
     _addGraphicsLayers: function () {
@@ -107,7 +96,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           wCustomers.RunCustomers(1);
           RefreshWidget = "";
         }
-        console.log("Customers Refreshed");
       });
     },
 
@@ -151,13 +139,11 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
     showHideEditMode: function(){
       if (document.getElementById("EditDiv").style.display === "block")
       {
-        console.log("Edit Mode Hidden");
         document.getElementById("EditDiv").style.display = "none";
         document.getElementById("CustomerDiv").style.display = "block";
       }
       else
       {
-        console.log("Edit Mode Shown");
         document.getElementById("EditDiv").style.display = "block";
         document.getElementById("CustomerDiv").style.display = "none";
       }
@@ -165,8 +151,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
 
     CreateToolbar: function () {
       editToolbar = new Edit(wCustomers.map1);
-
-      //Activate the toolbar when you click on a graphic
       customerGraphicsLayer.on("mouse-down", function (evt) {
         if (wCustomers.inEditMode == true){
           wCustomers.map1.disablePan();
@@ -174,7 +158,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           wCustomers.ActivateToolbar(evt.graphic);
         }
       });
-
       editToolbar.on('graphic-move-stop', function(evt) {
         var smsup = new PictureMarkerSymbol("./widgets/CustomersWidget/images/StoreGreen.png", 40, 40);
         evt.graphic.setSymbol(smsup);
@@ -183,15 +166,11 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         var CustomerIdentification = evt.graphic.attributes.CustomerID;
         var cust = [CustomerIdentification, newLong, newLat];
         wCustomers.custToBeMoved.push(cust);
-        console.log(wCustomers.custToBeMoved);
       });
-
-      //deactivate the toolbar when you click outside a graphic
       wCustomers.map1.on("click", function (evt) {
         wCustomers.map1.enablePan();
         editToolbar.deactivate();
       });
-
       customerGraphicsLayer.on("mouse-over", function (evt) {
         if (wCustomers.inEditMode == true)
         {
@@ -210,7 +189,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           wCustomers.map1.infoWindow.show(evt.screenPoint, wCustomers.map1.getInfoWindowAnchor(evt.screenPoint));
         }
       });
-
       customerGraphicsLayer.on("mouse-out", function (evt) {
         if (wCustomers.inEditMode == true)
         {
@@ -233,8 +211,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
     SaveEdits: function(){
       var RMID = loginWidget.loginInfo.RMID;
       var index = 0;
-      //var myJsonString = JSON.stringify(wCustomers.custToBeMoved);
-
       while (index < wCustomers.custToBeMoved.length)
       {
         $.ajax({
@@ -252,13 +228,12 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         index = index + 1;
       }
       function SaveCustEditsSucceeded(result) {
-        var resultObject = result.SaveCustEditsResult;
-        console.log(resultObject)
+        alert('Edits Saved');
       }
       function ServiceFailed(result) {
         console.log('Service call failed: ' + result.status + '  ' + result.statusText);
       }
-      alert('Edits Saved');
+
     },
 
     ClearEditLayer: function(){
@@ -481,16 +456,13 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       {
         isRestricted = 0;
       }
-      console.log(isRestricted);
       var e;
       var isActive, minLat, maxLat, minLong, maxLong;
 
       if (document.getElementById("viewExtent").checked)
       {
         var topLeftPoint = webMercatorUtils.xyToLngLat(wCustomers.map1.extent.xmin, wCustomers.map1.extent.ymin);
-        console.log(topLeftPoint);
         var bottomRightPoint = webMercatorUtils.xyToLngLat(wCustomers.map1.extent.xmax, wCustomers.map1.extent.ymax);
-        console.log(bottomRightPoint);
         minLat = topLeftPoint[1];
         maxLat = bottomRightPoint[1];
         minLong = topLeftPoint[0];
@@ -531,7 +503,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustSelectCustSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustSelectCustButton');
       }
       else if (document.getElementById("ByNameFilter").checked)
       {
@@ -546,7 +517,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustNameFilterSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustNameFilterButton');
       }
       else if (document.getElementById("ByRoute").checked)
       {
@@ -562,7 +532,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustRouteSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustRouteButton');
       }
       else if (document.getElementById("ByGroup").checked)
       {
@@ -578,7 +547,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustGroupSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustGroupButton');
       }
       else if (document.getElementById("ByShipCity").checked)
       {
@@ -594,7 +562,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustShipCitySucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustShipCityButton');
       }
       else if (document.getElementById("ByShipZip").checked)
       {
@@ -610,7 +577,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustShipZipSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustShipZipButton');
       }
       else if (document.getElementById("ByInvoiceDates").checked)
       {
@@ -634,7 +600,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustInvoiceDateSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustInvoiceDateButton');
       }
       else if (document.getElementById("ByNoInvoicesIn").checked)
       {
@@ -649,7 +614,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustNoInvoicesInDaysSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustNoInvoicesInDaysButton');
       }
       else if (document.getElementById("AllCustomers").checked)
       {
@@ -672,29 +636,29 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           success: wCustomers.GetCustAllCustomersSucceeded,
           error: wCustomers.ServiceFailed
         });
-        console.log('Hunterswidget::GetCustAllCustomersButton');
       }
     },
 
     GetCustSelectCustSucceeded: function(result) {
-    if (result.GetCustSelectCustResult.length === 0)
-    {
-      alert("No Customers available");
-      document.getElementById("CustDiv").style.display = "none";
+      if (result.GetCustSelectCustResult.length === 0)
+      {
+        alert("No Customers available");
+        document.getElementById("CustDiv").style.display = "none";
+        document.body.style.cursor = 'default';
+        return;
+      }
+      if (result.GetCustSelectCustResult[0].ValidUserName == false)
+      {
+        location.reload();
+      }
+      customerGraphicsLayer.clear();
+      custTextGraphicsLayer.clear();
+      var resultObject = result.GetCustSelectCustResult;
+      wCustomers._PlotPoints(resultObject, wCustomers.context);
       document.body.style.cursor = 'default';
-      return;
-    }
-    if (result.GetCustSelectCustResult[0].ValidUserName == false)
-    {
-      location.reload();
-    }
-    customerGraphicsLayer.clear();
-    custTextGraphicsLayer.clear();
-    var resultObject = result.GetCustSelectCustResult;
-    wCustomers._PlotPoints(resultObject, wCustomers.context);
-    document.body.style.cursor = 'default';
-    document.getElementById("CustDiv").style.display = "none";
-  },
+      document.getElementById("CustDiv").style.display = "none";
+    },
+
     ServiceFailed: function(result) {
     console.log('Service call failed: ' + result.status + '  ' + result.statusText);
     document.body.style.cursor = 'default';
@@ -856,7 +820,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
     customerGraphicsLayer.clear();
     custTextGraphicsLayer.clear();
     var resultObject = result.GetCustAllCustomersResult;
-    console.log(resultObject);
     wCustomers._PlotPoints(resultObject, wCustomers.context);
     document.body.style.cursor = 'default';
     document.getElementById("CustDiv").style.display = "none";
@@ -870,7 +833,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       function OrderRoutes(){
         var long = resultObject[index].Longitude;
         var lat = resultObject[index].Latitude;
-        console.log(resultObject);
 
         var ROText = new TextSymbol(index + 1);
         ROText.setHaloColor(new Color([0, 0, 0]));
@@ -949,9 +911,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         customerGraphicsLayer.add(graphic);
         custTextGraphicsLayer.add(textGraphic);
 
-        console.log("Customers Retrieved: " + long + "," + lat);
         index = index + 1;
-
       }
       if (document.getElementById("showAndZoomCust").checked == true)
       {
@@ -962,19 +922,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         else if (customerGraphicsLayer.graphics.length >= 2)
         {
           var newExtent = graphicsUtils.graphicsExtent(customerGraphicsLayer.graphics);
-          console.log(newExtent);
           wCustomers.map1.setExtent(newExtent, true);
         }
       }
     },
 
     onOpen: function(){
-      //this.fetchDataByName("Login Widget");
       this._loadCustData();
-      // the date/time being edited
       wCustomers.theStartDate = new Date();
       var StartElement = document.getElementById("invoiceDateBegin");
-      // create InputDate control
       if (StartElement ) {
         wCustomers.inputStartDate = new wijmo.input.InputDate(StartElement, {
           min: new Date(2010, 1, 1),
@@ -984,7 +940,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       }
       wCustomers.theEndDate = new Date();
       var EndElement = document.getElementById("invoiceDateEnd");
-      // create InputDate control
       if (EndElement ) {
         wCustomers.inputEndDate = new wijmo.input.InputDate(EndElement, {
           min: new Date(2010, 1, 1),
@@ -992,8 +947,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           value: wCustomers.theEndDate
         });
       }
-      console.log('CustomersWidget::onOpen');
-      console.log(loginWidget.loginInfo.RMID);
     },
 
     onClose: function(){
@@ -1003,41 +956,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       }
       wCustomers.inputStartDate.dispose();
       wCustomers.inputEndDate.dispose();
-      console.log('CustomersWidget::onClose');
     }
 
-    //startup: function() {
-     //  this.inherited(arguments);
-     //  console.log('CustomersWidget::startup');
-     //}
-
-
-    // onMinimize: function(){
-    //   console.log('CustomersWidget::onMinimize');
-    // },
-
-    // onMaximize: function(){
-    //   console.log('CustomersWidget::onMaximize');
-    // },
-
-    // onSignIn: function(credential){
-    //   console.log('CustomersWidget::onSignIn', credential);
-    // },
-
-    // onSignOut: function(){
-    //   console.log('CustomersWidget::onSignOut');
-    // }
-
-    // onPositionChange: function(){
-    //   console.log('CustomersWidget::onPositionChange');
-    // },
-
-    // resize: function(){
-    //   console.log('CustomersWidget::resize');
-    // }
-
-    //methods to communication between widgets:
-
   });
-
 });
