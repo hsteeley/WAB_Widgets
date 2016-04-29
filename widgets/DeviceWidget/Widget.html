@@ -3,21 +3,21 @@
   <div id="loading"><img src="./widgets/DeviceWidget/images/loadingGif.gif" alt="Loading" style="width:80px;height:80px;"></div>
 </div>
   <div id="DevDiv">
-  <input type="radio" name="Devices" id="LastKnownLocation" checked="checked" data-dojo-attach-point="LKLRadio">Last Known Location<br>
+  <input type="radio" name="Devices" id="LastKnownLocation" checked="checked" data-dojo-attach-point="LKLRadio">  Last Known Location<br>
 
   <hr>
 
-  <input type="radio" name="Devices" id="LastInvoiceCreated" data-dojo-attach-point="LICRadio">Last Invoice Created<br>
+  <input type="radio" name="Devices" id="LastInvoiceCreated" data-dojo-attach-point="LICRadio">  Last Invoice Created<br>
 
   <hr>
 
-  <input type="radio" name="Devices" id="BreadCrumbTrail" data-dojo-attach-point="BCTRadio">Bread Crumb Trail
+  <input type="radio" name="Devices" id="BreadCrumbTrail" data-dojo-attach-point="BCTRadio">  Bread Crumb Trail
 
   <div id="BCTDiv">
 
-    <input type="radio" name="DateSelect" id="SingleDateSelect" checked="checked" data-dojo-attach-point="BCTSingleDate">Select Single Date<br>
+    <input type="radio" name="DateSelect" id="SingleDateSelect" checked="checked" data-dojo-attach-point="BCTSingleDate">  Select Single Date<br>
 
-    <input type="radio" name="DateSelect" id="DateRangeSelect" data-dojo-attach-point="BCTRangeDate">Select Date Range<br><br>
+    <input type="radio" name="DateSelect" id="DateRangeSelect" data-dojo-attach-point="BCTRangeDate">  Select Date Range<br><br>
 
     <div id="SODiv">
       <input type="checkbox" id="speedOver" data-dojo-attach-point="speedOverTog"> Speed Over</input>
@@ -37,6 +37,12 @@
       </div>
     </div>
 
+    <div id="deviceDropDiv">
+      <p>Select Device</p>
+      <select id="deviceSelection">
+      </select>
+    </div>
+
     <div id="pickDateDiv">
       <p id="PickStart">Pick Date</p>
       <div id="theStartInputDate"></div>
@@ -46,14 +52,8 @@
     </div>
     </div>
 
-    <div id="deviceDropDiv">
-      <p>Select Device</p>
-      <select id="deviceSelection">
-      </select>
-    </div>
-
     <div id="routeAnimation">
-      <br><p>Total Seconds:</p>
+      <br><p id="totalSecondsText">Total Seconds:</p>
       <Select id="routeSeconds">
         <option value="10">10 Seconds</option>
         <option value="20">20 Seconds</option>
@@ -83,12 +83,15 @@
 
   <hr>
 
-  <input type="radio" name="Devices" id="Invoices" data-dojo-attach-point="InvRadio">Invoices
+  <input type="radio" name="Devices" id="Invoices" data-dojo-attach-point="InvRadio">  Invoices
 
   <div id="InvoiceQuery">
-    <input type="radio" name="DateSelectInv" id="SingleDateSelectInv" checked="checked" data-dojo-attach-point="InvSingleDate">Select Single Date<br>
+    <input type="radio" name="DateSelectInv" id="SingleDateSelectInv" checked="checked" data-dojo-attach-point="InvSingleDate">  Select Single Date<br>
 
-    <input type="radio" name="DateSelectInv" id="DateRangeSelectInv" data-dojo-attach-point="InvRangeDate">Select Date Range<br><br>
+    <input type="radio" name="DateSelectInv" id="DateRangeSelectInv" data-dojo-attach-point="InvRangeDate">  Select Date Range<br><br>
+
+    <div id="totalInvoicesText">Total Invoices: </div><br>
+    <div id="totalInvoices"></div>
 
     <div id="pickDateDivInv">
       <p id="PickStartInv">Pick Date</p>
@@ -114,7 +117,7 @@
 
   <div id="showButton">
     <button type="button" data-dojo-attach-point="ShowMe" class = "my-btn" id="showMeButton">Show me</button>
-    <div id="showAndZoomDiv"><input type="checkbox" id="showAndZoom" data-dojo-attach-point="ZoomExtent" checked="checked"> Zoom</input></div>
+    <div id="showAndZoomDiv"><input type="checkbox" id="showAndZoom" data-dojo-attach-point="ZoomExtent"> Zoom</input></div>
 
     <div id="lastReportSince">
       <input type="checkbox" id="lastReport" data-dojo-attach-point="lastReportCheck"> Last report</input>

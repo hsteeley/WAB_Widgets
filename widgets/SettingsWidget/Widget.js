@@ -29,6 +29,12 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
     devSettingsShown: false,
     settingsWidget: null,
     devicesArraySet: null,
+    minLat: null,
+    maxLat: null,
+    minLong: null,
+    maxLong: null,
+    topLeftPoint: null,
+    bottomRightPoint: null,
     // this property is set by the framework when widget is loaded.
     // name: 'SettingsWidget',
     // add additional properties here
@@ -46,6 +52,27 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       this.own(on(this.SaveChanges, 'click', lang.hitch(this.SaveSettings)));
       this.own(on(this.SaveChanges, 'click', lang.hitch(this.refreshTimer)));
       this.own(on(this.search, 'click', lang.hitch(this.showDeviceSettings)));
+      this.own(on(this.ViewExtentCheck, 'click', lang.hitch(this.showNewExtent)));
+    },
+
+    showNewExtent: function(){
+      if (document.getElementById("setExtent").checked == true)
+      {
+        settingsWidget.topLeftPoint = webMercatorUtils.xyToLngLat(settingsWidget.map.extent.xmin, settingsWidget.map.extent.ymin);
+        console.log(settingsWidget.topLeftPoint);
+        settingsWidget.bottomRightPoint = webMercatorUtils.xyToLngLat(settingsWidget.map.extent.xmax, settingsWidget.map.extent.ymax);
+        console.log(settingsWidget.bottomRightPoint);
+        settingsWidget.minLat = settingsWidget.topLeftPoint[1];
+        settingsWidget.maxLat = settingsWidget.bottomRightPoint[1];
+        settingsWidget.minLong = settingsWidget.topLeftPoint[0];
+        settingsWidget.maxLong = settingsWidget.bottomRightPoint[0];
+
+        document.getElementById("viewExtentMessage").innerHTML = "Your view extent will be set at " + settingsWidget.topLeftPoint + " " + settingsWidget.bottomRightPoint;
+      }
+      else
+      {
+        document.getElementById("viewExtentMessage").innerHTML = "";
+      }
     },
 
     showDeviceSettings: function(){
@@ -212,6 +239,17 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       document.getElementById("changesSaved").style.display = "none";
       document.getElementById("changesSaved").style.display = "block";
 
+      if (document.getElementById("setExtent").checked == true)
+      {
+        _saveTLPXViewExtentCookie(settingsWidget.minLong);
+        _saveTLPYViewExtentCookie(settingsWidget.minLat);
+        _saveBRPXViewExtentCookie(settingsWidget.maxLong);
+        _saveBRPYViewExtentCookie(settingsWidget.maxLat);
+      }
+
+      document.getElementById("viewExtentMessage").innerHTML = "";
+      document.getElementById("setExtent").checked = false;
+
       setTimeout(function() {
         $(document.getElementById("changesSaved")).fadeOut(750);
       }, 3000);
@@ -219,20 +257,20 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       var r = document.getElementById("refreshTime");
       var ReloadTime = r.options[r.selectedIndex].value;
 
-      var colorFrom = document.getElementById("BCTFromColorPicker");
-      var fromColor = colorFrom.options[colorFrom.selectedIndex].value;
-      var colorTo = document.getElementById("BCTToColorPicker");
-      var toColor = colorTo.options[colorTo.selectedIndex].value;
+      //var colorFrom = document.getElementById("BCTFromColorPicker");
+      //var fromColor = colorFrom.options[colorFrom.selectedIndex].value;
+      //var colorTo = document.getElementById("BCTToColorPicker");
+      //var toColor = colorTo.options[colorTo.selectedIndex].value;
 
       var BCSize = document.getElementById("BCTSize").value;
 
       console.log(ReloadTime);
-      topic.publish("SettingsWidget", [ReloadTime, fromColor, toColor, BCSize]);
+      topic.publish("SettingsWidget", [ReloadTime, BCSize]);
       console.log('Data Published');
 
       _saveReloadTimeCookie(ReloadTime);
-      _saveFromColorCookie(fromColor);
-      _saveToColorCookie(toColor);
+      //_saveFromColorCookie(fromColor);
+      //_saveToColorCookie(toColor);
       _saveBCSizeCookie(BCSize);
 
       function  _saveReloadTimeCookie  (ReloadTime) {
@@ -243,18 +281,50 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         });
         console.log(cookie(cookieName));
       }
-      function  _saveFromColorCookie  (fromColor) {
-        var cookieName = "fromColor";
-        removeCookie(fromColor);
-        cookie(cookieName, fromColor, {
+      //function  _saveFromColorCookie  (fromColor) {
+      //  var cookieName = "fromColor";
+      //  removeCookie(fromColor);
+      //  cookie(cookieName, fromColor, {
+      //    path: '/'
+      //  });
+      //  console.log(cookie(cookieName));
+      //}
+      //function  _saveToColorCookie  (toColor) {
+      //  var cookieName = "toColor";
+      //  removeCookie(toColor);
+      //  cookie(cookieName, toColor, {
+      //    path: '/'
+      //  });
+      //  console.log(cookie(cookieName));
+      //}
+      function  _saveTLPXViewExtentCookie  (topLeftPointX) {
+        var cookieName = "topLeftPointX";
+        removeCookie(topLeftPointX);
+        cookie(cookieName, topLeftPointX, {
           path: '/'
         });
         console.log(cookie(cookieName));
       }
-      function  _saveToColorCookie  (toColor) {
-        var cookieName = "toColor";
-        removeCookie(toColor);
-        cookie(cookieName, toColor, {
+      function  _saveTLPYViewExtentCookie  (topLeftPointY) {
+        var cookieName = "topLeftPointY";
+        removeCookie(topLeftPointY);
+        cookie(cookieName, topLeftPointY, {
+          path: '/'
+        });
+        console.log(cookie(cookieName));
+      }
+      function  _saveBRPXViewExtentCookie  (bottomRightPointX) {
+        var cookieName = "bottomRightPointX";
+        removeCookie(bottomRightPointX);
+        cookie(cookieName, bottomRightPointX, {
+          path: '/'
+        });
+        console.log(cookie(cookieName));
+      }
+      function  _saveBRPYViewExtentCookie  (bottomRightPointY) {
+        var cookieName = "bottomRightPointY";
+        removeCookie(bottomRightPointY);
+        cookie(cookieName, bottomRightPointY, {
           path: '/'
         });
         console.log(cookie(cookieName));
@@ -278,14 +348,14 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       {
         document.getElementById('refreshTime').value = cookie("ReloadTime");
       }
-      if (cookie("fromColor") != null)
-      {
-        document.getElementById('BCTFromColorPicker').value = cookie("fromColor");
-      }
-      if (cookie("toColor") != null)
-      {
-        document.getElementById('BCTToColorPicker').value = cookie("toColor");
-      }
+      //if (cookie("fromColor") != null)
+      //{
+      //  document.getElementById('BCTFromColorPicker').value = cookie("fromColor");
+      //}
+      //if (cookie("toColor") != null)
+      //{
+      //  document.getElementById('BCTToColorPicker').value = cookie("toColor");
+      //}
       if (cookie("BCSize") != null)
       {
         document.getElementById('BCTSize').value = cookie("BCSize");

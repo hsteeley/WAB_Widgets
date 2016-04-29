@@ -73,6 +73,7 @@ define([
     }),
 
     _login: function () {
+      document.body.style.cursor = 'progress';
       if (document.getElementById('remember_me').checked == false)
       {
         document.cookie = "auth_username=; expires=Thu, 01 Jan 1970 00:00:00 UTC";

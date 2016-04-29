@@ -175,12 +175,29 @@ function(declare, dom, on, lang, topic, cookie, map, SpatialReference, Extent, P
       {
         timerWidget.firstThrough = false;
 
-        var TLPLong = loginWidget.loginInfo.Y1;
-        var TLPLat = loginWidget.loginInfo.X1;
-        var BRPLong =loginWidget.loginInfo.Y2;
-        var BRPLat = loginWidget.loginInfo.X2;
-        var topLeftPoint = webMercatorUtils.xyToLngLat(TLPLat, TLPLong);
-        var bottomRightPoint = webMercatorUtils.xyToLngLat(BRPLat, BRPLong);
+        var TLPLong;
+        var TLPLat;
+        var BRPLong;
+        var BRPLat;
+        var topLeftPoint;
+        var bottomRightPoint;
+        if (cookie("topLeftPointX") != null)
+        {
+          topLeftPoint = [cookie("topLeftPointX"), cookie("topLeftPointY")];
+          bottomRightPoint = [cookie("bottomRightPointX"), cookie("bottomRightPointY")];
+          console.log(topLeftPoint)
+        }
+        else
+        {
+          TLPLat = loginWidget.loginInfo.Y1;
+          TLPLong = loginWidget.loginInfo.X1;
+          BRPLat =loginWidget.loginInfo.Y2;
+          BRPLong = loginWidget.loginInfo.X2;
+          topLeftPoint = webMercatorUtils.xyToLngLat(TLPLong, TLPLat);
+          bottomRightPoint = webMercatorUtils.xyToLngLat(BRPLong, BRPLat);
+          console.log(topLeftPoint);
+        }
+
         var newExtent = new Extent(topLeftPoint[0], topLeftPoint[1], bottomRightPoint[0], bottomRightPoint[1], new SpatialReference({wkid:4326}));
         console.log(newExtent);
         timerWidget.map.setExtent(newExtent, true);

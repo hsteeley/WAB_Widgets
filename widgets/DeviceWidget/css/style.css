@@ -21,7 +21,7 @@
 }
 .device-widget #BCTDiv {
   display: none;
-  margin-left: 37px;
+  margin-left: 25px;
 }
 .device-widget #BCTDateRange {
   display: none;
@@ -82,10 +82,15 @@
   margin-top: 0px;
 }
 .device-widget #routeSeconds {
-  margin-right: 40px;
+  margin-right: 50px;
   margin-top: -24px;
   margin-bottom: 0px;
   float: right;
+}
+.device-widget #totalSecondsText {
+  margin-left: 18px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 .device-widget #SODiv {
   margin-right: 28px;
@@ -147,7 +152,7 @@
   float: right;
 }
 .device-widget #stoppedOver {
-   margin-left: 0px;
+   margin-right: 0px;
    margin-top: 0px;
  }
 .device-widget #stoppedDiv {
@@ -202,11 +207,12 @@
   width: 115px;
 }
 .device-widget #deviceDropDiv {
-   margin-left: 125px;
-   margin-top: -43px;
+   margin-left: 145px;
+   margin-top: 14px;
+   margin-bottom: -54px;
  }
 .device-widget #pickDateDiv {
-  margin-left: -20px;
+  margin-left: -4px;
   margin-top: 10px;
 }
 .device-widget #InvoiceQuery {
@@ -221,6 +227,22 @@
 }
 .device-widget #InvDateRange {
   display: none;
+}
+.device-widget #totalInvoices {
+  margin-left: 162px;
+  margin-top: -12px;
+  margin-bottom: -31px;
+  font-weight: bold;
+}
+.device-widget #totalInvoicesText {
+  margin-left: 126px;
+  margin-top: -8px;
+  margin-bottom: 0px;
+  font-weight: bold;
+}
+.device-widget #pickDateDivInv {
+  margin-left: -14px;
+  margin-top: 0px;
 }
 input[type=range] {
   /*removes default webkit styles*/

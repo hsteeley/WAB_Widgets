@@ -58,8 +58,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     inputEndDateInv: null,
     editGraphicsLayer: null,
     devicesArray: null,
-    fromColor: null,
-    toColor: null,
+    fromColor: "white",
+    toColor: "blue",
     graphicSize: null,
     counter: null,
     playRouteObject: null,
@@ -77,6 +77,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     namesLayerOn: true,
     invoiceIndex: null,
     indexInvoice: null,
+    plotInvoiceIndex: null,
+    totalInvoices: null,
     // this property is set by the framework when widget is loaded.
     // name: 'DeviceWidget',
     // add additional properties here
@@ -160,10 +162,9 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         console.log("Devices Refreshed");
       });
       var handle = topic.subscribe("SettingsWidget", function (Settings) {
-        wDevices.fromColor = Settings[1];
-        wDevices.toColor = Settings[2];
+        //wDevices.fromColor = Settings[1];
+        //wDevices.toColor = Settings[2];
         wDevices.graphicSize = Settings[3];
-        console.log(Settings[3])
       });
     },
 
@@ -190,22 +191,22 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     },
 
     loadDevCookies: function(){
-      if (cookie("fromColor") != null)
-      {
-        wDevices.fromColor = cookie("fromColor");
-      }
-      else
-      {
-        wDevices.fromColor = 'white';
-      }
-      if (cookie("toColor") != null)
-      {
-        wDevices.toColor = cookie("toColor");
-      }
-      else
-      {
-        wDevices.toColor = 'blue';
-      }
+      //if (cookie("fromColor") != null)
+      //{
+      //  wDevices.fromColor = cookie("fromColor");
+      //}
+      //else
+      //{
+      //  wDevices.fromColor = 'white';
+      //}
+      //if (cookie("toColor") != null)
+      //{
+      //  wDevices.toColor = cookie("toColor");
+      //}
+      //else
+      //{
+      //  wDevices.toColor = 'blue';
+      //}
       if (cookie("BCSize") != null)
       {
         wDevices.graphicSize = cookie("BCSize");
@@ -683,6 +684,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         invoicesGraphicsLayer.clear();
         deviceGraphicsLayer.clear();
         devTextGraphicsLayer.clear();
+        wDevices.totalInvoices = 0;
         while (wDevices.invoiceIndex < wDevices.devCheckedArray.length)
         {
           document.body.style.cursor = 'progress';
@@ -693,7 +695,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetBCTInvoices",
             data: {"RMID": RMID, "devID": wDevices.devCheckedArray[wDevices.invoiceIndex], "startDate": wDevices.startDateInv, "endDate": wDevices.endDateInv, "username": loginWidget.loginInfo.UserName},
             contentType: "application/json; charset=utf-8",
-            success: wDevices.GetBCTInvoicesSucceeded,
+            success: wDevices.GetInvoicesSucceeded,
             error: wDevices.ServiceFailed
           });
           wDevices.invoiceIndex = wDevices.invoiceIndex + 1;
@@ -1013,20 +1015,31 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       }
       var resultInvObject = result.GetBCTInvoicesResult;
       console.log(resultInvObject);
-      var index = 0;
 
-      if (resultInvObject != "")
+      wDevices.PlotBreadInvoices(resultInvObject);
+
+      if (wDevices.indexInvoice == (wDevices.devCheckedArray.length - 1))
       {
-        resultInvObject.forEach(PlotBreadInvoices);
+        document.body.style.cursor = 'default';
+        document.getElementById("DevicesDiv").style.display = "none";
+      }
+      wDevices.indexInvoice = wDevices.indexInvoice + 1;
+    },
 
-      function PlotBreadInvoices(){
+    PlotBreadInvoices: function(resultInvObject){
+      if (resultInvObject != "") {
+        wDevices.plotInvoiceIndex = 0;
+        console.log(resultInvObject);
+        //resultInvObject.forEach(invPlotPoints);
 
-          var long = resultInvObject[index].Longitude;
-          var lat = resultInvObject[index].Latitude;
+        while (wDevices.plotInvoiceIndex < resultInvObject.length)
+        {
+          var long = resultInvObject[wDevices.plotInvoiceIndex].Longitude;
+          var lat = resultInvObject[wDevices.plotInvoiceIndex].Latitude;
 
           var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
 
-          var BCTInvText = new TextSymbol(index + 1);
+          var BCTInvText = new TextSymbol(wDevices.plotInvoiceIndex + 1);
           BCTInvText.setHaloColor(new Color([0, 0, 0]));
           BCTInvText.setHaloSize(2);
           BCTInvText.setOffset(-14, -16);
@@ -1038,7 +1051,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
           wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
 
-          var str = resultInvObject[index].GPSTimeStamp;
+          var str = resultInvObject[wDevices.plotInvoiceIndex].GPSTimeStamp;
           var TimeStamp = str.substring(6, 16);
           var d = new Date(TimeStamp * 1000);
           var format = 'M/d/yy hh:mm:ss tt';
@@ -1046,16 +1059,16 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
           var invGraphic = new Graphic(wDevices.pt, sms);
           var attributes = {
-            "CompanyName": resultInvObject[index].CompanyName,
+            "CompanyName": resultInvObject[wDevices.plotInvoiceIndex].CompanyName,
             "GPSTimeStamp": GTimeStamp,
-            "InvoiceNo": resultInvObject[index].InvoiceNo,
-            "Latitude": resultInvObject[index].Latitude,
-            "Longitude": resultInvObject[index].Longitude,
-            "Accuracy": resultInvObject[index].Accuracy,
-            "Bearing": resultInvObject[index].Bearing,
-            "Speed": resultInvObject[index].Speed,
-            "DeviceDescription": resultInvObject[index].DeviceDescription,
-            "DeviceID": resultInvObject[index].DeviceID
+            "InvoiceNo": resultInvObject[wDevices.plotInvoiceIndex].InvoiceNo,
+            "Latitude": resultInvObject[wDevices.plotInvoiceIndex].Latitude,
+            "Longitude": resultInvObject[wDevices.plotInvoiceIndex].Longitude,
+            "Accuracy": resultInvObject[wDevices.plotInvoiceIndex].Accuracy,
+            "Bearing": resultInvObject[wDevices.plotInvoiceIndex].Bearing,
+            "Speed": resultInvObject[wDevices.plotInvoiceIndex].Speed,
+            "DeviceDescription": resultInvObject[wDevices.plotInvoiceIndex].DeviceDescription,
+            "DeviceID": resultInvObject[wDevices.plotInvoiceIndex].DeviceID
           };
           invGraphic.setAttributes(attributes);
           var template = new InfoTemplate();
@@ -1077,9 +1090,33 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           var BCTInvGraphic = new Graphic(wDevices.pt, BCTInvText);
           invoicesGraphicsLayer.add(BCTInvGraphic);
 
-          index = index + 1;
+          wDevices.plotInvoiceIndex = wDevices.plotInvoiceIndex + 1;
         }
       }
+    },
+
+    GetInvoicesSucceeded: function(result){
+      if (result.GetBCTInvoicesResult === null)
+      {
+        if (wDevices.indexInvoice == (wDevices.devCheckedArray.length - 1))
+        {
+          document.body.style.cursor = 'default';
+          document.getElementById("DevicesDiv").style.display = "none";
+        }
+        wDevices.indexInvoice = wDevices.indexInvoice + 1;
+        return;
+      }
+      if (result.GetBCTInvoicesResult[0].ValidUserName == false)
+      {
+        location.reload();
+      }
+      var resultInvObject = result.GetBCTInvoicesResult;
+      console.log(resultInvObject);
+
+      wDevices.totalInvoices = wDevices.totalInvoices + resultInvObject.length;
+      document.getElementById("totalInvoices").innerHTML = wDevices.totalInvoices;
+      wDevices.PlotInvoices(resultInvObject);
+
       if (wDevices.indexInvoice == (wDevices.devCheckedArray.length - 1))
       {
         document.body.style.cursor = 'default';
@@ -1101,6 +1138,75 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         }
       }
   },
+
+    PlotInvoices: function(resultInvObject){
+        if (resultInvObject != "") {
+          wDevices.plotInvoiceIndex = 0;
+          console.log(resultInvObject);
+          //resultInvObject.forEach(invPlotPoints);
+
+          while (wDevices.plotInvoiceIndex < resultInvObject.length)
+          {
+            var long = resultInvObject[wDevices.plotInvoiceIndex].Longitude;
+            var lat = resultInvObject[wDevices.plotInvoiceIndex].Latitude;
+
+            var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
+
+            //var BCTInvText = new TextSymbol(wDevices.plotInvoiceIndex + 1);
+            //BCTInvText.setHaloColor(new Color([0, 0, 0]));
+            //BCTInvText.setHaloSize(2);
+            //BCTInvText.setOffset(-14, -16);
+            //var font  = new Font();
+            //font.setSize("16pt");
+            //font.setWeight(Font.WEIGHT_BOLD);
+            //BCTInvText.setFont(font);
+            //BCTInvText.setColor(new Color([255, 255, 255]));
+
+            wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
+
+            var str = resultInvObject[wDevices.plotInvoiceIndex].GPSTimeStamp;
+            var TimeStamp = str.substring(6, 16);
+            var d = new Date(TimeStamp * 1000);
+            var format = 'M/d/yy hh:mm:ss tt';
+            var GTimeStamp = wijmo.Globalize.format(d, format);
+
+            var invGraphic = new Graphic(wDevices.pt, sms);
+            var attributes = {
+              "CompanyName": resultInvObject[wDevices.plotInvoiceIndex].CompanyName,
+              "GPSTimeStamp": GTimeStamp,
+              "InvoiceNo": resultInvObject[wDevices.plotInvoiceIndex].InvoiceNo,
+              "Latitude": resultInvObject[wDevices.plotInvoiceIndex].Latitude,
+              "Longitude": resultInvObject[wDevices.plotInvoiceIndex].Longitude,
+              "Accuracy": resultInvObject[wDevices.plotInvoiceIndex].Accuracy,
+              "Bearing": resultInvObject[wDevices.plotInvoiceIndex].Bearing,
+              "Speed": resultInvObject[wDevices.plotInvoiceIndex].Speed,
+              "DeviceDescription": resultInvObject[wDevices.plotInvoiceIndex].DeviceDescription,
+              "DeviceID": resultInvObject[wDevices.plotInvoiceIndex].DeviceID
+            };
+            invGraphic.setAttributes(attributes);
+            var template = new InfoTemplate();
+            var content = "<b>Device ID</b>: ${DeviceID}" +
+                "<br><b>GPS Time Stamp</b>: ${GPSTimeStamp}" +
+                "<br/><b>Longitude</b>: ${Longitude}" +
+                "<br/><b>Latitude</b>: ${Latitude}" +
+                "<br/><b>Accuracy</b>: ${Accuracy}" +
+                "<br/><b>Bearing</b>: ${Bearing}" +
+                "<br/><b>Speed</b>: ${Speed}" +
+                "<hr/><b>Company Name</b>: ${CompanyName}" +
+                "<br/><b>Invoice Number</b>: ${InvoiceNo}";
+            template.setTitle("<b>${DeviceDescription}</b>");
+            template.setContent(content);
+            invGraphic.infoTemplate = template;
+
+            invoicesGraphicsLayer.add(invGraphic);
+
+            //var BCTInvGraphic = new Graphic(wDevices.pt, BCTInvText);
+            //invoicesGraphicsLayer.add(BCTInvGraphic);
+
+            wDevices.plotInvoiceIndex = wDevices.plotInvoiceIndex + 1;
+          }
+        }
+      },
 
     _PlotPointsBCT: function(resultObject, colorNumber, rainbow){
       var index = 0;
@@ -1147,7 +1253,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               sms.setStyle(SimpleMarkerSymbol.STYLE_PATH);
               sms.setPath("M150 0 L75 200 L225 200 Z");
               sms.setColor(new Color([255, 0, 0]));
-              sms.setSize(60);
+              sms.setSize(45);
 
               var stopMin = Math.floor((timedifference/60) % 60);
               var stopHours = Math.floor(stopMin/60);
