@@ -29,8 +29,9 @@
    margin-top: 0px;
  }
 .settings-widget #search {
-  margin-left: 222px;
-  margin-top: -18px;
+  margin-left: 120px;
+  margin-top: 18px;
+  margin-bottom: -46px;
 }
 .settings-widget #deviceSettingsDiv {
   display: none;
@@ -72,4 +73,10 @@
   padding: 7px;
   padding-top: 0px;
   margin-top: 20px;
+}
+.settings-widget #devSetSelect {
+  margin-left: 0px;
+  margin-top: -26px;
+  float: left;
+  width: 100px;
 }

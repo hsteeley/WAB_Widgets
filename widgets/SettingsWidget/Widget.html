@@ -321,10 +321,11 @@
   <h4>View Device Settings</h4>
   <img src="./widgets/SettingsWidget/images/MagnifyingGlass.png" alt="Search" style="width:30px;height:30px;" data-dojo-attach-point="search" id="search">
 
-  <div id="devSettings" class="devChecks">
-    <select id="devSetSelect">
+  <!--<div id="devSettings">-->
+    <p>Select Device</p><br><br>
+    <select id="devSetSelect" onchange="settingsWidget.clearDevSettings()">
     </select>
-  </div>
+  <!--</div>-->
 
   <div id="deviceSettingsDiv">
     <h6>Device Information</h6>
