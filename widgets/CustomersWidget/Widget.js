@@ -956,6 +956,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       }
       wCustomers.inputStartDate.dispose();
       wCustomers.inputEndDate.dispose();
+      document.getElementById("noGeoCustDiv").style.display = "none";
     }
 
   });

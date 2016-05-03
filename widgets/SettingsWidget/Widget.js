@@ -20,8 +20,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
   return declare([BaseWidget], {
 
     baseClass: 'settings-widget',
-    //settingsWidget: null,
-    //reloadTime: null,
     map1: null,
     devSettingsShown: false,
     settingsWidget: null,
@@ -43,7 +41,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
     _bindEvents: function(){
       this.own(on(this.SaveChanges, 'click', lang.hitch(this.SaveSettings)));
       this.own(on(this.SaveChanges, 'click', lang.hitch(this.refreshTimer)));
-      this.own(on(this.search, 'click', lang.hitch(this.showDeviceSettings)));
       this.own(on(this.ViewExtentCheck, 'click', lang.hitch(this.showNewExtent)));
     },
 
@@ -65,31 +62,12 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       }
     },
 
-    showDeviceSettings: function(){
-      if (settingsWidget.devSettingsShown == false)
-      {
-        document.getElementById('deviceSettingsDiv').style.display = "block";
-        settingsWidget.devSettingsShown = true;
-        settingsWidget.loadDevSettings();
-      }
-      else if (settingsWidget.devSettingsShown == true)
-      {
-        document.getElementById('deviceSettingsDiv').style.display = "none";
-        settingsWidget.devSettingsShown = false;
-      }
-    },
-
-    clearDevSettings: function(){
-      document.getElementById('theDeviceSettings').innerHTML = "";
-      settingsWidget.hideDevSettings();
-    },
-
     loadDevSettings: function(){
       document.getElementById('theDeviceSettings').innerHTML = "";
 
-      document.getElementById("devSetSelect").onChange = document.getElementById('theDeviceSettings').innerHTML = "";
+      document.getElementById('deviceSettingsDiv').style.display = "block";
+
       var RMID = loginWidget.loginInfo.RMID;
-      //var inputs = query(".list_itemSet");
       var devIndex = 0;
       var count = 0;
       var index = 0;
@@ -107,8 +85,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         index = index + 1;
         count = count + 1;
       }
-
-
 
       $.ajax({
         type: "GET",
@@ -199,11 +175,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       function ServiceFailed(result) {
         console.log('Service call failed: ' + result.status + '  ' + result.statusText);
       }
-    },
-
-    hideDevSettings: function(){
-      document.getElementById('deviceSettingsDiv').style.display = "none";
-      settingsWidget.devSettingsShown = false;
     },
 
     SaveSettings: function() {
@@ -326,7 +297,8 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
     },
 
     onClose: function(){
-       document.getElementById("changesSaved").style.display = "none";
+      document.getElementById("changesSaved").style.display = "none";
+      document.getElementById('deviceSettingsDiv').style.display = "none";
      },
 
     onOpen: function(){

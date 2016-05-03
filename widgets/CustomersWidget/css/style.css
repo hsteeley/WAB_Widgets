@@ -80,6 +80,11 @@
     text-align: center;
     margin-top: 150px;
 }
+.customers-widget #noGeoCustDiv {
+    margin-left: 0px;
+    margin-top: 0px;
+    display: none;
+}
 input[type=range] {
     /*removes default webkit styles*/
     -webkit-appearance: none;
