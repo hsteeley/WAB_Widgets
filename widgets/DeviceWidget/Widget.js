@@ -388,6 +388,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       if (document.getElementById("toggleDeviceLayer").checked == true)
       {
         deviceGraphicsLayer.show();
+        invoicesGraphicsLayer.show();
         if (wDevices.namesLayerOn == true)
         {
           devTextGraphicsLayer.show();
@@ -398,6 +399,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       {
         deviceGraphicsLayer.hide();
         devTextGraphicsLayer.hide();
+        invoicesGraphicsLayer.hide();
         document.getElementById("toggleDevTextLayer").checked = false;
       }
     },
