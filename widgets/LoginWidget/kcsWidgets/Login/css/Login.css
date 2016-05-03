@@ -22,7 +22,7 @@
     position: relative;
 }
 .loginForm #versionNumber {
-    text-align: right;
+    margin-left: 280px;
 }
 .form-module {
     position: relative;
@@ -99,7 +99,8 @@
 }
 .form-module .form-bottom {
     position: absolute;
-    bottom: 0;
+    bottom: 4px;
+    left: 4px;
     font-size: 10px;
     font-style: italic;
 }

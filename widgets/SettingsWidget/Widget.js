@@ -45,6 +45,7 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       this.own(on(this.SaveChanges, 'click', lang.hitch(this.refreshTimer)));
       this.own(on(this.search, 'click', lang.hitch(this.showDeviceSettings)));
       this.own(on(this.ViewExtentCheck, 'click', lang.hitch(this.showNewExtent)));
+      this.loadDevices();
     },
 
     showNewExtent: function(){
@@ -83,9 +84,12 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       document.getElementById('theDeviceSettings').innerHTML = "";
       var RMID = loginWidget.loginInfo.RMID;
       var inputs = query(".list_itemSet");
-      var DevID = null;
       var devIndex = 0;
       var count = 0;
+
+      var r = document.getElementById("devSetSelect");
+      var DevID = r.options[r.selectedIndex].value;
+
       arrayUtils.forEach(inputs, function(input) {
         if (input.checked)
         {
@@ -107,6 +111,7 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       });
 
       function GetDevSettingsSucceeded(result){
+        console.log(result);
         var str = settingsWidget.devicesArraySet[devIndex].LastDownload;
         var TimeStamp = str.substring(6, 16);
         var d = new Date(TimeStamp * 1000);
@@ -176,37 +181,43 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         settingsWidget.devicesArraySet.forEach(createCheckboxSet);
 
         function createCheckboxSet(){
-          var devID = settingsWidget.devicesArraySet[index].DeviceID;
-          var devDesc = settingsWidget.devicesArraySet[index].DeviceDescription;
-
-          var label = document.createElement("div");
-          label.id = "newRadio" + index;
-          var description = document.createTextNode(devDesc);
-          var Radio = document.createElement("input");
-
-          Radio.type = "radio";
-          Radio.name = "radioB";
-          Radio.value = devID;
-          Radio.id = "CB" + index;
-          if (index == 0)
-          {
-            Radio.checked = true;
-          }
-          else if (index > 0)
-          {
-            Radio.checked = false;
-          }
-          Radio.className = "list_itemSet";
-
-          label.appendChild(Radio);
-          label.appendChild(description);
-
-          var devContainer = document.getElementById('devSettings');
-          devContainer.appendChild(label);
-
-          document.getElementById(label.id).onclick = settingsWidget.hideDevSettings;
-
+          var option = document.createElement("option");
+          option.text = settingsWidget.devicesArraySet[index].DeviceDescription;
+          option.value = settingsWidget.devicesArraySet[index].DeviceID;
+          document.getElementById("devSetSelect").appendChild(option);
           index = index + 1;
+
+          //var devID = settingsWidget.devicesArraySet[index].DeviceID;
+          //var devDesc = settingsWidget.devicesArraySet[index].DeviceDescription;
+          //
+          //var label = document.createElement("div");
+          //label.id = "newRadio" + index;
+          //var description = document.createTextNode(devDesc);
+          //var Radio = document.createElement("input");
+          //
+          //Radio.type = "radio";
+          //Radio.name = "radioB";
+          //Radio.value = devID;
+          //Radio.id = "CB" + index;
+          //if (index == 0)
+          //{
+          //  Radio.checked = true;
+          //}
+          //else if (index > 0)
+          //{
+          //  Radio.checked = false;
+          //}
+          //Radio.className = "list_itemSet";
+          //
+          //label.appendChild(Radio);
+          //label.appendChild(description);
+          //
+          //var devContainer = document.getElementById('devSettings');
+          //devContainer.appendChild(label);
+          //
+          //document.getElementById(label.id).onclick = settingsWidget.hideDevSettings;
+          //
+          //index = index + 1;
         }
       }
       function ServiceFailed(result) {
@@ -343,7 +354,6 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
      },
 
     onOpen: function(){
-      this.loadDevices();
       this.loadCookies();
     }
   });

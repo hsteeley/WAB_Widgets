@@ -236,8 +236,8 @@
 }
 .device-widget #totalInvoicesText {
   margin-left: 126px;
-  margin-top: -8px;
-  margin-bottom: 0px;
+  margin-top: -4px;
+  margin-bottom: -3px;
   font-weight: bold;
 }
 .device-widget #pickDateDivInv {

@@ -381,6 +381,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       var o = document.getElementById('devOpacity_control').value;
       deviceGraphicsLayer.setOpacity(o / 100);
       devTextGraphicsLayer.setOpacity(o / 100);
+      invoicesGraphicsLayer.setOpacity(o / 100);
     },
 
     toggleDevLayer: function(){
@@ -1396,6 +1397,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     onClose: function(){
       wDevices.inputStartDate.dispose();
       wDevices.inputEndDate.dispose();
+      wDevices.inputStartDateInv.dispose();
+      wDevices.inputEndDateInv.dispose();
     },
 
     startup: function() {
