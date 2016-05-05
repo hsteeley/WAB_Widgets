@@ -11,7 +11,7 @@
     <br><hr>
 
     <input type="radio" name="CQSelected" id="SelectCustomer">  Select Customer</input>
-    <select id="Customers" style="width: 175px">
+    <select id="Customers" style="width: 167px">
     </select>
 
     <br><hr>
@@ -73,13 +73,15 @@
 
   <div id="CustIncluded">
     <h5>Customers To Include</h5>
-    <input type="radio" name="CustIncluded" id="Active" checked="checked">Active</input>
-    <input type="radio" name="CustIncluded" id="Inactive">Inactive</input>
-    <input type="radio" name="CustIncluded" id="All">All</input>
+    <input type="radio" name="CustIncluded" id="Active" checked="checked" data-dojo-attach-point="ActiveCust">Active</input>
+    <input type="radio" name="CustIncluded" id="Inactive" data-dojo-attach-point="InactiveCust">Inactive</input>
+    <input type="radio" name="CustIncluded" id="All" data-dojo-attach-point="AllCust">All</input>
   </div>
 
   <div id="noGeoCustDiv">
-    <h3>Customers with no Latitude or Longitude:</h3><br>
+    <h5>Customers with no Latitude or Longitude:</h5>
+    <div id="noGeoList">
+    </div>
   </div>
 
 </div>

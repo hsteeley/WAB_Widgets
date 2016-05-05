@@ -40,7 +40,7 @@
 }
 .customers-widget #EditButton {
   float: right;
-  margin-right: 13px;
+  margin-right: -7px;
   margin-top: -10px;
 }
 .customers-widget #ServiceCalls {
@@ -84,6 +84,12 @@
     margin-left: 0px;
     margin-top: 0px;
     display: none;
+}
+.customers-widget #invoiceDateBegin{
+    width: 125px;
+}
+.customers-widget #invoiceDateEnd{
+    width: 125px;
 }
 input[type=range] {
     /*removes default webkit styles*/

@@ -91,12 +91,122 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       this.own(on(this.Save, 'click', lang.hitch(this.ClearEditLayer)));
       this.own(on(this.Save, 'click', lang.hitch(this, "RunCustomers", 1)));
       this.own(on(this.Save, 'click', lang.hitch(this.checkCustNamesOff)));
+      this.own(on(this.ActiveCust, 'click', lang.hitch(this.loadCustNames)));
+      this.own(on(this.InactiveCust, 'click', lang.hitch(this.loadCustNames)));
+      this.own(on(this.AllCust, 'click', lang.hitch(this.loadCustNames)));
       var handle = topic.subscribe("TimerWidget", function (RefreshWidget) {
         if (RefreshWidget == "RefreshWidget") {
           wCustomers.RunCustomers(1);
           RefreshWidget = "";
         }
       });
+    },
+
+    loadCustNames: function(){
+      document.getElementById("Customers").innerHTML = "";
+      var RMID = loginWidget.loginInfo.RMID;
+      var isRestricted;
+      if (loginWidget.loginInfo.RestrictedAccess == true)
+      {
+        isRestricted = loginWidget.loginInfo.LoginID;
+      }
+      else
+      {
+        isRestricted = 0;
+      }
+      if (document.getElementById("Active").checked == true)
+      {
+        $.ajax({
+          type: "GET",
+          dataType: "jsonp",
+          url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetCustNames",
+          data: {"RMID": RMID, "restriction": isRestricted, "username": loginWidget.loginInfo.UserName},
+          contentType: "application/json; charset=utf-8",
+          success: GetCustNamesSucceeded,
+          error: ServiceFailed
+        });
+        function GetCustNamesSucceeded(result) {
+          if (result.GetCustNamesResult[0].ValidUserName == false)
+          {
+            location.reload();
+          }
+          var resultObject = result.GetCustNamesResult;
+          var index = 0;
+          resultObject.forEach(AddComboboxData);
+          function AddComboboxData() {
+            var option = document.createElement("option");
+            option.text = resultObject[index].CompanyName;
+            option.value = resultObject[index].CustomerID;
+            document.getElementById("Customers").appendChild(option);
+            index = index + 1;
+          }
+        }
+        function ServiceFailed(result) {
+          console.log('Service call failed: ' + result.status + '  ' + result.statusText);
+        }
+      }
+      else if (document.getElementById("Inactive").checked == true)
+      {
+        $.ajax({
+          type: "GET",
+          dataType: "jsonp",
+          url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetCustNamesInactive",
+          data: {"RMID": RMID, "restriction": isRestricted, "username": loginWidget.loginInfo.UserName},
+          contentType: "application/json; charset=utf-8",
+          success: GetCustNamesInactiveSucceeded,
+          error: ServiceFailed
+        });
+        function GetCustNamesInactiveSucceeded(result) {
+          if (result.GetCustNamesInactiveResult[0].ValidUserName == false)
+          {
+            location.reload();
+          }
+          var resultObject = result.GetCustNamesInactiveResult;
+          var index = 0;
+          resultObject.forEach(AddComboboxData);
+          function AddComboboxData() {
+            var option = document.createElement("option");
+            option.text = resultObject[index].CompanyName;
+            option.value = resultObject[index].CustomerID;
+            document.getElementById("Customers").appendChild(option);
+            index = index + 1;
+          }
+        }
+        function ServiceFailed(result) {
+          console.log('Service call failed: ' + result.status + '  ' + result.statusText);
+        }
+      }
+      else if (document.getElementById("All").checked == true)
+      {
+        $.ajax({
+          type: "GET",
+          dataType: "jsonp",
+          url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetCustNamesAll",
+          data: {"RMID": RMID, "restriction": isRestricted, "username": loginWidget.loginInfo.UserName},
+          contentType: "application/json; charset=utf-8",
+          success: GetCustNamesAllSucceeded,
+          error: ServiceFailed
+        });
+        function GetCustNamesAllSucceeded(result) {
+          if (result.GetCustNamesAllResult[0].ValidUserName == false)
+          {
+            location.reload();
+          }
+          var resultObject = result.GetCustNamesAllResult;
+          var index = 0;
+          resultObject.forEach(AddComboboxData);
+          function AddComboboxData() {
+            var option = document.createElement("option");
+            option.text = resultObject[index].CompanyName;
+            option.value = resultObject[index].CustomerID;
+            document.getElementById("Customers").appendChild(option);
+            index = index + 1;
+          }
+        }
+        function ServiceFailed(result) {
+          console.log('Service call failed: ' + result.status + '  ' + result.statusText);
+        }
+      }
     },
 
     checkCustNamesOff: function(){
@@ -290,7 +400,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         success: GetCustNamesSucceeded,
         error: ServiceFailed
       });
-      console.log('Hunterswidget::GetCustNames');
       function GetCustNamesSucceeded(result) {
         if (result.GetCustNamesResult[0].ValidUserName == false)
         {
@@ -320,7 +429,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         success: GetRoutesSucceeded,
         error: ServiceFailed
       });
-      console.log('Hunterswidget::GetRoutes');
       function GetRoutesSucceeded(result) {
         if (result.GetRoutesResult[0].ValidUserName == false)
         {
@@ -350,7 +458,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         success: GetGroupsSucceeded,
         error: ServiceFailed
       });
-      console.log('Hunterswidget::GetGroups');
       function GetGroupsSucceeded(result) {
         if (result.GetGroupsResult[0].ValidUserName == false)
         {
@@ -380,7 +487,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         success: GetShipCityNamesSucceeded,
         error: ServiceFailed
       });
-      console.log('Hunterswidget::GetShipCityNames');
       function GetShipCityNamesSucceeded(result) {
         if (result.GetShipCityNamesResult[0].ValidUserName == false)
         {
@@ -410,7 +516,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         success: GetShipZipNamesSucceeded,
         error: ServiceFailed
       });
-      console.log('Hunterswidget::GetShipZipNames');
       function GetShipZipNamesSucceeded(result) {
         if (result.GetShipZipNamesResult[0].ValidUserName == false)
         {
@@ -443,6 +548,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       wCustomers.context = CustContext;
       customerGraphicsLayer.clear();
       custTextGraphicsLayer.clear();
+      var listDiv = document.getElementById("noGeoList");
+      listDiv.innerHTML = "";
       document.body.style.cursor = 'default';
       document.getElementById("CustDiv").style.display = "block";
       document.getElementById("toggleCustLayer").checked = true;
@@ -834,23 +941,28 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         var long = resultObject[index].Longitude;
         var lat = resultObject[index].Latitude;
 
-        var ROText = new TextSymbol(index + 1);
-        ROText.setHaloColor(new Color([0, 0, 0]));
-        ROText.setHaloSize(2);
-        ROText.setOffset(-14, -16);
-        var font  = new Font();
-        font.setSize("16pt");
-        font.setWeight(Font.WEIGHT_BOLD);
-        ROText.setFont(font);
-        ROText.setColor(new Color([255, 255, 255]));
+        if (long == 0 && lat == 0)
+        {
+          document.getElementById("noGeoCustDiv").style.display = "block";
+        }
+        else
+        {
+          var ROText = new TextSymbol(index + 1);
+          ROText.setHaloColor(new Color([0, 0, 0]));
+          ROText.setHaloSize(2);
+          ROText.setOffset(-14, -16);
+          var font  = new Font();
+          font.setSize("16pt");
+          font.setWeight(Font.WEIGHT_BOLD);
+          ROText.setFont(font);
+          ROText.setColor(new Color([255, 255, 255]));
 
-        wCustomers.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
-        var routeGraphic = new Graphic(wCustomers.pt, ROText);
-        custTextGraphicsLayer.add(routeGraphic);
-
+          wCustomers.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
+          var routeGraphic = new Graphic(wCustomers.pt, ROText);
+          custTextGraphicsLayer.add(routeGraphic);
+        }
         index = index + 1;
       }
-
     },
 
     _PlotPoints: function(resultObject, context){
@@ -861,56 +973,64 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         var long = resultObject[index].Longitude;
         var lat = resultObject[index].Latitude;
 
-        if (context == 1)
+        if (long == 0 && lat == 0)
         {
-          sms.setUrl("./widgets/CustomersWidget/images/Store.png");
+          document.getElementById("noGeoCustDiv").style.display = "block";
+          var listDiv = document.getElementById("noGeoList");
+          listDiv.innerHTML = listDiv.innerHTML + resultObject[index].CompanyName;
+          listDiv.appendChild(document.createElement('br'));
         }
-        else if (context == 2)
-        {
-          sms.setUrl("./widgets/CustomersWidget/images/StoreYellow.png");
+        else {
+          if (context == 1)
+          {
+            sms.setUrl("./widgets/CustomersWidget/images/Store.png");
+          }
+          else if (context == 2)
+          {
+            sms.setUrl("./widgets/CustomersWidget/images/StoreYellow.png");
+          }
+
+          var CustText = new TextSymbol(resultObject[index].CompanyName);
+          CustText.setHaloColor(new Color([0, 0, 0]));
+          CustText.setHaloSize(2);
+          CustText.setOffset(16, 6);
+          var font  = new Font();
+          font.setSize("14pt");
+          font.setWeight(Font.WEIGHT_BOLD);
+          CustText.setColor(new Color([255, 255, 0]));
+          CustText.setFont(font);
+          CustText.setAngle(345);
+          CustText.setHorizontalAlignment("left");
+
+          wCustomers.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
+          var textGraphic = new Graphic(wCustomers.pt, CustText);
+          var graphic = new Graphic(wCustomers.pt, sms);
+          var attributes = {
+            "CompanyName": resultObject[index].CompanyName,
+            "ShipAddress1": resultObject[index].ShipAddress1,
+            "ShipCity": resultObject[index].ShipCity,
+            "ShipState": resultObject[index].ShipState,
+            "ShipZip": resultObject[index].ShipZip,
+            "WorkNo": resultObject[index].WorkNo,
+            "Notes": resultObject[index].Notes,
+            "CustomerID": resultObject[index].CustomerID
+          };
+          graphic.setAttributes(attributes);
+          var template = new InfoTemplate();
+          var content = "<b>Ship Address</b>: ${ShipAddress1}" +
+              "<br/><b>Ship City</b>: ${ShipCity}" +
+              "<br/><b>Ship State</b>: ${ShipState}" +
+              "<br/><b>Ship Zip</b>: ${ShipZip}" +
+              "<br/><b>Work Number</b>: ${WorkNo}" +
+              "<br/><b>Notes</b>: ${Notes}" +
+              "<br/><b>Customer ID</b>: ${CustomerID}";
+          template.setTitle("<b>${CompanyName}</b>");
+          template.setContent(content);
+          graphic.infoTemplate = template;
+
+          customerGraphicsLayer.add(graphic);
+          custTextGraphicsLayer.add(textGraphic);
         }
-
-        var CustText = new TextSymbol(resultObject[index].CompanyName);
-        CustText.setHaloColor(new Color([0, 0, 0]));
-        CustText.setHaloSize(2);
-        CustText.setOffset(16, 6);
-        var font  = new Font();
-        font.setSize("14pt");
-        font.setWeight(Font.WEIGHT_BOLD);
-        CustText.setColor(new Color([255, 255, 0]));
-        CustText.setFont(font);
-        CustText.setAngle(345);
-        CustText.setHorizontalAlignment("left");
-
-        wCustomers.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
-        var textGraphic = new Graphic(wCustomers.pt, CustText);
-        var graphic = new Graphic(wCustomers.pt, sms);
-        var attributes = {
-          "CompanyName": resultObject[index].CompanyName,
-          "ShipAddress1": resultObject[index].ShipAddress1,
-          "ShipCity": resultObject[index].ShipCity,
-          "ShipState": resultObject[index].ShipState,
-          "ShipZip": resultObject[index].ShipZip,
-          "WorkNo": resultObject[index].WorkNo,
-          "Notes": resultObject[index].Notes,
-          "CustomerID": resultObject[index].CustomerID
-        };
-        graphic.setAttributes(attributes);
-        var template = new InfoTemplate();
-        var content = "<b>Ship Address</b>: ${ShipAddress1}" +
-            "<br/><b>Ship City</b>: ${ShipCity}" +
-            "<br/><b>Ship State</b>: ${ShipState}" +
-            "<br/><b>Ship Zip</b>: ${ShipZip}" +
-            "<br/><b>Work Number</b>: ${WorkNo}" +
-            "<br/><b>Notes</b>: ${Notes}" +
-            "<br/><b>Customer ID</b>: ${CustomerID}";
-        template.setTitle("<b>${CompanyName}</b>");
-        template.setContent(content);
-        graphic.infoTemplate = template;
-
-        customerGraphicsLayer.add(graphic);
-        custTextGraphicsLayer.add(textGraphic);
-
         index = index + 1;
       }
       if (document.getElementById("showAndZoomCust").checked == true)
@@ -957,6 +1077,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       wCustomers.inputStartDate.dispose();
       wCustomers.inputEndDate.dispose();
       document.getElementById("noGeoCustDiv").style.display = "none";
+      document.getElementById("Active").checked = true;
     }
 
   });

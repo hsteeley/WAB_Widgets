@@ -470,7 +470,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           var checkbox = document.createElement("input");
 
           checkbox.type = "checkbox";
-          checkbox.name = devDesc;
+          checkbox.name = "  " + devDesc;
           checkbox.value = devID;
           checkbox.id = "CB" + index;
           checkbox.checked = true;
@@ -1000,7 +1000,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           font.setSize("16pt");
           font.setWeight(Font.WEIGHT_BOLD);
           BCTInvText.setFont(font);
-          BCTInvText.setColor(new Color([255, 255, 255]));
+          BCTInvText.setColor(new Color([0, 255, 0]));
 
           wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
 
@@ -1220,7 +1220,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               font.setSize("12pt");
               font.setWeight(Font.WEIGHT_BOLD);
               StopText.setFont(font);
-              StopText.setColor(new Color([255, 0, 0]));
+              StopText.setColor(new Color([255, 255, 255]));
             }
             else
             {
@@ -1257,7 +1257,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             font.setSize("14pt");
             font.setWeight(Font.WEIGHT_BOLD);
             SOText.setFont(font);
-            SOText.setColor(new Color([0, 255, 0]));
+            SOText.setColor(new Color([255, 0, 0]));
           }
         }
         wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
