@@ -171,6 +171,7 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
           document.getElementById("devSetSelect").appendChild(option);
           index = index + 1;
         }
+        settingsWidget.loadDevSettings();
       }
       function ServiceFailed(result) {
         console.log('Service call failed: ' + result.status + '  ' + result.statusText);
