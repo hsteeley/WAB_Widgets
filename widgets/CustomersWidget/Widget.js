@@ -122,28 +122,13 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetCustNames",
           data: {"RMID": RMID, "restriction": isRestricted, "username": loginWidget.loginInfo.UserName},
           contentType: "application/json; charset=utf-8",
-          success: GetCustNamesSucceeded,
-          error: ServiceFailed
+          success: wCustomers.GetCustNamesSucceeded,
+          error: wCustomers.ServiceFailed
         });
-        function GetCustNamesSucceeded(result) {
-          if (result.GetCustNamesResult[0].ValidUserName == false)
-          {
-            location.reload();
-          }
-          var resultObject = result.GetCustNamesResult;
-          var index = 0;
-          resultObject.forEach(AddComboboxData);
-          function AddComboboxData() {
-            var option = document.createElement("option");
-            option.text = resultObject[index].CompanyName;
-            option.value = resultObject[index].CustomerID;
-            document.getElementById("Customers").appendChild(option);
-            index = index + 1;
-          }
-        }
-        function ServiceFailed(result) {
-          console.log('Service call failed: ' + result.status + '  ' + result.statusText);
-        }
+
+        //function ServiceFailed(result) {
+        //  console.log('Service call failed: ' + result.status + '  ' + result.statusText);
+        //}
       }
       else if (document.getElementById("Inactive").checked == true)
       {
@@ -153,28 +138,13 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetCustNamesInactive",
           data: {"RMID": RMID, "restriction": isRestricted, "username": loginWidget.loginInfo.UserName},
           contentType: "application/json; charset=utf-8",
-          success: GetCustNamesInactiveSucceeded,
-          error: ServiceFailed
+          success: wCustomers.GetCustNamesInactiveSucceeded,
+          error: wCustomers.ServiceFailed
         });
-        function GetCustNamesInactiveSucceeded(result) {
-          if (result.GetCustNamesInactiveResult[0].ValidUserName == false)
-          {
-            location.reload();
-          }
-          var resultObject = result.GetCustNamesInactiveResult;
-          var index = 0;
-          resultObject.forEach(AddComboboxData);
-          function AddComboboxData() {
-            var option = document.createElement("option");
-            option.text = resultObject[index].CompanyName;
-            option.value = resultObject[index].CustomerID;
-            document.getElementById("Customers").appendChild(option);
-            index = index + 1;
-          }
-        }
-        function ServiceFailed(result) {
-          console.log('Service call failed: ' + result.status + '  ' + result.statusText);
-        }
+
+        //function ServiceFailed(result) {
+        //  console.log('Service call failed: ' + result.status + '  ' + result.statusText);
+        //}
       }
       else if (document.getElementById("All").checked == true)
       {
@@ -184,30 +154,66 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetCustNamesAll",
           data: {"RMID": RMID, "restriction": isRestricted, "username": loginWidget.loginInfo.UserName},
           contentType: "application/json; charset=utf-8",
-          success: GetCustNamesAllSucceeded,
-          error: ServiceFailed
+          success: wCustomers.GetCustNamesAllSucceeded,
+          error: wCustomers.ServiceFailed
         });
-        function GetCustNamesAllSucceeded(result) {
-          if (result.GetCustNamesAllResult[0].ValidUserName == false)
-          {
-            location.reload();
-          }
-          var resultObject = result.GetCustNamesAllResult;
-          var index = 0;
-          resultObject.forEach(AddComboboxData);
-          function AddComboboxData() {
-            var option = document.createElement("option");
-            option.text = resultObject[index].CompanyName;
-            option.value = resultObject[index].CustomerID;
-            document.getElementById("Customers").appendChild(option);
-            index = index + 1;
-          }
-        }
-        function ServiceFailed(result) {
-          console.log('Service call failed: ' + result.status + '  ' + result.statusText);
-        }
+
+        //function ServiceFailed(result) {
+        //  console.log('Service call failed: ' + result.status + '  ' + result.statusText);
+        //}
       }
     },
+
+    GetCustNamesSucceeded: function(result) {
+    if (result.GetCustNamesResult[0].ValidUserName == false)
+    {
+      location.reload();
+    }
+    var resultObject = result.GetCustNamesResult;
+    var index = 0;
+    resultObject.forEach(AddComboboxData);
+    function AddComboboxData() {
+      var option = document.createElement("option");
+      option.text = resultObject[index].CompanyName;
+      option.value = resultObject[index].CustomerID;
+      document.getElementById("Customers").appendChild(option);
+      index = index + 1;
+    }
+  },
+
+    GetCustNamesInactiveSucceeded: function(result) {
+    if (result.GetCustNamesInactiveResult[0].ValidUserName == false)
+    {
+      location.reload();
+    }
+    var resultObject = result.GetCustNamesInactiveResult;
+    var index = 0;
+    resultObject.forEach(AddComboboxData);
+    function AddComboboxData() {
+      var option = document.createElement("option");
+      option.text = resultObject[index].CompanyName;
+      option.value = resultObject[index].CustomerID;
+      document.getElementById("Customers").appendChild(option);
+      index = index + 1;
+    }
+    },
+
+    GetCustNamesAllSucceeded: function(result) {
+    if (result.GetCustNamesAllResult[0].ValidUserName == false)
+    {
+      location.reload();
+    }
+    var resultObject = result.GetCustNamesAllResult;
+    var index = 0;
+    resultObject.forEach(AddComboboxData);
+    function AddComboboxData() {
+      var option = document.createElement("option");
+      option.text = resultObject[index].CompanyName;
+      option.value = resultObject[index].CustomerID;
+      document.getElementById("Customers").appendChild(option);
+      index = index + 1;
+    }
+  },
 
     checkCustNamesOff: function(){
       customerGraphicsLayer.show();

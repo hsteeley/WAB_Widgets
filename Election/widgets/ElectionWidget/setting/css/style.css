@@ -1,3 +1,6 @@
 .election-widget-setting input {
   margin-left: 10px;
 }
+.election-widget-setting .subInput {
+  margin-left: 20px;
+}

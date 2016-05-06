@@ -1,5 +1,17 @@
 <div>
-  
-    <label>${nls.serviceUrl}</label>
-  <input data-dojo-attach-point="textNode">
+
+  <label>${nls.serviceUrl}</label>
+  <input data-dojo-attach-point="textNode"><br><br>
+
+  <label>${nls.pickRace}</label>
+  <select data-dojo-attach-point="races">
+      <option>Presidential Race</option>
+  </select>
+  <button data-dojo-attach-point="addRaceButton">Add Race</button><br><br>
+
+  <label>${nls.addCandidate}</label><br><br>
+  <label class = "subInput">${nls.pickCanRace}</label>
+  <input data-dojo-attach-point="candidateRace"><br><br>
+  <label class = "subInput">${nls.pickCanName}</label>
+  <input data-dojo-attach-point="candidateName"><br><br>
 </div>

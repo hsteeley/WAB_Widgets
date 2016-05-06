@@ -26,6 +26,7 @@ function(declare, BaseWidgetSetting) {
     postCreate: function(){
       //the config object is passed in
       this.setConfig(this.config);
+
     },
 
     setConfig: function(config){
