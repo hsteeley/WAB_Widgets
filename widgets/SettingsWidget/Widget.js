@@ -214,6 +214,52 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       //_saveToColorCookie(toColor);
       _saveBCSizeCookie(BCSize);
 
+      var custSize = document.getElementById("CustSize").value;
+      _saveCustSizeCookie(custSize);
+      var devSize = document.getElementById("DevSize").value;
+      _saveDevSizeCookie(devSize);
+      var invSize = document.getElementById("InvSize").value;
+      _saveInvSizeCookie(invSize);
+
+      if (cookie("custSize") != null)
+      {
+        document.getElementById('custIcon').style.width = cookie("custSize") + "px";
+        document.getElementById('custIcon').style.height = cookie("custSize") + "px";
+      }
+
+      if (cookie("devSize") != null)
+      {
+        document.getElementById('devIcon').style.width = cookie("devSize") + "px";
+        document.getElementById('devIcon').style.height = cookie("devSize") + "px";
+      }
+
+      if (cookie("invSize") != null)
+      {
+        document.getElementById('invIcon').style.width = cookie("invSize") + "px";
+        document.getElementById('invIcon').style.height = cookie("invSize") + "px";
+      }
+
+      function  _saveCustSizeCookie  (custSize) {
+        var cookieName = "custSize";
+        removeCookie(custSize);
+        cookie(cookieName, custSize, {
+          path: '/'
+        });
+      }
+      function  _saveDevSizeCookie  (devSize) {
+        var cookieName = "devSize";
+        removeCookie(devSize);
+        cookie(cookieName, devSize, {
+          path: '/'
+        });
+      }
+      function  _saveInvSizeCookie  (invSize) {
+        var cookieName = "invSize";
+        removeCookie(invSize);
+        cookie(cookieName, invSize, {
+          path: '/'
+        });
+      }
       function  _saveReloadTimeCookie  (ReloadTime) {
         var cookieName = "ReloadTime";
         removeCookie(ReloadTime);
@@ -294,6 +340,24 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       if (cookie("BCSize") != null)
       {
         document.getElementById('BCTSize').value = cookie("BCSize");
+      }
+      if (cookie("custSize") != null)
+      {
+        document.getElementById('CustSize').value = cookie("custSize");
+        document.getElementById('custIcon').style.width = cookie("custSize") + "px";
+        document.getElementById('custIcon').style.height = cookie("custSize") + "px";
+      }
+      if (cookie("devSize") != null)
+      {
+        document.getElementById('DevSize').value = cookie("devSize");
+        document.getElementById('devIcon').style.width = cookie("devSize") + "px";
+        document.getElementById('devIcon').style.height = cookie("devSize") + "px";
+      }
+      if (cookie("invSize") != null)
+      {
+        document.getElementById('InvSize').value = cookie("invSize");
+        document.getElementById('invIcon').style.width = cookie("invSize") + "px";
+        document.getElementById('invIcon').style.height = cookie("invSize") + "px";
       }
     },
 

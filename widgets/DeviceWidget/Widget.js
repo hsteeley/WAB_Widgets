@@ -72,6 +72,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     indexInvoice: null,
     plotInvoiceIndex: null,
     totalInvoices: null,
+    devIconSize: null,
+    invIconSize: null,
 
     postCreate: function() {
       this.inherited(arguments);
@@ -107,7 +109,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     },
 
     _bindEvents: function(){
-      this.loadDevCookies();
       this.own(on(this.ShowMe, 'click', lang.hitch(this.RunDevices)));
       this.own(on(this.BCTRadio, 'click', lang.hitch(this.showBCT)));
       this.own(on(this.LKLRadio, 'click', lang.hitch(this.hideBCT)));
@@ -194,6 +195,22 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       else
       {
         wDevices.graphicSize = 14;
+      }
+      if (cookie("devSize") != null)
+      {
+        wDevices.devIconSize = cookie("devSize");
+      }
+      else
+      {
+        wDevices.devIconSize = 40;
+      }
+      if (cookie("invSize") != null)
+      {
+        wDevices.invIconSize = cookie("invSize");
+      }
+      else
+      {
+        wDevices.invIconSize = 40;
       }
     },
 
@@ -774,16 +791,16 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         {
           if (newDateObj > TimeStamp)
           {
-            var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/RedTruckHalo.png", 40, 40);
+            var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/RedTruckHalo.png", wDevices.devIconSize, wDevices.devIconSize);
           }
           else if (newDateObj <= TimeStamp)
           {
-            var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", 40, 40);
+            var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", wDevices.devIconSize, wDevices.devIconSize);
           }
         }
         else
         {
-          var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", 40, 40);
+          var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", wDevices.devIconSize, wDevices.devIconSize);
         }
 
         var LKLText = new TextSymbol(resultObject[index].DeviceDescription);
@@ -866,7 +883,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         var long = resultObject[index].Longitude;
         var lat = resultObject[index].Latitude;
 
-        var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
+        var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", wDevices.invIconSize, wDevices.invIconSize);
 
         var LICText = new TextSymbol(resultObject[index].DeviceDescription);
         LICText.setHaloColor(new Color([0, 0, 0]));
@@ -990,7 +1007,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           var long = resultInvObject[wDevices.plotInvoiceIndex].Longitude;
           var lat = resultInvObject[wDevices.plotInvoiceIndex].Latitude;
 
-          var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
+          var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", wDevices.invIconSize, wDevices.invIconSize);
 
           var BCTInvText = new TextSymbol(wDevices.plotInvoiceIndex + 1);
           BCTInvText.setHaloColor(new Color([0, 0, 0]));
@@ -1099,7 +1116,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             var long = resultInvObject[wDevices.plotInvoiceIndex].Longitude;
             var lat = resultInvObject[wDevices.plotInvoiceIndex].Latitude;
 
-            var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", 40, 40);
+            var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/CashYellowHalo.png", wDevices.invIconSize, wDevices.invIconSize);
 
             wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
 
@@ -1158,7 +1175,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         var SOText;
         if (index == 0)
         {
-          var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", 40, 40);
+          var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", wDevices.devIconSize, wDevices.devIconSize);
           var BCTText = new TextSymbol(resultObject[index].DeviceDescription);
           BCTText.setHaloColor(new Color([0, 0, 0]));
           BCTText.setHaloSize(2);
@@ -1394,6 +1411,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         });
       }
       wDevices._getVersion();
+      wDevices.loadDevCookies();
     },
 
     onClose: function(){

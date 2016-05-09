@@ -5,6 +5,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'dojo/_base/lang',
       'dojo/topic',
       'dojo/_base/event',
+      'dojo/cookie',
       'esri/map',
       'esri/dijit/BasemapGallery',
       'esri/arcgis/utils',
@@ -31,7 +32,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       './widgets/DeviceWidget/Resources/wijmo/wijmo.input.min.js',
       'xstyle/css!./Resources/wijmo/wijmo.min.css'
       ],
-function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event, Map, BasemapGallery, arcgisUtils, Search, PictureMarkerSymbol, Graphic, Color, Point,
+function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event, cookie, Map, BasemapGallery, arcgisUtils, Search, PictureMarkerSymbol, Graphic, Color, Point,
          SpatialReference, GraphicsLayer, webMercatorUtils, OpacitySlider, InfoTemplate, Edit, Extent, graphicsUtils, TextSymbol, Font) {
   return declare([BaseWidget], {
 
@@ -50,6 +51,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
     isClicked: false,
     custHidden: false,
     context: null,
+    custIconSize: null,
 
     postCreate: function () {
       this.inherited(arguments);
@@ -57,6 +59,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       wCustomers = this;
       wCustomers.map1 = this.map;
       this._addGraphicsLayers();
+      this.loadCookies();
       this._bindEvents();
     },
 
@@ -100,6 +103,17 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           RefreshWidget = "";
         }
       });
+    },
+
+    loadCookies: function(){
+      if (cookie("custSize") != null)
+      {
+        wCustomers.custIconSize = cookie("custSize");
+      }
+      else
+      {
+        wCustomers.custIconSize = 40;
+      }
     },
 
     loadCustNames: function(){
@@ -275,7 +289,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
         }
       });
       editToolbar.on('graphic-move-stop', function(evt) {
-        var smsup = new PictureMarkerSymbol("./widgets/CustomersWidget/images/StoreGreen.png", 40, 40);
+        var smsup = new PictureMarkerSymbol("./widgets/CustomersWidget/images/StoreGreen.png", wCustomers.custIconSize, wCustomers.custIconSize);
         evt.graphic.setSymbol(smsup);
         var newLong = evt.graphic.geometry.x;
         var newLat = evt.graphic.geometry.y;
@@ -938,8 +952,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
     document.getElementById("CustDiv").style.display = "none";
   },
 
-    var: sms = new PictureMarkerSymbol("./widgets/CustomersWidget/images/Store.png", 40, 40),
-
     RouteOrder: function(resultObject){
       var index = 0;
       resultObject.forEach(OrderRoutes);
@@ -973,6 +985,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
 
     _PlotPoints: function(resultObject, context){
       var index = 0;
+      var sms = new PictureMarkerSymbol("./widgets/CustomersWidget/images/Store.png", wCustomers.custIconSize, wCustomers.custIconSize);
       var pt = [];
       resultObject.forEach(PlotPoints);
       function PlotPoints() {
