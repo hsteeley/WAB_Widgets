@@ -6,6 +6,9 @@ define({
 
     addCandidate: "Add Candidate",
     pickCanRace: "Candidate Race:",
-    pickCanName: "Candidate Name:"
+    pickCanName: "Candidate Name:",
+
+    selectCanColor: "Select Candidate Color"
+
   })
 });

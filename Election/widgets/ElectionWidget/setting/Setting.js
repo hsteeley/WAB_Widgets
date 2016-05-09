@@ -16,27 +16,130 @@
 
 define([
   'dojo/_base/declare',
+  'dojo/on',
+  'dojo/_base/lang',
   'jimu/BaseWidgetSetting'
 ],
-function(declare, BaseWidgetSetting) {
+function(declare, on, lang, BaseWidgetSetting) {
 
   return declare([BaseWidgetSetting], {
     baseClass: 'election-widget-setting',
 
     postCreate: function(){
       //the config object is passed in
+      console.log("Post Creating Set wdiget");
       this.setConfig(this.config);
+      this.setSquareColors();
+      this._bindEvents();
+    },
 
+    _bindEvents: function () {
+      this.own(on(this.addRaceButton, 'click', lang.hitch(this.addRaceToList)));
+    },
+
+    setSquareColors: function(){
+      this.square1.style.background = this.select1.value;
+      this.square2.style.background = this.select2.value;
+      this.square3.style.background = this.select3.value;
+      this.square4.style.background = this.select4.value;
+      this.square5.style.background = this.select5.value;
+      this.square6.style.background = this.select6.value;
+      this.square7.style.background = this.select7.value;
+      this.square8.style.background = this.select8.value;
+      this.square9.style.background = this.select9.value;
+      this.square10.style.background = this.select10.value;
+      this.square11.style.background = this.select11.value;
+      this.square12.style.background = this.select12.value;
+      this.square13.style.background = this.select13.value;
+      this.square14.style.background = this.select14.value;
+      this.square15.style.background = this.select15.value;
+      this.square16.style.background = this.select16.value;
+      this.square17.style.background = this.select17.value;
+      this.square18.style.background = this.select18.value;
+      this.square19.style.background = this.select19.value;
+      this.square20.style.background = this.select20.value;
+    },
+
+    addRaceToList: function(){
+      var raceTable = document.getElementById("racesTable");
+      var row;
+      var race;
+      var addedRowIndex = raceTable.rows.length;
+      if (raceTable.rows.length == 1)
+      {
+        row = raceTable.insertRow(1);
+
+        race = row.insertCell(0);
+
+        race.innerHTML = document.getElementById("races").value;
+      }
+      else
+      {
+        var rowIndex = 0;
+        while (rowIndex < raceTable.rows.length)
+        {
+          if (raceTable.rows[rowIndex].cells[0] != document.getElementById("races").value)
+          {
+            row = raceTable.insertRow(addedRowIndex);
+
+            race = row.insertCell(0);
+
+            race.innerHTML = document.getElementById("races").value;
+          }
+          rowIndex += 1
+        }
+      }
     },
 
     setConfig: function(config){
       this.textNode.value = config.serviceUrl;
+
+      this.select1.value = config.canCol1;
+      this.select2.value = config.canCol2;
+      this.select3.value = config.canCol3;
+      this.select4.value = config.canCol4;
+      this.select5.value = config.canCol5;
+      this.select6.value = config.canCol6;
+      this.select7.value = config.canCol7;
+      this.select8.value = config.canCol8;
+      this.select9.value = config.canCol9;
+      this.select10.value = config.canCol10;
+      this.select11.value = config.canCol11;
+      this.select12.value = config.canCol12;
+      this.select13.value = config.canCol13;
+      this.select14.value = config.canCol14;
+      this.select15.value = config.canCol15;
+      this.select16.value = config.canCol16;
+      this.select17.value = config.canCol17;
+      this.select18.value = config.canCol18;
+      this.select19.value = config.canCol19;
+      this.select20.value = config.canCol20;
     },
 
     getConfig: function(){
       //WAB will get config object through this method
       return {
-        serviceUrl: this.textNode.value
+        serviceUrl: this.textNode.value,
+        canCol1:  this.select1.value,
+        canCol2:  this.select2.value,
+        canCol3:  this.select3.value,
+        canCol4:  this.select4.value,
+        canCol5:  this.select5.value,
+        canCol6:  this.select6.value,
+        canCol7:  this.select7.value,
+        canCol8:  this.select8.value,
+        canCol9:  this.select9.value,
+        canCol10:  this.select10.value,
+        canCol11:  this.select11.value,
+        canCol12:  this.select12.value,
+        canCol13:  this.select13.value,
+        canCol14:  this.select14.value,
+        canCol15:  this.select15.value,
+        canCol16:  this.select16.value,
+        canCol17:  this.select17.value,
+        canCol18:  this.select18.value,
+        canCol19:  this.select19.value,
+        canCol20:  this.select20.value
       };
     }
   });

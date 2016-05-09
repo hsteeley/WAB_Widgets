@@ -4,3 +4,20 @@
 .election-widget-setting .subInput {
   margin-left: 20px;
 }
+.election-widget-setting table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.election-widget-setting #racesTable {
+  margin-left: 0px;
+  margin-top: 0px;
+}
+
+.election-widget-setting .square {
+  /*display: none;*/
+  float: left;
+  width: 18px;
+  height: 18px;
+  margin: 0px;
+  border: 1px solid rgba(0, 0, 0, .2);
+}
