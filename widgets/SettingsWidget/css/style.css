@@ -77,31 +77,17 @@
 }
 .settings-widget #BCTSize {
   width:50px;
+  margin-left: 10px;
 }
-/*.settings-widget #customerIcon {*/
-  /*margin-left: 0px;*/
-  /*margin-top: 0px;*/
-/*}*/
-/*.settings-widget #deviceIcon {*/
-  /*margin-left: 0px;*/
-  /*margin-top: 0px;*/
-/*}*/
-/*.settings-widget #invoiceIcon {*/
-  /*margin-left: 0px;*/
-  /*margin-top: 0px;*/
-/*}*/
 .settings-widget #CustSize {
   width:50px;
-  margin-left: 0px;
-  margin-top: 0px;
+  margin-left: 10px;
 }
 .settings-widget #DevSize {
   width:50px;
-  margin-left: 0px;
-  margin-top: 0px;
+  margin-left: 10px;
 }
 .settings-widget #InvSize {
   width:50px;
-  margin-left: 0px;
-  margin-top: 0px;
+  margin-left: 10px;
 }

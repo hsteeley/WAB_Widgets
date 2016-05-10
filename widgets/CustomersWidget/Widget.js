@@ -59,7 +59,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       wCustomers = this;
       wCustomers.map1 = this.map;
       this._addGraphicsLayers();
-      this.loadCookies();
       this._bindEvents();
     },
 
@@ -566,6 +565,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
 
     RunCustomers: function(CustContext) {
       wCustomers.context = CustContext;
+      this.loadCookies();
       customerGraphicsLayer.clear();
       custTextGraphicsLayer.clear();
       var listDiv = document.getElementById("noGeoList");
@@ -954,6 +954,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
 
     RouteOrder: function(resultObject){
       var index = 0;
+      var routeNumbSize = (wCustomers.custIconSize / 40) * 16;
       resultObject.forEach(OrderRoutes);
       function OrderRoutes(){
         var long = resultObject[index].Longitude;
@@ -970,7 +971,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           ROText.setHaloSize(2);
           ROText.setOffset(-14, -16);
           var font  = new Font();
-          font.setSize("16pt");
+          if (routeNumbSize > 16)
+          {
+            font.setSize("16pt");
+          }
+          else
+          {
+            font.setSize(routeNumbSize + "pt");
+          }
           font.setWeight(Font.WEIGHT_BOLD);
           ROText.setFont(font);
           ROText.setColor(new Color([255, 255, 255]));
@@ -987,6 +995,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
       var index = 0;
       var sms = new PictureMarkerSymbol("./widgets/CustomersWidget/images/Store.png", wCustomers.custIconSize, wCustomers.custIconSize);
       var pt = [];
+      var custNameSize = (wCustomers.custIconSize / 40) * 14;
       resultObject.forEach(PlotPoints);
       function PlotPoints() {
         var long = resultObject[index].Longitude;
@@ -1014,7 +1023,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
           CustText.setHaloSize(2);
           CustText.setOffset(16, 6);
           var font  = new Font();
-          font.setSize("14pt");
+          if (custNameSize > 14)
+          {
+            font.setSize("14pt");
+          }
+          else
+          {
+            font.setSize(custNameSize + "pt");
+          }
           font.setWeight(Font.WEIGHT_BOLD);
           CustText.setColor(new Color([255, 255, 0]));
           CustText.setFont(font);
@@ -1068,6 +1084,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang, topic, event,
 
     onOpen: function(){
       this._loadCustData();
+      this.loadCookies();
       wCustomers.theStartDate = new Date();
       var StartElement = document.getElementById("invoiceDateBegin");
       if (StartElement ) {

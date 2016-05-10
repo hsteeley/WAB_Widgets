@@ -553,6 +553,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     RunDevices: function() {
       document.body.style.cursor = 'default';
       document.getElementById("DevicesDiv").style.display = "block";
+      wDevices.loadDevCookies();
       var RMID = loginWidget.loginInfo.RMID;
       var format = 'M/d/yy ';
       wDevices.startDate = wijmo.Globalize.format(wDevices.inputStartDate.value, format);
@@ -774,6 +775,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     _PlotPointsLKL: function(resultObject){
       wDevices.hideRouteAnimation();
       var index = 0;
+      var deviceNameSize = (wDevices.devIconSize / 40) * 16;
       var pt = [];
       resultObject.forEach(PlotPoints);
       function PlotPoints() {
@@ -808,7 +810,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         LKLText.setHaloSize(2);
         LKLText.setOffset(16, 6);
         var font  = new Font();
-        font.setSize("16pt");
+        if (deviceNameSize > 16)
+        {
+          font.setSize("16pt");
+        }
+        else
+        {
+          font.setSize(deviceNameSize + "pt");
+        }
         font.setWeight(Font.WEIGHT_BOLD);
         LKLText.setFont(font);
         LKLText.setColor(new Color([255, 255, 0]));
@@ -877,6 +886,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     _PlotPointsInvoice: function(resultObject){
       wDevices.hideRouteAnimation();
       var index = 0;
+      var invNameSize = (wDevices.invIconSize / 40) * 16;
       var pt = [];
       resultObject.forEach(PlotPoints);
       function PlotPoints() {
@@ -890,7 +900,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         LICText.setHaloSize(2);
         LICText.setOffset(16, 6);
         var font  = new Font();
-        font.setSize("16pt");
+        if (invNameSize > 16)
+        {
+          font.setSize("16pt");
+        }
+        else
+        {
+          font.setSize(invNameSize + "pt");
+        }
         font.setWeight(Font.WEIGHT_BOLD);
         LICText.setFont(font);
         LICText.setColor(new Color([255, 255, 0]));
@@ -1001,6 +1018,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     PlotBreadInvoices: function(resultInvObject){
       if (resultInvObject != "") {
         wDevices.plotInvoiceIndex = 0;
+        var invNumbSize = (wDevices.invIconSize / 40) * 16;
 
         while (wDevices.plotInvoiceIndex < resultInvObject.length)
         {
@@ -1014,7 +1032,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           BCTInvText.setHaloSize(2);
           BCTInvText.setOffset(-14, -16);
           var font  = new Font();
-          font.setSize("16pt");
+          if (invNumbSize > 16)
+          {
+            font.setSize("16pt");
+          }
+          else
+          {
+            font.setSize(invNumbSize + "pt");
+          }
           font.setWeight(Font.WEIGHT_BOLD);
           BCTInvText.setFont(font);
           BCTInvText.setColor(new Color([0, 255, 0]));
@@ -1166,6 +1191,10 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       wDevices.showRouteAnimation(resultObject);
       var pt = [];
       colorNumber = 0;
+      var BCTNameSize = (wDevices.devIconSize / 40) * 16;
+      //var stoppedOverSize = (wDevices.devIconSize / 40) * 45;
+      var stopTextSize = (wDevices.devIconSize / 40) * 12;
+      var speedTextSize = (wDevices.graphicSize / 14) * 14;
 
       while (index < resultObject.length)
       {
@@ -1181,7 +1210,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           BCTText.setHaloSize(2);
           BCTText.setOffset(16, 6);
           var font  = new Font();
-          font.setSize("16pt");
+          if (BCTNameSize > 16)
+          {
+            font.setSize("16pt");
+          }
+          else
+          {
+            font.setSize(BCTNameSize + "pt");
+          }
           font.setWeight(Font.WEIGHT_BOLD);
           BCTText.setFont(font);
           BCTText.setColor(new Color([255, 255, 0]));
@@ -1207,6 +1243,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               sms.setPath("M150 0 L75 200 L225 200 Z");
               sms.setColor(new Color([255, 0, 0]));
               sms.setSize(45);
+              //console.log(stoppedOverSize);
+              //if (stoppedOverSize > 45)
+              //{
+              //  sms.setSize(45);
+              //}
+              //else
+              //{
+              //  sms.setSize(stoppedOverSize + "pt");
+              //}
 
               var stopMin = Math.floor((timedifference/60) % 60);
               var stopHours = Math.floor(stopMin/60);
@@ -1234,7 +1279,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               StopText.setHaloColor(new Color([0, 0, 0]));
               StopText.setHaloSize(1);
               var font  = new Font();
-              font.setSize("12pt");
+              if (stopTextSize > 12)
+              {
+                font.setSize("12pt");
+              }
+              else
+              {
+                font.setSize(stopTextSize + "pt");
+              }
               font.setWeight(Font.WEIGHT_BOLD);
               StopText.setFont(font);
               StopText.setColor(new Color([255, 255, 255]));
@@ -1271,7 +1323,14 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             SOText.setHaloSize(1);
             SOText.setOffset(14, 4);
             var font  = new Font();
-            font.setSize("14pt");
+            if (speedTextSize > 14)
+            {
+              font.setSize("14pt");
+            }
+            else
+            {
+              font.setSize(speedTextSize + "pt");
+            }
             font.setWeight(Font.WEIGHT_BOLD);
             SOText.setFont(font);
             SOText.setColor(new Color([255, 0, 0]));

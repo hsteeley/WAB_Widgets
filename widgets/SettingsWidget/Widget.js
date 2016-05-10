@@ -9,6 +9,8 @@ define(['dojo/_base/declare',
         'dojo/cookie',
         'jimu/BaseWidget',
         'jimu/utils',
+        'esri/Color',
+        'esri/symbols/SimpleMarkerSymbol',
         'esri/geometry/webMercatorUtils',
         'esri/map',
         'jimu/loaderplugins/jquery-loader!./widgets/DeviceWidget/Resources/libraries/jquery-2.1.0.min.js',
@@ -16,7 +18,7 @@ define(['dojo/_base/declare',
         './widgets/SettingsWidget/Resources/wijmo/wijmo.input.min.js',
         'xstyle/css!./Resources/wijmo/wijmo.min.css'
 ],
-function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseWidget, jimuUtils, webMercatorUtils, Map, $) {
+function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseWidget, jimuUtils, Color, SimpleMarkerSymbol, webMercatorUtils, Map, $) {
   return declare([BaseWidget], {
 
     baseClass: 'settings-widget',
@@ -221,6 +223,12 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       var invSize = document.getElementById("InvSize").value;
       _saveInvSizeCookie(invSize);
 
+      if (cookie("BCSize") != null)
+      {
+        document.getElementById('breadIcon').style.width = cookie("BCSize") + "px";
+        document.getElementById('breadIcon').style.height = cookie("BCSize") + "px";
+      }
+
       if (cookie("custSize") != null)
       {
         document.getElementById('custIcon').style.width = cookie("custSize") + "px";
@@ -340,6 +348,8 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
       if (cookie("BCSize") != null)
       {
         document.getElementById('BCTSize').value = cookie("BCSize");
+        document.getElementById('breadIcon').style.width = cookie("BCSize") + "px";
+        document.getElementById('breadIcon').style.height = cookie("BCSize") + "px";
       }
       if (cookie("custSize") != null)
       {
@@ -359,6 +369,8 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
         document.getElementById('invIcon').style.width = cookie("invSize") + "px";
         document.getElementById('invIcon').style.height = cookie("invSize") + "px";
       }
+
+
     },
 
     onClose: function(){
