@@ -832,10 +832,41 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         var graphic = new Graphic(wDevices.pt, sms);
 
         var str = resultObject[index].GPSTimeStamp;
-        var TimeStamp = str.substring(6, 16);
-        var d = new Date(TimeStamp * 1000);
-        var format = 'M/d/yy hh:mm:ss tt';
-        var GTimeStamp = wijmo.Globalize.format(d, format);
+        //var TimeStamp = str.substring(6, 16);
+        //var d = new Date(TimeStamp * 1000);
+        //var format = 'M/d/yy hh:mm:ss tt';
+        //var GTimeStamp = wijmo.Globalize.format(d, format);
+
+        var date = new Date(parseFloat(str.substr(6, 16)));
+
+        var month = date.getMonth();
+        var day = date.getDate();
+        var year = date.getFullYear();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+
+        if (minutes < 10)
+        {
+          var extraString = "0";
+          minutes = extraString.concat(minutes.toString());
+        }
+        if (seconds < 10)
+        {
+          var extraString = "0";
+          seconds = extraString.concat(seconds.toString());
+        }
+
+        var GTimeStamp = (
+            (month + 1) + "/" +
+            day + "/" +
+            year + " " +
+            hours + ":" +
+            minutes + ":" +
+            seconds
+        );
+        console.log(date);
+
 
         var attributes = {
           "Accuracy": resultObject[index].Accuracy,
