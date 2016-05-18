@@ -100,22 +100,37 @@ function(declare, lang, on, parser, dom, topic, arrayUtils, query, cookie, BaseW
 
       function GetDevSettingsSucceeded(result){
         var str = settingsWidget.devicesArraySet[devIndex].LastDownload;
-        var TimeStamp = str.substring(6, 16);
-        var d = new Date(TimeStamp * 1000);
-        var format = 'M/d/yy hh:mm:ss tt';
-        var lastDL = wijmo.Globalize.format(d, format);
+        str = str.substr(6, 13);
+        var timeChange = loginWidget.loginInfo.timeDifferential;
+        timeChange = ((timeChange * 60) * 60) * 1000;
+        console.log(timeChange);
+        str = str - timeChange;
+
+        var date = new Date(parseFloat(str));
+        //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+        var lastDL = date.toLocaleString('en-US');
 
         str = settingsWidget.devicesArraySet[devIndex].LastUpload;
-        TimeStamp = str.substring(6, 16);
-        d = new Date(TimeStamp * 1000);
-        format = 'M/d/yy hh:mm:ss tt';
-        var lastUp = wijmo.Globalize.format(d, format);
+        str = str.substr(6, 13);
+        var timeChange = loginWidget.loginInfo.timeDifferential;
+        timeChange = ((timeChange * 60) * 60) * 1000;
+        console.log(timeChange);
+        str = str - timeChange;
+
+        var date = new Date(parseFloat(str));
+        //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+        var lastUp = date.toLocaleString('en-US');
 
         str = settingsWidget.devicesArraySet[devIndex].LastConfigured;
-        TimeStamp = str.substring(6, 16);
-        d = new Date(TimeStamp * 1000);
-        format = 'M/d/yy hh:mm:ss tt';
-        var lastCon = wijmo.Globalize.format(d, format);
+        str = str.substr(6, 13);
+        var timeChange = loginWidget.loginInfo.timeDifferential;
+        timeChange = ((timeChange * 60) * 60) * 1000;
+        console.log(timeChange);
+        str = str - timeChange;
+
+        var date = new Date(parseFloat(str));
+        //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+        var lastCon = date.toLocaleString('en-US');
 
         var lastVers = settingsWidget.devicesArraySet[devIndex].LastVersionExecuted;
 

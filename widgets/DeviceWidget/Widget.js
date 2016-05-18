@@ -831,42 +831,18 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
         var graphic = new Graphic(wDevices.pt, sms);
 
-        var str = resultObject[index].GPSTimeStamp;
-        //var TimeStamp = str.substring(6, 16);
-        //var d = new Date(TimeStamp * 1000);
-        //var format = 'M/d/yy hh:mm:ss tt';
-        //var GTimeStamp = wijmo.Globalize.format(d, format);
+        str = resultObject[index].GPSTimeStamp;
+        str = str.substr(6, 13);
+        var timeChange = loginWidget.loginInfo.timeDifferential;
+        timeChange = ((timeChange * 60) * 60) * 1000;
+        console.log(timeChange);
+        str = str - timeChange;
 
-        var date = new Date(parseFloat(str.substr(6, 16)));
+        var date = new Date(parseFloat(str));
 
-        var month = date.getMonth();
-        var day = date.getDate();
-        var year = date.getFullYear();
-        var hours = date.getHours();
-        var minutes = date.getMinutes();
-        var seconds = date.getSeconds();
 
-        if (minutes < 10)
-        {
-          var extraString = "0";
-          minutes = extraString.concat(minutes.toString());
-        }
-        if (seconds < 10)
-        {
-          var extraString = "0";
-          seconds = extraString.concat(seconds.toString());
-        }
-
-        var GTimeStamp = (
-            (month + 1) + "/" +
-            day + "/" +
-            year + " " +
-            hours + ":" +
-            minutes + ":" +
-            seconds
-        );
-        console.log(date);
-
+        //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+        var GTimeStamp = date.toLocaleString('en-US');
 
         var attributes = {
           "Accuracy": resultObject[index].Accuracy,
@@ -953,10 +929,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         var graphic = new Graphic(wDevices.pt, sms);
 
         var str = resultObject[index].GPSTimeStamp;
-        var TimeStamp = str.substring(6, 16);
-        var d = new Date(TimeStamp * 1000);
-        var format = 'M/d/yy hh:mm:ss tt';
-        var GTimeStamp = wijmo.Globalize.format(d, format);
+        str = str.substr(6, 13);
+        var timeChange = loginWidget.loginInfo.timeDifferential;
+        timeChange = ((timeChange * 60) * 60) * 1000;
+        console.log(timeChange);
+        str = str - timeChange;
+
+        var date = new Date(parseFloat(str));
+        //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+        var GTimeStamp = date.toLocaleString('en-US');
 
         var attributes = {
           "Accuracy": resultObject[index].Accuracy,
@@ -1078,10 +1059,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
 
           var str = resultInvObject[wDevices.plotInvoiceIndex].GPSTimeStamp;
-          var TimeStamp = str.substring(6, 16);
-          var d = new Date(TimeStamp * 1000);
-          var format = 'M/d/yy hh:mm:ss tt';
-          var GTimeStamp = wijmo.Globalize.format(d, format);
+          str = str.substr(6, 13);
+          var timeChange = loginWidget.loginInfo.timeDifferential;
+          timeChange = ((timeChange * 60) * 60) * 1000;
+          console.log(timeChange);
+          str = str - timeChange;
+
+          var date = new Date(parseFloat(str));
+          //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+          var GTimeStamp = date.toLocaleString('en-US');
 
           var invGraphic = new Graphic(wDevices.pt, sms);
           var attributes = {
@@ -1177,10 +1163,16 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
 
             var str = resultInvObject[wDevices.plotInvoiceIndex].GPSTimeStamp;
-            var TimeStamp = str.substring(6, 16);
-            var d = new Date(TimeStamp * 1000);
-            var format = 'M/d/yy hh:mm:ss tt';
-            var GTimeStamp = wijmo.Globalize.format(d, format);
+
+            str = str.substr(6, 13);
+            var timeChange = loginWidget.loginInfo.timeDifferential;
+            timeChange = ((timeChange * 60) * 60) * 1000;
+            console.log(timeChange);
+            str = str - timeChange;
+
+            var date = new Date(parseFloat(str));
+            //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+            var GTimeStamp = date.toLocaleString('en-US');
 
             var invGraphic = new Graphic(wDevices.pt, sms);
             var attributes = {
@@ -1373,10 +1365,17 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         var stopGraphic = new Graphic(wDevices.pt, StopText);
 
         var str = resultObject[index].GPSTimeStamp;
-        var TimeStamp = str.substring(6, 16);
-        var d = new Date(TimeStamp * 1000);
-        var format = 'M/d/yy hh:mm:ss tt';
-        var GTimeStamp = wijmo.Globalize.format(d, format);
+
+        str = str.substr(6, 13);
+        var timeChange = loginWidget.loginInfo.timeDifferential;
+        timeChange = ((timeChange * 60) * 60) * 1000;
+        console.log(timeChange);
+        str = str - timeChange;
+
+        var date = new Date(parseFloat(str));
+        //var options = { timeZone: 'America/Chicago', timeZoneName: 'short' };
+        var GTimeStamp = date.toLocaleString('en-US');
+
         var attributes = {
             "Accuracy": resultObject[index].Accuracy,
             "AssignedGraphic": resultObject[index].AssignedGraphic,
