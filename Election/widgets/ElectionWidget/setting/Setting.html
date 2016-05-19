@@ -1,24 +1,16 @@
 <div>
 
   <label>${nls.serviceUrl}</label>
-  <input data-dojo-attach-point="textNode"><br><br>
+  <input data-dojo-attach-point="textNode" id="serviceURL">
+  <button data-dojo-attach-point="addURLButton">Add URL</button><br><br>
 
-  <label>${nls.pickRace}</label>
-  <select id="races">
-      <option>Presidential Race</option>
-      <option>Vice Presidential Race</option>
+  <select id="Elections" style="width: 167px">
   </select>
-  <button data-dojo-attach-point="addRaceButton">Add Race</button><br><br>
+  <button data-dojo-attach-point="addURLButton">Add URL</button><br><br>
 
-  <table id="racesTable">
-      <th>Race</th>
-  </table>
-
-  <label>${nls.addCandidate}</label><br><br>
-  <label class = "subInput">${nls.pickCanRace}</label>
-  <input data-dojo-attach-point="candidateRace"><br><br>
-  <label class = "subInput">${nls.pickCanName}</label>
-  <input data-dojo-attach-point="candidateName"><br><br>
+  <table id="URLTable">
+    <th>Service URLs</th>
+  </table><br><br>
 
   <label>${nls.selectCanColor}</label><br>
     <div class="square" data-dojo-attach-point="square1"></div>
@@ -501,7 +493,5 @@
         <option value="#FF6347" style="background:Tomato">Light Red</option>
         <option value="#F5DEB3" style="background:Wheat" selected="selected">Wheat</option>
     </select><br><br>
-
-    <button data-dojo-attach-point="saveColors">Save Colors</button><br>
 
 </div>

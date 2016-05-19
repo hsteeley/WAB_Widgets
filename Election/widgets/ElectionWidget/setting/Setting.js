@@ -18,23 +18,60 @@ define([
   'dojo/_base/declare',
   'dojo/on',
   'dojo/_base/lang',
-  'jimu/BaseWidgetSetting'
+  'jimu/BaseWidgetSetting',
+  'esri/tasks/query',
+  'esri/tasks/QueryTask'
 ],
-function(declare, on, lang, BaseWidgetSetting) {
+function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
 
   return declare([BaseWidgetSetting], {
     baseClass: 'election-widget-setting',
+    URLList: [],
+    electionsList: [],
 
     postCreate: function(){
       //the config object is passed in
-      console.log("Post Creating Set wdiget");
+      wElectionSetting = this;
       this.setConfig(this.config);
       this.setSquareColors();
+      this.getElectionNames();
       this._bindEvents();
     },
 
     _bindEvents: function () {
-      this.own(on(this.addRaceButton, 'click', lang.hitch(this.addRaceToList)));
+      this.own(on(this.addURLButton, 'click', lang.hitch(this.addURLToList)));
+    },
+
+    getElectionNames: function(){
+      var query = new Query();
+      var queryTask = new QueryTask("http://web3.kcsgis.com/kcsgis/rest/services/ElectionResults/ElectionResults/MapServer/4");
+      query.where = "1=1";
+      query.outSpatialReference = {wkid:102100};
+      query.returnGeometry = true;
+      query.outFields = ["*"];
+      queryTask.execute(query, this.loadElectionNames);
+    },
+
+    loadElectionNames: function(result){
+      console.log(result);
+      var index = 0;
+      while (index < result.features.length)
+      {
+        wElectionSetting.electionsList.push(result.features[index]);
+        index += 1;
+      }
+      console.log(wElectionSetting.electionsList);
+
+      index = 0;
+
+      while (index < wElectionSetting.electionsList.length)
+      {
+        var option = document.createElement("option");
+        option.text = wElectionSetting.electionsList[index].attributes.ElectionName;
+        option.value = wElectionSetting.electionsList[index].attributes.ElectionID;
+        document.getElementById("Elections").appendChild(option);
+        index += 1;
+      }
     },
 
     setSquareColors: function(){
@@ -60,33 +97,37 @@ function(declare, on, lang, BaseWidgetSetting) {
       this.square20.style.background = this.select20.value;
     },
 
-    addRaceToList: function(){
-      var raceTable = document.getElementById("racesTable");
+    addURLToList: function(){
+      var URLTable = document.getElementById("URLTable");
       var row;
-      var race;
-      var addedRowIndex = raceTable.rows.length;
-      if (raceTable.rows.length == 1)
+      var URL;
+      var addedRowIndex = URLTable.rows.length;
+      var inTable = false;
+      if (URLTable.rows.length == 1)
       {
-        row = raceTable.insertRow(1);
+        row = URLTable.insertRow(1);
 
-        race = row.insertCell(0);
+        URL = row.insertCell(0);
 
-        race.innerHTML = document.getElementById("races").value;
+        URL.innerHTML = document.getElementById("serviceURL").value;
       }
       else
       {
         var rowIndex = 0;
-        while (rowIndex < raceTable.rows.length)
+        while (rowIndex < URLTable.rows.length)
         {
-          if (raceTable.rows[rowIndex].cells[0] != document.getElementById("races").value)
+          if (URLTable.rows[rowIndex].cells[0].innerHTML == document.getElementById("serviceURL").value)
           {
-            row = raceTable.insertRow(addedRowIndex);
-
-            race = row.insertCell(0);
-
-            race.innerHTML = document.getElementById("races").value;
+            inTable = true;
           }
-          rowIndex += 1
+          rowIndex += 1;
+        }
+        if (inTable == false)
+        {
+          row = URLTable.insertRow(addedRowIndex);
+          URL = row.insertCell(0);
+          URL.innerHTML = document.getElementById("serviceURL").value;
+          wElectionSetting.URLList.push(document.getElementById("serviceURL").value);
         }
       }
     },

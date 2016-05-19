@@ -5,7 +5,7 @@
   margin-left: 20px;
 }
 .election-widget-setting table, th, td {
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   border-collapse: collapse;
 }
 .election-widget-setting #racesTable {
@@ -20,4 +20,14 @@
   height: 18px;
   margin: 0px;
   border: 1px solid rgba(0, 0, 0, .2);
+}
+.election-widget-setting #serviceURL {
+   width: 560px;
+ }
+.election-widget-setting tr:nth-child(even) {
+  background-color: #f2f2f2
+}
+.election-widget-setting th {
+  background-color: #4CAF50;
+  color: white;
 }
