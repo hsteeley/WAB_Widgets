@@ -2,13 +2,8 @@ define({
   root: ({
     serviceUrl: "Set service url:",
 
-    pickRace: "Add Race:",
+    selectCanColor: "Select Candidate Color:",
 
-    addCandidate: "Add Candidate",
-    pickCanRace: "Candidate Race:",
-    pickCanName: "Candidate Name:",
-
-    selectCanColor: "Select Candidate Color"
-
+    selectElection: "Select Election:"
   })
 });

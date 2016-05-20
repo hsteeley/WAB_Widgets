@@ -5,8 +5,10 @@
   margin-left: 20px;
 }
 .election-widget-setting table, th, td {
-  /*border: 1px solid black;*/
+  border: 1px solid black;
   border-collapse: collapse;
+  text-align: center;
+  padding: 5px;
 }
 .election-widget-setting #racesTable {
   margin-left: 0px;

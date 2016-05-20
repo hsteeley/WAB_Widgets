@@ -1,15 +1,18 @@
 <div>
 
   <label>${nls.serviceUrl}</label>
-  <input data-dojo-attach-point="textNode" id="serviceURL">
-  <button data-dojo-attach-point="addURLButton">Add URL</button><br><br>
+  <input data-dojo-attach-point="textNode" id="serviceURL"><br><br>
 
+  <label>${nls.selectElection}</label>
   <select id="Elections" style="width: 167px">
   </select>
   <button data-dojo-attach-point="addURLButton">Add URL</button><br><br>
 
   <table id="URLTable">
-    <th>Service URLs</th>
+      <th>Service URL</th>
+      <th>Election ID</th>
+      <th>Election Name</th>
+      <th>Election Year</th>
   </table><br><br>
 
   <label>${nls.selectCanColor}</label><br>

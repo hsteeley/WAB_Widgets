@@ -19,6 +19,8 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
 
     baseClass: 'election-widget',
     map1: null,
+    URLIndex: null,
+    electionIndex: -1,
     // this property is set by the framework when widget is loaded.
     // name: 'ElectionWidget',
     // add additional properties here
@@ -32,13 +34,16 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
     },
 
     _bindEvents: function(){
-      this.own(on(this.showResButton, 'click', lang.hitch(this.populateMap)));
+
     },
 
-    populateMap: function(){
+    populateMap: function(select){
+      console.log(select);
       var query = new Query();
-      var queryTask = new QueryTask(wElection.config.serviceUrl);
-      var conNumb = $('#Contests').val();
+      var getNumb = select.id.length;
+      var electionNumber = select.id.substring((getNumb - 1), getNumb);
+      var queryTask = new QueryTask(wElection.config.pickedElections[electionNumber].ServiceURL);
+      var conNumb = select.value;
       query.where = "ContestNumber  = '" + conNumb + "'";
       query.outSpatialReference = {wkid:102100};
       query.returnGeometry = true;
@@ -48,7 +53,6 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
     },
 
     addPointsToMap: function(result){
-      console.log(result);
       wElection.map1.graphics.clear();
       document.getElementById("canAndColors").innerHTML = "";
       var graphicIndex = 0;
@@ -820,17 +824,36 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
     },
 
     buildContestDDQuery: function(){
-      var query = new Query();
-      var queryTask = new QueryTask(wElection.config.serviceUrl);
-      query.where = "1=1";
-      query.outSpatialReference = {wkid:102100};
-      query.returnGeometry = true;
-      query.outFields = ["*"];
-      queryTask.execute(query, this.buildContestDD);
+      wElection.URLIndex = 0;
+      while (wElection.URLIndex < wElection.config.pickedElections.length)
+      {
+        var h3 = document.createElement("h3");
+        h3.id = "electionName" + wElection.URLIndex;
+        document.getElementById('allElections').appendChild(h3);
+
+        var select = document.createElement("select");
+        select.id = "Contests" + wElection.URLIndex;
+        select.style.width = "310px";
+        document.getElementById('allElections').appendChild(select);
+
+        document.getElementById('allElections').appendChild(document.createElement('br'));
+        document.getElementById('allElections').appendChild(document.createElement('br'));
+
+        var query = new Query();
+        var queryTask = new QueryTask(wElection.config.pickedElections[wElection.URLIndex].ServiceURL);
+        query.where = "1=1";
+        query.outSpatialReference = {wkid:102100};
+        query.returnGeometry = true;
+        query.outFields = ["*"];
+        queryTask.execute(query, this.buildContestDD);
+        document.getElementById("electionName" + wElection.URLIndex).innerHTML = wElection.config.pickedElections[wElection.URLIndex].ElectionName;
+        document.getElementById("Contests" + wElection.URLIndex).onchange = function(){wElection.populateMap(this)};
+        wElection.URLIndex += 1;
+      }
     },
 
     buildContestDD: function(result){
-      console.log(result);
+      wElection.electionIndex += 1;
       var contestIndex = 0;
       var optionList = [];
 
@@ -854,11 +877,15 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
           var option = document.createElement("option");
           option.text = result.features[contestIndex].attributes.ContestTitle;
           option.value = result.features[contestIndex].attributes.ContestNumber;
-          document.getElementById("Contests").appendChild(option);
+          document.getElementById("Contests" + wElection.electionIndex).appendChild(option);
           optionList.push(option.value);
         }
         contestIndex = contestIndex + 1;
       }
+      //if (wElection.electionIndex == 0)
+      //{
+      //  wElection.populateMap(0);
+      //}
     },
 
     // startup: function() {
@@ -868,7 +895,6 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
 
     onOpen: function(){
       wElection.buildContestDDQuery();
-      //wElection.populateMap();
     }
 
     // onClose: function(){

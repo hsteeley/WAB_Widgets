@@ -26,8 +26,9 @@ function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
 
   return declare([BaseWidgetSetting], {
     baseClass: 'election-widget-setting',
-    URLList: [],
+    pickedElectionList: [],
     electionsList: [],
+    URLElectionsList: [],
 
     postCreate: function(){
       //the config object is passed in
@@ -54,6 +55,9 @@ function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
 
     loadElectionNames: function(result){
       console.log(result);
+      document.getElementById("Elections").innerHTML = "";
+      wElectionSetting.electionsList = [];
+
       var index = 0;
       while (index < result.features.length)
       {
@@ -106,10 +110,30 @@ function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
       if (URLTable.rows.length == 1)
       {
         row = URLTable.insertRow(1);
-
         URL = row.insertCell(0);
-
         URL.innerHTML = document.getElementById("serviceURL").value;
+        URL = row.insertCell(1);
+        URL.innerHTML = document.getElementById("Elections").value;
+        URL = row.insertCell(2);
+        URL.innerHTML = document.getElementById("Elections").options[document.getElementById("Elections").selectedIndex].text;
+
+        var electionIndex = 0;
+        while (electionIndex < wElectionSetting.electionsList.length)
+        {
+          if (document.getElementById("Elections").value == wElectionSetting.electionsList[electionIndex].attributes.ElectionID)
+          {
+            URL = row.insertCell(3);
+            URL.innerHTML = wElectionSetting.electionsList[electionIndex].attributes.ElectionYear;
+            var election = {
+              ElectionID: wElectionSetting.electionsList[electionIndex].attributes.ElectionID,
+              ElectionName: wElectionSetting.electionsList[electionIndex].attributes.ElectionName,
+              ElectionYear: wElectionSetting.electionsList[electionIndex].attributes.ElectionYear,
+              ServiceURL: document.getElementById("serviceURL").value
+            };
+            wElectionSetting.pickedElectionList.push(election);
+          }
+          electionIndex += 1;
+        }
       }
       else
       {
@@ -127,9 +151,31 @@ function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
           row = URLTable.insertRow(addedRowIndex);
           URL = row.insertCell(0);
           URL.innerHTML = document.getElementById("serviceURL").value;
-          wElectionSetting.URLList.push(document.getElementById("serviceURL").value);
+          URL = row.insertCell(1);
+          URL.innerHTML = document.getElementById("Elections").value;
+          URL = row.insertCell(2);
+          URL.innerHTML = document.getElementById("Elections").options[document.getElementById("Elections").selectedIndex].text;
+
+          var electionIndex = 0;
+          while (electionIndex < wElectionSetting.electionsList.length)
+          {
+            if (document.getElementById("Elections").value == wElectionSetting.electionsList[electionIndex].attributes.ElectionID)
+            {
+              URL = row.insertCell(3);
+              URL.innerHTML = wElectionSetting.electionsList[electionIndex].attributes.ElectionYear;
+              var election = {
+                ElectionID: wElectionSetting.electionsList[electionIndex].attributes.ElectionID,
+                ElectionName: wElectionSetting.electionsList[electionIndex].attributes.ElectionName,
+                ElectionYear: wElectionSetting.electionsList[electionIndex].attributes.ElectionYear,
+                ServiceURL: document.getElementById("serviceURL").value
+              };
+              wElectionSetting.pickedElectionList.push(election);
+            }
+            electionIndex += 1;
+          }
         }
       }
+      console.log(wElectionSetting.pickedElectionList);
     },
 
     setConfig: function(config){
@@ -158,8 +204,10 @@ function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
     },
 
     getConfig: function(){
+      this.config.pickedElections = [];
       //WAB will get config object through this method
       return {
+        pickedElections: wElectionSetting.pickedElectionList,
         serviceUrl: this.textNode.value,
         canCol1:  this.select1.value,
         canCol2:  this.select2.value,
