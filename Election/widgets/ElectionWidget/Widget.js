@@ -4,6 +4,7 @@ define(['dojo/_base/declare',
         'jimu/BaseWidget',
         'jimu/loaderplugins/jquery-loader!https://code.jquery.com/jquery-1.11.2.min.js',
         'esri/InfoTemplate',
+        'esri/dijit/PopupTemplate',
         'esri/Color',
         'esri/geometry/Polygon',
         'esri/tasks/query',
@@ -11,7 +12,7 @@ define(['dojo/_base/declare',
         'esri/graphic',
         'esri/symbols/FillSymbol',
         'esri/symbols/SimpleFillSymbol'],
-function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
+function(declare, lang, on, BaseWidget, $, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
 
@@ -21,6 +22,8 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
     map1: null,
     URLIndex: null,
     electionIndex: -1,
+    currentDropDown: null,
+    currentSelect: null,
     // this property is set by the framework when widget is loaded.
     // name: 'ElectionWidget',
     // add additional properties here
@@ -30,18 +33,19 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
       this.inherited(arguments);
       wElection = this;
       wElection.map1 = this.map;
-      this._bindEvents();
+      //this._bindEvents();
     },
 
-    _bindEvents: function(){
-
-    },
+    //_bindEvents: function(){
+    //
+    //},
 
     populateMap: function(select){
-      console.log(select);
+      wElection.currentDropDown = select;
       var query = new Query();
       var getNumb = select.id.length;
       var electionNumber = select.id.substring((getNumb - 1), getNumb);
+      wElection.currentSelect = electionNumber;
       var queryTask = new QueryTask(wElection.config.pickedElections[electionNumber].ServiceURL);
       var conNumb = select.value;
       query.where = "ContestNumber  = '" + conNumb + "'";
@@ -445,7 +449,31 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
           g = new Graphic(result.features[graphicIndex].geometry, mapRing1);
 
           g.setAttributes(attributes);
-          var template = new InfoTemplate();
+          var template = new InfoTemplate({
+            title: "Candidates",
+            description: "Vote percentages for candidates",
+            fieldInfos: [{ //define field infos so we can specify an alias
+              fieldName: result.features[graphicIndex].attributes.CandidateName1,
+              label: result.features[graphicIndex].attributes.Percent1,
+              visible: true
+            },{
+              fieldName: result.features[graphicIndex].attributes.CandidateName2,
+              label: result.features[graphicIndex].attributes.Percent2,
+              visible: true
+            },{
+              fieldName: result.features[graphicIndex].attributes.CandidateName3,
+              label: result.features[graphicIndex].attributes.Percent3,
+              visible: true
+            }],
+            mediaInfos:[{ //define the bar chart
+              caption: "Candidate Votes",
+              type:"piechart",
+              value:{
+                theme: "Dollar",
+                fields:[result.features[graphicIndex].attributes.CandidateName1, result.features[graphicIndex].attributes.CandidateName2, result.features[graphicIndex].attributes.CandidateName3]
+              }
+            }]
+          });
           var content = "<b>Election</b>: ${ContestTitle}" +
               "<br/><br/><b>Winner</b>: ${WinnerCandidateName}" +
               "<br/><b>Winner Percentage</b>: ${WinnerPercent}" +
@@ -623,7 +651,28 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
           g = new Graphic(result.features[graphicIndex].geometry, mapRing2);
 
           g.setAttributes(attributes);
-          var template = new InfoTemplate();
+          var template = new PopupTemplate({
+            title: "Candidates",
+            description: "Vote percentages for candidates",
+            fieldInfos: [{ //define field infos so we can specify an alias
+              fieldName: result.features[graphicIndex].attributes.CandidateName1,
+              label: result.features[graphicIndex].attributes.Percent1
+            },{
+              fieldName: result.features[graphicIndex].attributes.CandidateName2,
+              label: result.features[graphicIndex].attributes.Percent2
+            },{
+              fieldName: result.features[graphicIndex].attributes.CandidateName3,
+              label: result.features[graphicIndex].attributes.Percent3
+            }],
+            mediaInfos:[{ //define the bar chart
+              caption: "Candidate Votes",
+              type:"piechart",
+              value:{
+                theme: "Dollar",
+                fields:[result.features[graphicIndex].attributes.CandidateName1, result.features[graphicIndex].attributes.CandidateName2, result.features[graphicIndex].attributes.CandidateName3]
+              }
+            }]
+          });
           var content = "<b>Election</b>: ${ContestTitle}" +
               "<br/><br/><b>Winner</b>: ${WinnerCandidateName}" +
               "<br/><b>Winner Percentage</b>: ${WinnerPercent}" +
@@ -793,6 +842,17 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
         }
         var colorListIndex = 0;
         var inList = false;
+
+        var h3 = document.createElement("h3");
+        h3.id = "currentElection";
+        document.getElementById('allElections').appendChild(h3);
+        document.getElementById("currentElection").innerHTML = wElection.config.pickedElections[wElection.currentSelect].ElectionName;
+
+        var h4 = document.createElement("h4");
+        h4.id = "currentContest";
+        document.getElementById('allElections').appendChild(h4);
+        document.getElementById("currentContest").innerHTML = wElection.currentDropDown.options[wElection.currentDropDown.selectedIndex].text;
+
         while (colorListIndex < colors.length)
         {
           if (colors[colorListIndex] == canColor)
@@ -805,7 +865,11 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
         {
           colors.push(canColor);
           var colDiv = document.getElementById("canAndColors");
-          colDiv.innerHTML = colDiv.innerHTML + result.features[graphicIndex].attributes.WinnerCandidateName;
+          //colDiv.innerHTML = colDiv.innerHTML + result.features[graphicIndex].attributes.WinnerCandidateName;
+          var winnerNames = document.createElement('div');
+          winnerNames.className = 'winnerNames';
+          winnerNames.innerHTML = winnerNames.innerHTML + result.features[graphicIndex].attributes.WinnerCandidateName;
+          colDiv.appendChild(winnerNames);
 
           var square = document.createElement('div');
           square.className = 'square';
@@ -850,6 +914,11 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
         document.getElementById("Contests" + wElection.URLIndex).onchange = function(){wElection.populateMap(this)};
         wElection.URLIndex += 1;
       }
+      document.getElementById('allElections').appendChild(document.createElement('br'));
+      if (wElection.electionIndex == 0)
+      {
+        wElection.populateMap(document.getElementById("Contests0"));
+      }
     },
 
     buildContestDD: function(result){
@@ -882,10 +951,10 @@ function(declare, lang, on, BaseWidget, $, InfoTemplate, Color, Polygon, Query, 
         }
         contestIndex = contestIndex + 1;
       }
-      //if (wElection.electionIndex == 0)
-      //{
-      //  wElection.populateMap(0);
-      //}
+      if (wElection.electionIndex == 3)
+      {
+        wElection.populateMap(document.getElementById("Contests0"));
+      }
     },
 
     // startup: function() {

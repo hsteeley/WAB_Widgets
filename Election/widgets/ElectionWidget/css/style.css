@@ -4,4 +4,12 @@
 .election-widget h3, p {
   margin-top: 0;
 }
+.election-widget .square {
+  margin-left: 0px;
+  margin-top: -20px;
+}
+.election-widget .winnerNames {
+  margin-left: 35px;
+  margin-top: 0px;
+}
 /* add additional custom styles */
