@@ -12,6 +12,10 @@
   margin-left: 35px;
   margin-top: 0px;
 }
+.election-widget .totVotes {
+  margin-left: 230px;
+  margin-top: -20px;
+}
 .esriPopup .contentPane {
   position: relative;
   max-height: 300px;

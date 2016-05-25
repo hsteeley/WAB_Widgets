@@ -16,6 +16,7 @@ define(['dijit/layout/ContentPane',
         'dojo/ready',
         'jimu/BaseWidget',
         'jimu/loaderplugins/jquery-loader!https://code.jquery.com/jquery-1.11.2.min.js',
+        'esri/layers/GraphicsLayer',
         'esri/InfoTemplate',
         'esri/dijit/PopupTemplate',
         'esri/Color',
@@ -26,7 +27,7 @@ define(['dijit/layout/ContentPane',
         'esri/symbols/FillSymbol',
         'esri/symbols/SimpleFillSymbol'],
 function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend, domConstruct, domClass,
-         number, ready, BaseWidget, $, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
+         number, ready, BaseWidget, $, GraphicsLayer, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
   //To create a widget, you need to derive from BaseWidget.
   return declare([BaseWidget], {
 
@@ -38,6 +39,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
     electionIndex: -1,
     currentDropDown: null,
     currentSelect: null,
+    precinctGraphicsLayer: null,
     // this property is set by the framework when widget is loaded.
     // name: 'ElectionWidget',
     // add additional properties here
@@ -47,12 +49,21 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       this.inherited(arguments);
       wElection = this;
       wElection.map1 = this.map;
+      this.createGraphicsLayer();
       //this._bindEvents();
     },
 
     //_bindEvents: function(){
     //
     //},
+
+    createGraphicsLayer: function(){
+      precinctGraphicsLayer = new GraphicsLayer({
+        id: 'precinctGraphicsLayer',
+        title: 'webServiceGraphics'
+      });
+      wElection.map1.addLayer(precinctGraphicsLayer);
+    },
 
     populateMap: function(select){
       wElection.map1.infoWindow.hide();
@@ -76,6 +87,47 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       document.getElementById("canAndColors").innerHTML = "";
       var graphicIndex = 0;
       var canColor;
+      var totalVotes = 0;
+      var totalCan1Votes = 0;
+      var totalCan2Votes = 0;
+      var totalCan3Votes = 0;
+      var totalCan4Votes = 0;
+      var totalCan5Votes = 0;
+      var totalCan6Votes = 0;
+      var totalCan7Votes = 0;
+      var totalCan8Votes = 0;
+      var totalCan9Votes = 0;
+      var totalCan10Votes = 0;
+      var totalCan11Votes = 0;
+      var totalCan12Votes = 0;
+      var totalCan13Votes = 0;
+      var totalCan14Votes = 0;
+      var totalCan15Votes = 0;
+      var totalCan16Votes = 0;
+      var totalCan17Votes = 0;
+      var totalCan18Votes = 0;
+      var totalCan19Votes = 0;
+      var totalCan20Votes = 0;
+      var totalCan1Percent = 0;
+      var totalCan2Percent = 0;
+      var totalCan3Percent = 0;
+      var totalCan4Percent = 0;
+      var totalCan5Percent = 0;
+      var totalCan6Percent = 0;
+      var totalCan7Percent = 0;
+      var totalCan8Percent = 0;
+      var totalCan9Percent = 0;
+      var totalCan10Percent = 0;
+      var totalCan11Percent = 0;
+      var totalCan12Percent = 0;
+      var totalCan13Percent = 0;
+      var totalCan14Percent = 0;
+      var totalCan15Percent = 0;
+      var totalCan16Percent = 0;
+      var totalCan17Percent = 0;
+      var totalCan18Percent = 0;
+      var totalCan19Percent = 0;
+      var totalCan20Percent = 0;
 
       while (graphicIndex < result.features.length)
       {
@@ -449,10 +501,10 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           template.setContent(wElection.getWindowContent(result, graphicIndex));
           g.infoTemplate = template;
 
-          wElection.map1.graphics.add(g);
+          precinctGraphicsLayer.add(g);
+          //wElection.map1.graphics.add(g);
         }
-        else if (winnerLength > 3)
-        {
+        else if (winnerLength > 3) {
           var mapRing2 = new SimpleFillSymbol();
           canColor = "white";
           mapRing2.setColor(canColor);
@@ -466,7 +518,8 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           template.setContent(wElection.getWindowContent(result, graphicIndex));
           g.infoTemplate = template;
 
-          wElection.map1.graphics.add(g);
+          precinctGraphicsLayer.add(g);
+          //wElection.map1.graphics.add(g);
 
         }
 
@@ -482,9 +535,51 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
 
         var colDiv = document.getElementById("canAndColors");
 
-        if (graphicIndex == 0)
+        totalVotes += result.features[graphicIndex].attributes.TotalVotes;
+        totalCan1Votes += result.features[graphicIndex].attributes.Votes1;
+        totalCan2Votes += result.features[graphicIndex].attributes.Votes2;
+        totalCan3Votes += result.features[graphicIndex].attributes.Votes3;
+        totalCan4Votes += result.features[graphicIndex].attributes.Votes4;
+        totalCan5Votes += result.features[graphicIndex].attributes.Votes5;
+        totalCan6Votes += result.features[graphicIndex].attributes.Votes6;
+        totalCan7Votes += result.features[graphicIndex].attributes.Votes7;
+        totalCan8Votes += result.features[graphicIndex].attributes.Votes8;
+        totalCan9Votes += result.features[graphicIndex].attributes.Votes9;
+        totalCan10Votes += result.features[graphicIndex].attributes.Votes10;
+        totalCan11Votes += result.features[graphicIndex].attributes.Votes11;
+        totalCan12Votes += result.features[graphicIndex].attributes.Votes12;
+        totalCan13Votes += result.features[graphicIndex].attributes.Votes13;
+        totalCan14Votes += result.features[graphicIndex].attributes.Votes14;
+        totalCan15Votes += result.features[graphicIndex].attributes.Votes15;
+        totalCan16Votes += result.features[graphicIndex].attributes.Votes16;
+        totalCan17Votes += result.features[graphicIndex].attributes.Votes17;
+        totalCan18Votes += result.features[graphicIndex].attributes.Votes18;
+        totalCan19Votes += result.features[graphicIndex].attributes.Votes19;
+        totalCan20Votes += result.features[graphicIndex].attributes.Votes20;
+
+        if (graphicIndex == (result.features.length - 1))
         {
           var squareIndex = 0;
+          totalCan1Percent = Math.round((totalCan1Votes / totalVotes) * 100) + "%";
+          totalCan2Percent = Math.round((totalCan2Votes / totalVotes) * 100) + "%";
+          totalCan3Percent = Math.round((totalCan3Votes / totalVotes) * 100) + "%";
+          totalCan4Percent = Math.round((totalCan4Votes / totalVotes) * 100) + "%";
+          totalCan5Percent = Math.round((totalCan5Votes / totalVotes) * 100) + "%";
+          totalCan6Percent = Math.round((totalCan6Votes / totalVotes) * 100) + "%";
+          totalCan7Percent = Math.round((totalCan7Votes / totalVotes) * 100) + "%";
+          totalCan8Percent = Math.round((totalCan8Votes / totalVotes) * 100) + "%";
+          totalCan9Percent = Math.round((totalCan9Votes / totalVotes) * 100) + "%";
+          totalCan10Percent = Math.round((totalCan10Votes / totalVotes) * 100) + "%";
+          totalCan11Percent = Math.round((totalCan11Votes / totalVotes) * 100) + "%";
+          totalCan12Percent = Math.round((totalCan12Votes / totalVotes) * 100) + "%";
+          totalCan13Percent = Math.round((totalCan13Votes / totalVotes) * 100) + "%";
+          totalCan14Percent = Math.round((totalCan14Votes / totalVotes) * 100) + "%";
+          totalCan15Percent = Math.round((totalCan15Votes / totalVotes) * 100) + "%";
+          totalCan16Percent = Math.round((totalCan16Votes / totalVotes) * 100) + "%";
+          totalCan17Percent = Math.round((totalCan17Votes / totalVotes) * 100) + "%";
+          totalCan18Percent = Math.round((totalCan18Votes / totalVotes) * 100) + "%";
+          totalCan19Percent = Math.round((totalCan19Votes / totalVotes) * 100) + "%";
+          totalCan20Percent = Math.round((totalCan20Votes / totalVotes) * 100) + "%";
 
           if (result.features[graphicIndex].attributes.CandidateName1 != "")
           {
@@ -502,10 +597,15 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
-              var br = document.createElement('br');
-              colDiv.appendChild(br);
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan1Votes + " / " + totalVotes + " " + totalCan1Percent;
+            colDiv.appendChild(totVotes);
 
-              squareIndex += 1
+            var br = document.createElement('br');
+            colDiv.appendChild(br);
+
+            squareIndex += 1
             }
           if (result.features[graphicIndex].attributes.CandidateName2 != "")
           {
@@ -522,6 +622,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan2Votes + " / " + totalVotes + " " + totalCan2Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -544,6 +649,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan3Votes + " / " + totalVotes + " " + totalCan3Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
               colDiv.appendChild(br);
 
@@ -564,6 +674,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan4Votes + " / " + totalVotes + " " + totalCan4Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -586,6 +701,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan5Votes + " / " + totalVotes + " " + totalCan5Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
               colDiv.appendChild(br);
 
@@ -606,6 +726,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan6Votes + " / " + totalVotes + " " + totalCan6Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -628,6 +753,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan7Votes + " / " + totalVotes + " " + totalCan7Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
               colDiv.appendChild(br);
 
@@ -648,6 +778,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan8Votes + " / " + totalVotes + " " + totalCan8Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -670,6 +805,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan9Votes + " / " + totalVotes + " " + totalCan9Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
               colDiv.appendChild(br);
 
@@ -691,8 +831,13 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan10Votes + " / " + totalVotes + " " + totalCan10Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
-              colDiv.appendChild(br)
+              colDiv.appendChild(br);
 
               squareIndex += 1
             }
@@ -712,8 +857,13 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan11Votes + " / " + totalVotes + " " + totalCan11Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
-              colDiv.appendChild(br)
+              colDiv.appendChild(br);
 
               squareIndex += 1
             }
@@ -732,6 +882,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan12Votes + " / " + totalVotes + " " + totalCan12Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -754,6 +909,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan13Votes + " / " + totalVotes + " " + totalCan13Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
               colDiv.appendChild(br);
 
@@ -774,6 +934,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan14Votes + " / " + totalVotes + " " + totalCan14Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -796,6 +961,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan15Votes + " / " + totalVotes + " " + totalCan15Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
               colDiv.appendChild(br);
 
@@ -816,6 +986,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan16Votes + " / " + totalVotes + " " + totalCan16Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -838,6 +1013,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan17Votes + " / " + totalVotes + " " + totalCan17Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
               colDiv.appendChild(br);
 
@@ -858,6 +1038,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan18Votes + " / " + totalVotes + " " + totalCan18Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -880,8 +1065,13 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
 
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan19Votes + " / " + totalVotes + " " + totalCan19Percent;
+            colDiv.appendChild(totVotes);
+
               var br = document.createElement('br');
-              colDiv.appendChild(br)
+              colDiv.appendChild(br);
 
               squareIndex += 1
             }
@@ -900,6 +1090,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               document.getElementById("square" + squareIndex).style.width = "25px";
               document.getElementById("square" + squareIndex).style.height = "25px";
               document.getElementById("square" + squareIndex).style.border = "thin solid #000000";
+
+            var totVotes = document.createElement('div');
+            totVotes.className = 'totVotes';
+            totVotes.innerHTML = totVotes.innerHTML + totalCan20Votes + " / " + totalVotes + " " + totalCan20Percent;
+            colDiv.appendChild(totVotes);
 
               var br = document.createElement('br');
               colDiv.appendChild(br);
@@ -1437,127 +1632,6 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       if (result.features[graphicIndex].attributes.CandidateName20 != "") {
         candidateTwenty = Math.round(result.features[graphicIndex].attributes.Votes20 / total * 100)
       }
-      //if (result.features[graphicIndex].attributes.CandidateName4 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 4</b>: ${CandidateName4}" +
-      //      "<br/><b>Candidate 4 Party</b>: ${PartyCode4}" +
-      //      "<br/><b>Candidate 4 Percentage</b>: ${Percent4}" +
-      //      "<br/><b>Candidate 4 Votes</b>: ${Votes4}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName5 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 5</b>: ${CandidateName5}" +
-      //      "<br/><b>Candidate 5 Party</b>: ${PartyCode5}" +
-      //      "<br/><b>Candidate 5 Percentage</b>: ${Percent5}" +
-      //      "<br/><b>Candidate 5 Votes</b>: ${Votes5}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName6 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 6</b>: ${CandidateName6}" +
-      //      "<br/><b>Candidate 6 Party</b>: ${PartyCode6}" +
-      //      "<br/><b>Candidate 6 Percentage</b>: ${Percent6}" +
-      //      "<br/><b>Candidate 6 Votes</b>: ${Votes6}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName7 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 7</b>: ${CandidateName7}" +
-      //      "<br/><b>Candidate 7 Party</b>: ${PartyCode7}" +
-      //      "<br/><b>Candidate 7 Percentage</b>: ${Percent7}" +
-      //      "<br/><b>Candidate 7 Votes</b>: ${Votes7}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName8 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 8</b>: ${CandidateName8}" +
-      //      "<br/><b>Candidate 8 Party</b>: ${PartyCode8}" +
-      //      "<br/><b>Candidate 8 Percentage</b>: ${Percent8}" +
-      //      "<br/><b>Candidate 8 Votes</b>: ${Votes8}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName9 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 9</b>: ${CandidateName9}" +
-      //      "<br/><b>Candidate 9 Party</b>: ${PartyCode9}" +
-      //      "<br/><b>Candidate 9 Percentage</b>: ${Percent9}" +
-      //      "<br/><b>Candidate 9 Votes</b>: ${Votes9}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName10 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 10</b>: ${CandidateName10}" +
-      //      "<br/><b>Candidate 10 Party</b>: ${PartyCode10}" +
-      //      "<br/><b>Candidate 10 Percentage</b>: ${Percent10}" +
-      //      "<br/><b>Candidate 10 Votes</b>: ${Votes10}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName11 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 11</b>: ${CandidateName11}" +
-      //      "<br/><b>Candidate 11 Party</b>: ${PartyCode11}" +
-      //      "<br/><b>Candidate 11 Percentage</b>: ${Percent11}" +
-      //      "<br/><b>Candidate 11 Votes</b>: ${Votes11}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName12 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 12</b>: ${CandidateName12}" +
-      //      "<br/><b>Candidate 12 Party</b>: ${PartyCode12}" +
-      //      "<br/><b>Candidate 12 Percentage</b>: ${Percent12}" +
-      //      "<br/><b>Candidate 12 Votes</b>: ${Votes12}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName13 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 13</b>: ${CandidateName13}" +
-      //      "<br/><b>Candidate 13 Party</b>: ${PartyCode13}" +
-      //      "<br/><b>Candidate 13 Percentage</b>: ${Percent13}" +
-      //      "<br/><b>Candidate 13 Votes</b>: ${Votes13}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName14 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 14</b>: ${CandidateName14}" +
-      //      "<br/><b>Candidate 14 Party</b>: ${PartyCode14}" +
-      //      "<br/><b>Candidate 14 Percentage</b>: ${Percent14}" +
-      //      "<br/><b>Candidate 14 Votes</b>: ${Votes14}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName15 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 15</b>: ${CandidateName15}" +
-      //      "<br/><b>Candidate 15 Party</b>: ${PartyCode15}" +
-      //      "<br/><b>Candidate 15 Percentage</b>: ${Percent15}" +
-      //      "<br/><b>Candidate 15 Votes</b>: ${Votes15}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName16 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 16</b>: ${CandidateName16}" +
-      //      "<br/><b>Candidate 16 Party</b>: ${PartyCode16}" +
-      //      "<br/><b>Candidate 16 Percentage</b>: ${Percent16}" +
-      //      "<br/><b>Candidate 16 Votes</b>: ${Votes16}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName17 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 17</b>: ${CandidateName17}" +
-      //      "<br/><b>Candidate 17 Party</b>: ${PartyCode17}" +
-      //      "<br/><b>Candidate 17 Percentage</b>: ${Percent17}" +
-      //      "<br/><b>Candidate 17 Votes</b>: ${Votes17}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName18 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 18</b>: ${CandidateName18}" +
-      //      "<br/><b>Candidate 18 Party</b>: ${PartyCode18}" +
-      //      "<br/><b>Candidate 18 Percentage</b>: ${Percent18}" +
-      //      "<br/><b>Candidate 18 Votes</b>: ${Votes18}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName19 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 19</b>: ${CandidateName19}" +
-      //      "<br/><b>Candidate 19 Party</b>: ${PartyCode19}" +
-      //      "<br/><b>Candidate 19 Percentage</b>: ${Percent19}" +
-      //      "<br/><b>Candidate 19 Votes</b>: ${Votes19}";
-      //}
-      //if (result.features[graphicIndex].attributes.CandidateName20 != "") {
-      //
-      //  content += "<br/><br/><b>Candidate 20</b>: ${CandidateName20}" +
-      //      "<br/><b>Candidate 20 Party</b>: ${PartyCode20}" +
-      //      "<br/><b>Candidate 20 Percentage</b>: ${Percent20}" +
-      //      "<br/><b>Candidate 20 Votes</b>: ${Votes20}";
-      //}
-      //var male = number.round(graphic.attributes.MALES / total * 100, 2);
-      //var female = number.round(graphic.attributes.FEMALES / total * 100, 2);
 
       chart.addSeries("Candidates", [
         {
@@ -1709,8 +1783,8 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
         var queryTask = new QueryTask(wElection.config.pickedElections[wElection.URLIndex].ServiceURL);
         query.where = "1=1";
         query.outSpatialReference = {wkid:102100};
-        query.returnGeometry = true;
-        query.outFields = ["*"];
+        query.returnGeometry = false;
+        query.outFields = ["ContestTitle", "ContestNumber"];
         queryTask.execute(query, this.buildContestDD);
         document.getElementById("electionName" + wElection.URLIndex).innerHTML = wElection.config.pickedElections[wElection.URLIndex].ElectionName;
         document.getElementById("Contests" + wElection.URLIndex).onchange = function(){wElection.populateMap(this)};
