@@ -12,4 +12,14 @@
   margin-left: 35px;
   margin-top: 0px;
 }
+.esriPopup .contentPane {
+  position: relative;
+  max-height: 300px;
+  overflow: auto;
+  padding: 10px 6px 6px 10px;
+  background-color: hsl(0, 0%, 97%);
+  color: hsl(0, 0%, 20%);
+  height: 300px;
+  width: 270px;
+}
 /* add additional custom styles */
