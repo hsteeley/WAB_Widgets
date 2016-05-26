@@ -1378,8 +1378,14 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
         style: "width:100%;height:100%;"
       }, domConstruct.create("div"));
 
+      var winnerParty = sGraphic.attributes.WinnerPartyCode;
+      if(winnerParty == "Democrat")
+      {
+        winnerParty = "Democratic";
+      }
+
       var precinctSummaryText = sGraphic.attributes.WinnerCandidateName + " won the " + sGraphic.attributes.ContestTitle +
-          " election for the " +  sGraphic.attributes.PrecinctName + " precinct for the " + sGraphic.attributes.WinnerPartyCode +
+          " election for the " +  sGraphic.attributes.PrecinctName + " precinct for the " + winnerParty +
           " Party with " + sGraphic.attributes.WinnerPercent + " of the votes. " + sGraphic.attributes.WinnerVotes + " / " +
           sGraphic.attributes.TotalVotes;
 

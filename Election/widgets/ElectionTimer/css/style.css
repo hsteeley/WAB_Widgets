@@ -1,53 +1,78 @@
-.election-widget h3 {
+.timer-widget h3 {
   font-size: 1.2em;
   color: white;
   font-weight: bold;
   padding-top: 13px;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   text-align: center;
+  background-color: dodgerblue;
+  border-radius: 30px;
+  left: 0px !important;
+  bottom: 0px !important;
 }
-.election-widget h3, p {
-  margin-top: 0;
+.timer-widget h3, p {
+  margin-top: -8px;
+  margin-left: -10px;
 }
-.election-widget {
-  left: 5px !important;
+.timer-widget {
+  left: 0px !important;
   top: auto !important;
   right: auto !important;
-  bottom: 130px !important;
-  width: 75px !important;
-  height: 75px !important;
+  bottom: 0px !important;
+  width: 40px !important;
+  height: 40px !important;
   padding: 2px !important;
   z-index: 0;
   position: absolute;
 }
-.jimu-widget-onscreen-icon.jimu-state-selected{
+.timer-widget #timer {
+  margin-top: 5px;
+  margin-left: 0px;
+}
+.jimu-widget-onscreen-icon {
   bottom: 87px !important;
+  left: 46px !important;
+  width: 40px;
+  height: 40px;
 }
 @media (max-width: 600px) {
-  .election-widget h3 {
-    font-size: 0.75em;
+  .timer-widget h3 {
+    font-size: 1.2em;
     color: white;
     font-weight: bold;
-    padding-top: 9px;
-    width: 30px !important;
-    height: 50px !important;
+    padding-top: 13px;
+    width: 60px;
+    height: 60px;
     text-align: center;
+    background-color: dodgerblue;
+    border-radius: 30px;
+    left: 0px !important;
+    bottom: 0px !important;
   }
-  .election-widget  {
-    left: 8px !important;
+  .timer-widget h3, p {
+    margin-top: -8px;
+    margin-left: -10px;
+  }
+  .timer-widget {
+    left: 0px !important;
     top: auto !important;
     right: auto !important;
-    bottom: 98px !important;
-    width: auto;
-    height: auto;
+    bottom: 0px !important;
+    width: 40px !important;
+    height: 40px !important;
     padding: 2px !important;
     z-index: 0;
     position: absolute;
   }
-  .jimu-widget-onscreen-icon.jimu-state-selected{
-    bottom: 70px !important;
-    width: 25px !important;
-    height: 25px !important;
+  .timer-widget #timer {
+    margin-top: 5px;
+    margin-left: 0px;
+  }
+  .jimu-widget-onscreen-icon {
+    bottom: 87px !important;
+    left: 46px !important;
+    width: 40px;
+    height: 40px;
   }
 }
