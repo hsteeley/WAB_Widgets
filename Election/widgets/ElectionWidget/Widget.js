@@ -28,10 +28,8 @@ define(['dijit/layout/ContentPane',
         'esri/symbols/SimpleFillSymbol'],
 function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend, domConstruct, domClass,
          number, ready, BaseWidget, $, GraphicsLayer, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
-  //To create a widget, you need to derive from BaseWidget.
-  return declare([BaseWidget], {
 
-    // Custom widget code goes here
+  return declare([BaseWidget], {
 
     baseClass: 'election-widget',
     map1: null,
@@ -40,22 +38,13 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
     currentDropDown: null,
     currentSelect: null,
     precinctGraphicsLayer: null,
-    // this property is set by the framework when widget is loaded.
-    // name: 'ElectionWidget',
-    // add additional properties here
 
-    //methods to communication with app container:
     postCreate: function() {
       this.inherited(arguments);
       wElection = this;
       wElection.map1 = this.map;
       this.createGraphicsLayer();
-      //this._bindEvents();
     },
-
-    //_bindEvents: function(){
-    //
-    //},
 
     createGraphicsLayer: function(){
       precinctGraphicsLayer = new GraphicsLayer({
@@ -1385,7 +1374,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       }
 
       var precinctSummaryText = sGraphic.attributes.WinnerCandidateName + " won the " + sGraphic.attributes.ContestTitle +
-          " election for the " +  sGraphic.attributes.PrecinctName + " precinct for the " + winnerParty +
+          " election for the " +  sGraphic.attributes.PrecinctName + " Precinct for the " + winnerParty +
           " Party with " + sGraphic.attributes.WinnerPercent + " of the votes. " + sGraphic.attributes.WinnerVotes + " / " +
           sGraphic.attributes.TotalVotes;
 
@@ -1550,12 +1539,12 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       var chart = new Chart2D(c);
       domClass.add(chart, "chart");
 
-      // Apply a color theme to the chart.
       chart.setTheme(MiamiNice);
       chart.addPlot("default", {
         type: "Pie",
-        radius: 70,
+        radius: 75,
         htmlLabels: true
+        //labelOffset: -12
       });
       tc.watch("selectedChildWidget", function(name, oldVal, newVal){
         if ( newVal.title === "Pie Chart" ) {
@@ -1766,7 +1755,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
         text: sGraphic.attributes.Percent20,
         color: wElection.config.canCol20
       }]);
-      //highlight the chart and display tooltips when you mouse over a slice.
+
       new Highlight(chart, "default");
       new Tooltip(chart, "default");
       new MoveSlice(chart, "default");

@@ -1,21 +1,15 @@
 define(['dojo/_base/declare',
         'jimu/BaseWidget'],
 function(declare, BaseWidget) {
-  //To create a widget, you need to derive from BaseWidget.
-  return declare([BaseWidget], {
 
-    // Custom widget code goes here
+  return declare([BaseWidget], {
 
     baseClass: 'election-timer',
     timerWidget: null,
     count: null,
     counter: null,
     refreshTime: 300,
-    // this property is set by the framework when widget is loaded.
-    // name: 'ElectionTimer',
-    // add additional properties here
 
-    //methods to communication with app container:
     postCreate: function() {
       this.inherited(arguments);
       timerWidget = this;
