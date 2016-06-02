@@ -17,14 +17,14 @@
   margin-top: -20px;
 }
 .esriPopup .contentPane {
-  position: relative;
-  max-height: 300px;
-  overflow: auto;
-  padding: 10px 6px 6px 10px;
-  background-color: hsl(0, 0%, 97%);
-  color: hsl(0, 0%, 20%);
-  height: 300px;
-  width: 270px;
+   position: relative;
+   max-height: 300px;
+   overflow: auto;
+   padding: 10px 6px 6px 10px;
+   background-color: hsl(0, 0%, 97%);
+   color: hsl(0, 0%, 20%);
+   height: 300px;
+   width: 270px;
 }
 .esriPopup #demoChart {
   margin-left: 18px;
@@ -35,5 +35,88 @@
   height: 225px !important;
   overflow-x: hidden;
   overflow-y: hidden;
+}
+.election-widget #yearSliderDiv {
+    border-style: solid;
+    border-color: dodgerblue;
+    color: blue;
+}
+.election-widget .yearClass {
+    width: 84px !important;
+}
+.election-widget .slick-prev:before, .slick-next:before {
+    color: dodgerblue;
+}
+.election-widget .slick-next:before, .slick-next:before {
+    color: dodgerblue;
+}
+.election-widget .slick-track {
+    text-align: center;
+    margin-left: 45px;
+}
+.election-widget .selectedYear0 {
+    transform: scale(1.5);
+    color: red;
+    width: 84px !important;
+    text-align: center;
+    margin: 0 auto;
+}
+.election-widget .selectedYear1 {
+    transform: scale(1.5);
+    color: red;
+    width: 118px !important;
+    text-align: center;
+    margin: 0 auto;
+}
+.election-widget .expandable-panel {
+    width:100%;
+    position:relative;
+    min-height:52px;
+    overflow:auto;
+    margin-bottom: 20px;
+    border:1px solid #999;
+}
+.election-widget .expandable-panel-heading {
+    width:100%;
+    cursor:pointer;
+    min-height:50px;
+    clear:both;
+    background-color:#E5E5E5;
+    position:relative;
+}
+.election-widget .expandable-panel-heading:hover {
+    color:#666;
+}
+.election-widget .expandable-panel-heading h2 {
+    padding: 0px;
+    font-size: 18px;
+    line-height: 20px;
+    margin-top: 15px;
+}
+.election-widget .expandable-panel-content {
+    padding: 0px;
+    margin-top: -999px;
+}
+.election-widget .expandable-panel-content p {
+    padding: 0px;
+}
+.election-widget .expandable-panel-content p:first-child {
+    padding-top: 0px;
+}
+.election-widget .expandable-panel-content p:last-child {
+    padding-bottom: 0px;
+}
+.election-widget .icon-close-open {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    background-image: url(http://i.imgur.com/Ir4S1H7.png);
+    right: 15px;
+}
+.election-widget .PanelHeader {
+    width: 250px;
+    height: 20px;
+    position: absolute;
+    left: 15px;
 }
 /* add additional custom styles */

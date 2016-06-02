@@ -16,6 +16,7 @@ define(['dijit/layout/ContentPane',
         'dojo/ready',
         'jimu/BaseWidget',
         'jimu/loaderplugins/jquery-loader!https://code.jquery.com/jquery-1.11.2.min.js',
+        //'jimu/loaderplugins/jquery-loader!https://code.jquery.com/jquery-migrate-1.2.1.min.js',
         'esri/layers/GraphicsLayer',
         'esri/InfoTemplate',
         'esri/dijit/PopupTemplate',
@@ -25,7 +26,10 @@ define(['dijit/layout/ContentPane',
         'esri/tasks/QueryTask',
         'esri/graphic',
         'esri/symbols/FillSymbol',
-        'esri/symbols/SimpleFillSymbol'],
+        'esri/symbols/SimpleFillSymbol',
+        'xstyle/css!./Resources/slick-1.6.0/slick/slick.css',
+        'xstyle/css!./Resources/slick-1.6.0/slick/slick-theme.css',
+        './widgets/ElectionWidget/Resources/slick-1.6.0/slick/slick.min.js'],
 function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend, domConstruct, domClass,
          number, ready, BaseWidget, $, GraphicsLayer, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
 
@@ -34,10 +38,14 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
     baseClass: 'election-widget',
     map1: null,
     URLIndex: null,
-    electionIndex: -1,
     currentDropDown: null,
     currentSelect: null,
     precinctGraphicsLayer: null,
+    selectedYear: null,
+    runFirst: null,
+    electionNumber: null,
+    electionNumberList: [],
+    electionIndex: -1,
 
     postCreate: function() {
       this.inherited(arguments);
@@ -1355,6 +1363,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           countySummaryText.innerHTML = countyWinnerName + " won the " + result.features[squareIndex].attributes.ContestTitle +
               " election for the county for the " + countyWinnerParty + " Party with " + countyWinnerPercentage + " of the votes. " + countyWinnerVotes +
               " / " + totalVotes;
+          countySummaryText.style.fontWeight = "900";
           colDiv.appendChild(countySummaryText);
         }
 
@@ -1387,139 +1396,139 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           "<br/><br/><b>Candidate 1</b><br/>" + sGraphic.attributes.CandidateName1 +
           "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode1 +
           "<br/><b>Percentage</b>: " +  sGraphic.attributes.Percent1 +
-          "<br/><b>Votes</b>: " + sGraphic.attributes.Votes1;
+          "<br/><b>Votes</b>: " + sGraphic.attributes.Votes1 + " / " + sGraphic.attributes.TotalVotes;
       if (sGraphic.attributes.CandidateName2 != "") {
 
         content += "<br/><br/><b>Candidate 2</b><br/>" + sGraphic.attributes.CandidateName2 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode2 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent2 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes2;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes2 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName3 != "") {
 
         content += "<br/><br/><b>Candidate 3</b><br/>" + sGraphic.attributes.CandidateName3 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode3 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent3 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes3;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes3 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName4 != "") {
 
         content += "<br/><br/><b>Candidate 4</b><br/>" + sGraphic.attributes.CandidateName4 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode4 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent4 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes4;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes4 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName5 != "") {
 
         content += "<br/><br/><b>Candidate 5</b><br/>" + sGraphic.attributes.CandidateName5 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode5 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent5 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes5;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes5 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName6 != "") {
 
         content += "<br/><br/><b>Candidate 6</b><br/>" + sGraphic.attributes.CandidateName6 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode6 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent6 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes6;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes6 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName7 != "") {
 
         content += "<br/><br/><b>Candidate 7</b><br/>" + sGraphic.attributes.CandidateName7 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode7 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent7 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes7;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes7 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName8 != "") {
 
         content += "<br/><br/><b>Candidate 8</b><br/>" + sGraphic.attributes.CandidateName8 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode8 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent8 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes8;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes8 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName9 != "") {
 
         content += "<br/><br/><b>Candidate 9</b><br/>" + sGraphic.attributes.CandidateName9 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode9 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent9 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes9;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes9 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName10 != "") {
 
         content += "<br/><br/><b>Candidate 10</b><br/>" + sGraphic.attributes.CandidateName10 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode10 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent10 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes10;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes10 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName11 != "") {
 
         content += "<br/><br/><b>Candidate 11</b><br/>" + sGraphic.attributes.CandidateName11 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode11 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent11 +
-            "<br/><b></b>Votes</b>: " + sGraphic.attributes.Votes11;
+            "<br/><b></b>Votes</b>: " + sGraphic.attributes.Votes11 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName12 != "") {
 
         content += "<br/><br/><b>Candidate 12</b><br/>" + sGraphic.attributes.CandidateName12 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode12 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent12 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes12;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes12 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName13 != "") {
 
         content += "<br/><br/><b>Candidate 13</b><br/>" + sGraphic.attributes.CandidateName13 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode13 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent13 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes13;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes13 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName14 != "") {
 
         content += "<br/><br/><b>Candidate 14</b><br/>" + sGraphic.attributes.CandidateName14 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode14 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent14 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes14;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes14 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName15 != "") {
 
         content += "<br/><br/><b>Candidate 15</b><br/>" + sGraphic.attributes.CandidateName15 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode15 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent15 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes15;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes15 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName16 != "") {
 
         content += "<br/><br/><b>Candidate 16</b><br/>" + sGraphic.attributes.CandidateName16 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode16 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent16 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes16;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes16 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName17 != "") {
 
         content += "<br/><br/><b>Candidate 17</b><br/>" + sGraphic.attributes.CandidateName17 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode17 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent17 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes17;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes17 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName18 != "") {
 
         content += "<br/><br/><b>Candidate 18</b><br/>" + sGraphic.attributes.CandidateName18 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode18 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent18 +
-            "<br/><b></b>Votes</b>: " + sGraphic.attributes.Votes18;
+            "<br/><b></b>Votes</b>: " + sGraphic.attributes.Votes18 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName19 != "") {
 
         content += "<br/><br/><b>Candidate 19</b><br/>" + sGraphic.attributes.CandidateName19 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode19 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent19 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes19;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes19 + " / " + sGraphic.attributes.TotalVotes;
       }
       if (sGraphic.attributes.CandidateName20 != "") {
 
         content += "<br/><br/><b>Candidate 20</b><br/>" + sGraphic.attributes.CandidateName20 +
             "<br/><b>Party</b>: " + sGraphic.attributes.PartyCode20 +
             "<br/><b>Percentage</b>: " + sGraphic.attributes.Percent20 +
-            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes20;
+            "<br/><b>Votes</b>: " + sGraphic.attributes.Votes20 + " / " + sGraphic.attributes.TotalVotes;
       }
 
       var cp1 = new ContentPane({
@@ -1637,121 +1646,121 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       chart.addSeries("Candidates", [
         {
         y: candidateOne,
-        tooltip: sGraphic.attributes.Votes1 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName1 + " received " + sGraphic.attributes.Votes1 + " Votes out of " + total,
         text: sGraphic.attributes.Percent1,
         color: wElection.config.canCol1
       },
         {
         y: candidateTwo,
-        tooltip: sGraphic.attributes.Votes2 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName2 + " received " + sGraphic.attributes.Votes2 + " Votes out of " + total,
         text: sGraphic.attributes.Percent2,
         color: wElection.config.canCol2
       },
         {
         y: candidateThree,
-        tooltip: sGraphic.attributes.Votes3 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName3 + " received " + sGraphic.attributes.Votes3 + " Votes out of " + total,
         text: sGraphic.attributes.Percent3,
         color: wElection.config.canCol3
       },
         {
         y: candidateFour,
-        tooltip: sGraphic.attributes.Votes4 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName4 + " received " + sGraphic.attributes.Votes4 + " Votes out of " + total,
         text: sGraphic.attributes.Percent4,
         color: wElection.config.canCol4
       },
         {
         y: candidateFive,
-        tooltip: sGraphic.attributes.Votes5 + " Votes",
+        tooltip:sGraphic.attributes.CandidateName5 + " received " + sGraphic.attributes.Votes5 + " Votes out of " + total,
         text: sGraphic.attributes.Percent5,
         color: wElection.config.canCol5
       },
         {
         y: candidateSix,
-        tooltip: sGraphic.attributes.Votes6 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName6 + " received " + sGraphic.attributes.Votes6 + " Votes out of " + total,
         text: sGraphic.attributes.Percent6,
         color: wElection.config.canCol6
       },
         {
         y: candidateSeven,
-        tooltip: sGraphic.attributes.Votes7 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName7 + " received " + sGraphic.attributes.Votes7 + " Votes out of " + total,
         text: sGraphic.attributes.Percent7,
         color: wElection.config.canCol7
       },
         {
         y: candidateEight,
-        tooltip: sGraphic.attributes.Votes8 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName8 + " received " + sGraphic.attributes.Votes8 + " Votes out of " + total,
         text: sGraphic.attributes.Percent8,
         color: wElection.config.canCol8
       },
         {
         y: candidateNine,
-        tooltip: sGraphic.attributes.Votes9 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName9 + " received " + sGraphic.attributes.Votes9 + " Votes out of " + total,
         text: sGraphic.attributes.Percent9,
         color: wElection.config.canCol9
       },
         {
         y: candidateTen,
-        tooltip: sGraphic.attributes.Votes10 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName10 + " received " + sGraphic.attributes.Votes10 + " Votes out of " + total,
         text: sGraphic.attributes.Percent10,
         color: wElection.config.canCol10
       },
         {
         y: candidateEleven,
-        tooltip: sGraphic.attributes.Votes11 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName11 + " received " + sGraphic.attributes.Votes11 + " Votes out of " + total,
         text: sGraphic.attributes.Percent11,
         color: wElection.config.canCol11
       },
         {
         y: candidateTwelve,
-        tooltip: sGraphic.attributes.Votes12 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName12 + " received " + sGraphic.attributes.Votes12 + " Votes out of " + total,
         text: sGraphic.attributes.Percent12,
         color: wElection.config.canCol12
       },
         {
         y: candidateThirteen,
-        tooltip: sGraphic.attributes.Votes13 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName13 + " received " + sGraphic.attributes.Votes13 + " Votes out of " + total,
         text: sGraphic.attributes.Percent13,
         color: wElection.config.canCol13
       },
         {
         y: candidateFourteen,
-        tooltip: sGraphic.attributes.Votes14 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName14 + " received " + sGraphic.attributes.Votes14 + " Votes out of " + total,
         text: sGraphic.attributes.Percent14,
         color: wElection.config.canCol14
       },
         {
         y: candidateFifteen,
-        tooltip: sGraphic.attributes.Votes15 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName15 + " received " + sGraphic.attributes.Votes15 + " Votes out of " + total,
         text: sGraphic.attributes.Percent15,
         color: wElection.config.canCol15
       },
         {
         y: candidateSixteen,
-        tooltip: sGraphic.attributes.Votes16 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName16 + " received " + sGraphic.attributes.Votes16 + " Votes out of " + total,
         text: sGraphic.attributes.Percent16,
         color: wElection.config.canCol16
       },
         {
         y: candidateSeventeen,
-        tooltip: sGraphic.attributes.Votes17 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName17 + " received " + sGraphic.attributes.Votes17 + " Votes out of " + total,
         text: sGraphic.attributes.Percent17,
         color: wElection.config.canCol17
       },
         {
         y: candidateEighteen,
-        tooltip: sGraphic.attributes.Votes18 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName18 + " received " + sGraphic.attributes.Votes18 + " Votes out of " + total,
         text: sGraphic.attributes.Percent18,
         color: wElection.config.canCol18
       },
         {
         y: candidateNineteen,
-        tooltip: sGraphic.attributes.Votes19 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName19 + " received " + sGraphic.attributes.Votes19 + " Votes out of " + total,
         text: sGraphic.attributes.Percent19,
         color: wElection.config.canCol19
       },
         {
         y: candidateTwenty,
-        tooltip: sGraphic.attributes.Votes20 + " Votes",
+        tooltip: sGraphic.attributes.CandidateName20 + " received " + sGraphic.attributes.Votes20 + " Votes out of " + total,
         text: sGraphic.attributes.Percent20,
         color: wElection.config.canCol20
       }]);
@@ -1764,41 +1773,149 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       return tc.domNode;
     },
 
-    buildContestDDQuery: function(){
+    buildContestDDQuery: function() {
       wElection.URLIndex = 0;
+      var electionYearList = [];
+      var yearIndex = 0;
+      var inList = false;
+      while (yearIndex < wElection.config.pickedElections.length) {
+        var listIndex = 0;
+        while (listIndex < (electionYearList.length + 1)) {
+          if (electionYearList[listIndex] == wElection.config.pickedElections[yearIndex].ElectionYear) {
+            inList = true;
+          }
+          listIndex += 1;
+        }
+        if (inList == false) {
+          electionYearList.push(wElection.config.pickedElections[yearIndex].ElectionYear);
+        }
+        inList = false;
+        yearIndex += 1;
+      }
+      console.log(electionYearList);
+
+      listIndex = 0;
+      while (listIndex < electionYearList.length) {
+        var year = document.createElement('div');
+        year.className = "yearClass";
+        year.id = "yearSelect" + listIndex;
+        year.innerHTML = electionYearList[listIndex];
+        year.style.padding = "3px 3px";
+        document.getElementById("yearSliderDiv").appendChild(year);
+        listIndex += 1;
+      }
+
+      $(document).ready(function () {
+        $('#yearSliderDiv').slick({
+          centerMode: true,
+          arrows: true,
+          rows: 1,
+          slidesToShow: 1,
+          dots: true,
+          focusOnSelect: true
+        });
+        $('#yearSelect0').addClass("selectedYear0");
+        wElection.selectedYear = document.getElementById("yearSelect0").innerHTML;
+      });
+
+      $('#yearSliderDiv').on('beforeChange', function (event, slick, currentSlide, nextSlide) {
+        if (slick.$slides[currentSlide].id == "yearSelect0") {
+          $(slick.$slides[currentSlide]).removeClass("selectedYear0");
+          $(slick.$slides[nextSlide]).addClass("selectedYear1");
+        }
+        else {
+          $(slick.$slides[currentSlide]).removeClass("selectedYear1");
+          if (slick.$slides[nextSlide].id == "yearSelect0") {
+            $(slick.$slides[nextSlide]).addClass("selectedYear0");
+          }
+          else {
+            $(slick.$slides[nextSlide]).addClass("selectedYear1");
+          }
+        }
+        wElection.selectedYear = slick.$slides[nextSlide].innerHTML;
+        wElection.buildContestDDQuery2();
+      });
+
+      wElection.buildContestDDQuery2();
+    },
+
+    buildContestDDQuery2: function(){
+      document.getElementById("allElections").innerHTML = "";
+      document.getElementById("canAndColors").innerHTML = "";
+      wElection.URLIndex = 0;
+      wElection.electionNumberList = [];
+      wElection.electionIndex = -1;
+      wElection.runFirst = 0;
       while (wElection.URLIndex < wElection.config.pickedElections.length)
       {
-        var h3 = document.createElement("h3");
-        h3.id = "electionName" + wElection.URLIndex;
-        document.getElementById('allElections').appendChild(h3);
+        if (wElection.selectedYear == wElection.config.pickedElections[wElection.URLIndex].ElectionYear)
+        {
+          var cPanel = document.createElement("div");
+          cPanel.className = "expandable-panel";
+          cPanel.id = "ContestPanel" + wElection.URLIndex;
+          document.getElementById('allElections').appendChild(cPanel);
 
-        var select = document.createElement("select");
-        select.id = "Contests" + wElection.URLIndex;
-        select.style.width = "310px";
-        document.getElementById('allElections').appendChild(select);
+          var cPanelHead = document.createElement("div");
+          cPanelHead.className = "expandable-panel-heading";
+          cPanelHead.id = "ContestPanelHead" + wElection.URLIndex;
+          document.getElementById("ContestPanel" + wElection.URLIndex).appendChild(cPanelHead);
 
-        document.getElementById('allElections').appendChild(document.createElement('br'));
-        document.getElementById('allElections').appendChild(document.createElement('br'));
+          var Contest = document.createElement("h2");
+          Contest.className = "PanelHeader";
+          Contest.id = "electionName" + wElection.URLIndex;
+          document.getElementById("ContestPanelHead" + wElection.URLIndex).appendChild(Contest);
 
-        var query = new Query();
-        var queryTask = new QueryTask(wElection.config.pickedElections[wElection.URLIndex].ServiceURL);
-        query.where = "1=1";
-        query.outSpatialReference = {wkid:102100};
-        query.returnGeometry = false;
-        query.outFields = ["ContestTitle", "ContestNumber"];
-        queryTask.execute(query, this.buildContestDD);
-        document.getElementById("electionName" + wElection.URLIndex).innerHTML = wElection.config.pickedElections[wElection.URLIndex].ElectionName;
-        document.getElementById("Contests" + wElection.URLIndex).onchange = function(){wElection.populateMap(this)};
+          var Plus = document.createElement("h2");
+          Plus.className = "icon-close-open";
+          document.getElementById("ContestPanelHead" + wElection.URLIndex).appendChild(Plus);
+
+          var cPanelContent = document.createElement("div");
+          cPanelContent.className = "expandable-panel-content";
+          cPanelContent.id = "ContestPanelContent" + wElection.URLIndex;
+          document.getElementById("ContestPanel" + wElection.URLIndex).appendChild(cPanelContent);
+
+          var Content = document.createElement("select");
+          Content.className = "icon-close-open";
+          Content.id = "Contests" + wElection.URLIndex;
+          Content.style.width = "310px";
+          document.getElementById("ContestPanelContent" + wElection.URLIndex).appendChild(Content);
+
+          //var h3 = document.createElement("h3");
+          //h3.id = "electionName" + wElection.URLIndex;
+          //document.getElementById('allElections').appendChild(h3);
+          //
+          //var select = document.createElement("select");
+          //select.id = "Contests" + wElection.URLIndex;
+          //select.style.width = "310px";
+          //document.getElementById('allElections').appendChild(select);
+
+          $('#ContestPanel' + wElection.URLIndex).on('click', function() {
+
+          });
+
+          //document.getElementById('allElections').appendChild(document.createElement('br'));
+          //document.getElementById('allElections').appendChild(document.createElement('br'));
+
+          var query = new Query();
+          var queryTask = new QueryTask(wElection.config.pickedElections[wElection.URLIndex].ServiceURL);
+          query.where = "1=1";
+          query.outSpatialReference = {wkid:102100};
+          query.returnGeometry = false;
+          query.outFields = ["ContestTitle", "ContestNumber"];
+          queryTask.execute(query, this.buildContestDD);
+          document.getElementById("electionName" + wElection.URLIndex).innerHTML = wElection.config.pickedElections[wElection.URLIndex].ElectionName;
+          document.getElementById("Contests" + wElection.URLIndex).onchange = function(){wElection.populateMap(this)};
+
+          wElection.electionNumberList.push(wElection.URLIndex);
+          wElection.runFirst = wElection.URLIndex;
+        }
         wElection.URLIndex += 1;
       }
       document.getElementById('allElections').appendChild(document.createElement('br'));
-      if (wElection.electionIndex == 0)
-      {
-        wElection.populateMap(document.getElementById("Contests0"));
-      }
     },
 
     buildContestDD: function(result){
+      console.log(wElection.electionNumberList);
       wElection.electionIndex += 1;
       var contestIndex = 0;
       var optionList = [];
@@ -1823,15 +1940,12 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           var option = document.createElement("option");
           option.text = result.features[contestIndex].attributes.ContestTitle;
           option.value = result.features[contestIndex].attributes.ContestNumber;
-          document.getElementById("Contests" + wElection.electionIndex).appendChild(option);
+          document.getElementById("Contests" + wElection.electionNumberList[wElection.electionIndex]).appendChild(option);
           optionList.push(option.value);
         }
         contestIndex = contestIndex + 1;
       }
-      if (wElection.electionIndex == 3)
-      {
-        wElection.populateMap(document.getElementById("Contests0"));
-      }
+      wElection.populateMap(document.getElementById("Contests" + wElection.runFirst));
     },
 
     onOpen: function(){
