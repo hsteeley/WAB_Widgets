@@ -528,16 +528,16 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           wDevices.firstLoad = false;
         }
 
-        index = 0;
-        wDevices.devicesArray.forEach(loadDropDown);
-
-        function loadDropDown(){
-          var option = document.createElement("option");
-          option.text = wDevices.devicesArray[index].DeviceDescription;
-          option.value = wDevices.devicesArray[index].DeviceID;
-          document.getElementById("deviceSelection").appendChild(option);
-          index = index + 1;
-        }
+        //index = 0;
+        //wDevices.devicesArray.forEach(loadDropDown);
+        //
+        //function loadDropDown(){
+        //  var option = document.createElement("option");
+        //  option.text = wDevices.devicesArray[index].DeviceDescription;
+        //  option.value = wDevices.devicesArray[index].DeviceID;
+        //  document.getElementById("deviceSelection").appendChild(option);
+        //  index = index + 1;
+        //}
       }
       function ServiceFailed(result) {
         console.log('Service call failed: ' + result.status + '  ' + result.statusText);
@@ -597,6 +597,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
           index = index + 1;
       });
+      console.log(wDevices.devCheckedArray);
 
       if (document.getElementById("SingleDateSelect").checked)
       {
@@ -647,17 +648,27 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         invoicesGraphicsLayer.clear();
         deviceGraphicsLayer.clear();
         devTextGraphicsLayer.clear();
-        var BCTDev = document.getElementById("deviceSelection");
-        var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
-        $.ajax({
-          type: "GET",
-          dataType: "jsonp",
-          url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetDevicesBreadCrumbTrail",
-          data: {"RMID": RMID, "DevIDs": BreadDevice, "startDate": wDevices.startDate, "endDate": wDevices.endDate, "username": loginWidget.loginInfo.UserName},
-          contentType: "application/json; charset=utf-8",
-          success: wDevices.GetDevicesBreadCrumbTrailSucceeded,
-          error: wDevices.ServiceFailed
-        });
+        //var BCTDev = document.getElementById("deviceSelection");
+        //var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
+        var BCTIndex = 0;
+        while (BCTIndex < wDevices.devCheckedArray.length) {
+          $.ajax({
+            type: "GET",
+            dataType: "jsonp",
+            url: "http://routemanrms.com/DashboardData/Services.DashboardService.svc/GetDevicesBreadCrumbTrail",
+            data: {
+              "RMID": RMID,
+              "DevIDs": wDevices.devCheckedArray[BCTIndex],
+              "startDate": wDevices.startDate,
+              "endDate": wDevices.endDate,
+              "username": loginWidget.loginInfo.UserName
+            },
+            contentType: "application/json; charset=utf-8",
+            success: wDevices.GetDevicesBreadCrumbTrailSucceeded,
+            error: wDevices.ServiceFailed
+          });
+          BCTIndex += 1;
+        }
       }
       if (document.getElementById("Invoices").checked)
       {
@@ -735,32 +746,28 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
   },
 
     GetDevicesBreadCrumbTrailSucceeded: function(result) {
-    if (result.GetDevicesBreadCrumbTrailResult === null)
-    {
-      alert("No bread crumbs available");
-      document.body.style.cursor = 'default';
-      document.getElementById("DevicesDiv").style.display = "none";
-      return;
-    }
+    //if (result.GetDevicesBreadCrumbTrailResult === null)
+    //{
+    //  alert("No bread crumbs available");
+    //  document.body.style.cursor = 'default';
+    //  document.getElementById("DevicesDiv").style.display = "none";
+    //  return;
+    //}
     if (result.GetDevicesBreadCrumbTrailResult[0].ValidUserName == false)
     {
       location.reload();
     }
-    deviceGraphicsLayer.clear();
-    devTextGraphicsLayer.clear();
-    invoicesGraphicsLayer.clear();
     var resultObject = result.GetDevicesBreadCrumbTrailResult;
-
     var colorNumber = 0;
     var rainbow = new Rainbow();
     var maxNumber = resultObject.length;
     rainbow.setSpectrum(wDevices.toColor, wDevices.fromColor);
     rainbow.setNumberRange(0, maxNumber);
 
-    var BCTDev = document.getElementById("deviceSelection");
-    var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
+    //var BCTDev = document.getElementById("deviceSelection");
+    //var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
 
-    wDevices._PlotPointsBreadInv(wDevices.startDate, wDevices.endDate, BreadDevice);
+    wDevices._PlotPointsBreadInv(wDevices.startDate, wDevices.endDate, resultObject[0].DeviceID);
 
     wDevices._PlotPointsBCT(resultObject, colorNumber, rainbow);
 
