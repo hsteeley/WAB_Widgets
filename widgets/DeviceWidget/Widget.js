@@ -51,8 +51,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     inputEndDateInv: null,
     editGraphicsLayer: null,
     devicesArray: null,
-    fromColor: "white",
-    toColor: "blue",
+    fromColor: null,
+    toColor: null,
     graphicSize: null,
     counter: null,
     playRouteObject: null,
@@ -74,6 +74,9 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     totalInvoices: null,
     devIconSize: null,
     invIconSize: null,
+    isMultipleBCT: null,
+    labelColor: null,
+    DevColorList: [],
 
     postCreate: function() {
       this.inherited(arguments);
@@ -648,6 +651,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         invoicesGraphicsLayer.clear();
         deviceGraphicsLayer.clear();
         devTextGraphicsLayer.clear();
+        wDevices.DevColorList = [];
+        if (wDevices.devCheckedArray.length > 1)
+        {
+          wDevices.isMultipleBCT = true;
+        }
+        else
+        {
+          wDevices.isMultipleBCT = false;
+        }
         //var BCTDev = document.getElementById("deviceSelection");
         //var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
         var BCTIndex = 0;
@@ -746,18 +758,45 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
   },
 
     GetDevicesBreadCrumbTrailSucceeded: function(result) {
-    //if (result.GetDevicesBreadCrumbTrailResult === null)
-    //{
-    //  alert("No bread crumbs available");
-    //  document.body.style.cursor = 'default';
-    //  document.getElementById("DevicesDiv").style.display = "none";
-    //  return;
-    //}
+    if (result.GetDevicesBreadCrumbTrailResult === null)
+    {
+      //alert("No bread crumbs available");
+      document.body.style.cursor = 'default';
+      document.getElementById("DevicesDiv").style.display = "none";
+      return;
+    }
     if (result.GetDevicesBreadCrumbTrailResult[0].ValidUserName == false)
     {
       location.reload();
     }
     var resultObject = result.GetDevicesBreadCrumbTrailResult;
+
+    var ColorList = ["aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate",
+        "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred",
+        "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro",
+        "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral",
+        "lightcyan", "lightgoldenrodyellow", "lightgray", "lightgreen", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen",
+        "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream",
+        "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru",
+        "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen",
+        "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen"];
+
+    if (wDevices.isMultipleBCT == true)
+    {
+      var randomColorIndex = Math.floor((Math.random() * 140) + 1);
+      wDevices.toColor = ColorList[randomColorIndex];
+      wDevices.fromColor = ColorList[randomColorIndex];
+    }
+    else
+    {
+      var randomColorIndex = Math.floor((Math.random() * 140) + 1);
+      wDevices.toColor = ColorList[randomColorIndex];
+      var randomColorIndex = Math.floor((Math.random() * 140) + 1);
+      wDevices.fromColor = ColorList[randomColorIndex];
+    }
+
+    console.log(wDevices.toColor);
+
     var colorNumber = 0;
     var rainbow = new Rainbow();
     var maxNumber = resultObject.length;
@@ -766,6 +805,11 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
     //var BCTDev = document.getElementById("deviceSelection");
     //var BreadDevice = BCTDev.options[BCTDev.selectedIndex].value;
+
+    var newColor = rainbow.colourAt(0);
+
+    var devCol = [resultObject[0].DeviceID, newColor];
+    wDevices.DevColorList.push(devCol);
 
     wDevices._PlotPointsBreadInv(wDevices.startDate, wDevices.endDate, resultObject[0].DeviceID);
 
@@ -842,7 +886,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         str = str.substr(6, 13);
         var timeChange = loginWidget.loginInfo.timeDifferential;
         timeChange = ((timeChange * 60) * 60) * 1000;
-        console.log(timeChange);
         str = str - timeChange;
 
         var date = new Date(parseFloat(str));
@@ -1059,9 +1102,23 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           {
             font.setSize(invNumbSize + "pt");
           }
+
+          var colorIndex = 0;
+          var newColor;
+          while (colorIndex < wDevices.DevColorList.length)
+          {
+            if (wDevices.DevColorList[colorIndex][0] == resultInvObject[wDevices.plotInvoiceIndex].DeviceID)
+            {
+              newColor = wDevices.DevColorList[colorIndex][1];
+              break;
+            }
+            colorIndex += 1;
+          }
+
           font.setWeight(Font.WEIGHT_BOLD);
           BCTInvText.setFont(font);
-          BCTInvText.setColor(new Color([0, 255, 0]));
+          //BCTInvText.setColor(new Color([0, 255, 0]));
+          BCTInvText.setColor(new Color("#" + newColor));
 
           wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
 
@@ -1069,7 +1126,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           str = str.substr(6, 13);
           var timeChange = loginWidget.loginInfo.timeDifferential;
           timeChange = ((timeChange * 60) * 60) * 1000;
-          console.log(timeChange);
           str = str - timeChange;
 
           var date = new Date(parseFloat(str));
@@ -1235,6 +1291,21 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         if (index == 0)
         {
           var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", wDevices.devIconSize, wDevices.devIconSize);
+
+          var BCTColorText = new TextSymbol("*");
+          var newColor = rainbow.colourAt(colorNumber);
+          BCTColorText.setHaloColor(new Color([0, 0, 0]));
+          BCTColorText.setHaloSize(1);
+          BCTColorText.setColor(new Color("#" + newColor));
+          BCTColorText.setOffset(0, 6);
+          var font  = new Font();
+          font.setSize("18pt");
+          BCTColorText.setFont(font);
+
+          wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
+          var BCTGraphic = new Graphic(wDevices.pt, BCTColorText);
+          devTextGraphicsLayer.add(BCTGraphic);
+
           var BCTText = new TextSymbol(resultObject[index].DeviceDescription);
           BCTText.setHaloColor(new Color([0, 0, 0]));
           BCTText.setHaloSize(2);
@@ -1327,7 +1398,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
               var bearing = resultObject[index].Bearing;
               sms.setStyle(SimpleMarkerSymbol.STYLE_PATH);
               sms.setPath("M150 0 L75 200 L225 200 Z");
-              sms.setColor(new Color(rainbow.colourAt(colorNumber)));
+              var newColor = rainbow.colourAt(colorNumber);
+              sms.setColor(new Color("#" + newColor));
               sms.setAngle(bearing);
               sms.setSize(wDevices.graphicSize);
             }
@@ -1339,7 +1411,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             var bearing = resultObject[index].Bearing;
             sms.setStyle(SimpleMarkerSymbol.STYLE_PATH);
             sms.setPath("M150 0 L75 200 L225 200 Z");
-            sms.setColor(new Color(rainbow.colourAt(colorNumber)));
+            var newColor = rainbow.colourAt(colorNumber);
+            sms.setColor(new Color("#" + newColor));
             sms.setAngle(bearing);
             sms.setSize(wDevices.graphicSize);
           }
@@ -1376,7 +1449,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         str = str.substr(6, 13);
         var timeChange = loginWidget.loginInfo.timeDifferential;
         timeChange = ((timeChange * 60) * 60) * 1000;
-        console.log(timeChange);
         str = str - timeChange;
 
         var date = new Date(parseFloat(str));
