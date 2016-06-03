@@ -87,6 +87,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
 
     addPointsToMap: function(result){
       wElection.map1.graphics.clear();
+      precinctGraphicsLayer.clear();
       document.getElementById("canAndColors").innerHTML = "";
       var graphicIndex = 0;
       var canColor;
@@ -1875,24 +1876,9 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           document.getElementById("ContestPanel" + wElection.URLIndex).appendChild(cPanelContent);
 
           var Content = document.createElement("select");
-          Content.className = "icon-close-open";
           Content.id = "Contests" + wElection.URLIndex;
           Content.style.width = "310px";
           document.getElementById("ContestPanelContent" + wElection.URLIndex).appendChild(Content);
-
-          //var h3 = document.createElement("h3");
-          //h3.id = "electionName" + wElection.URLIndex;
-          //document.getElementById('allElections').appendChild(h3);
-          //
-          //var select = document.createElement("select");
-          //select.id = "Contests" + wElection.URLIndex;
-          //select.style.width = "310px";
-          //document.getElementById('allElections').appendChild(select);
-          //document.getElementById('allElections').appendChild(document.createElement('br'));
-          //document.getElementById('allElections').appendChild(document.createElement('br'));
-          //$('#ContestPanel' + wElection.URLIndex).on('click', function() {
-          //
-          //});
 
           var query = new Query();
           var queryTask = new QueryTask(wElection.config.pickedElections[wElection.URLIndex].ServiceURL);
@@ -1910,17 +1896,15 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
         wElection.URLIndex += 1;
 
         $(function () {
-          /*-------------------- EXPANDABLE PANELS ----------------------*/
-          var panelSpeed = 500; //panel animate speed in milliseconds
-          var totalPanels = wElection.electionNumberList.length; //total number of collapsible panels
-          var defaultOpenPanel = 0; //leave 0 for no panel open
-          var accordian = true; //set panels to behave like an accordian, with one panel only ever open at once
+          var panelSpeed = 500;
+          var totalPanels = wElection.config.pickedElections.length;
+          var defaultOpenPanel = -1;
+          var accordian = true;
 
           var panelHeight = new Array();
           var currentPanel = defaultOpenPanel;
           var iconHeight = parseInt($('.icon-close-open').css('height'));
 
-          //Initialise collapsible panels
           function panelinit() {
             for (var i = 0; i <= totalPanels; i++) {
               panelHeight[i] = parseInt($('#ContestPanel' + i).find('.expandable-panel-content').css('height'));
@@ -1958,7 +1942,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           });
 
           function resetpanels() {
-            for (var i = 1; i <= totalPanels; i++) {
+            for (var i = 0; i <= totalPanels; i++) {
               if (currentPanel != i) {
                 $('#ContestPanel' + i).find('.icon-close-open').css('background-position', '0px 0px');
                 $('#ContestPanel' + i).find('.expandable-panel-content').animate({
@@ -1968,7 +1952,6 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
             }
           }
 
-          // run once window has loaded
           panelinit();
 
         });
@@ -2013,42 +1996,6 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
     onOpen: function(){
       wElection.buildContestDDQuery();
     }
-
-    // startup: function() {
-    //   this.inherited(arguments);
-    //   console.log('ElectionWidget::startup');
-    // },
-
-    // onClose: function(){
-    //   console.log('ElectionWidget::onClose');
-    // },
-
-    // onMinimize: function(){
-    //   console.log('ElectionWidget::onMinimize');
-    // },
-
-    // onMaximize: function(){
-    //   console.log('ElectionWidget::onMaximize');
-    // },
-
-    // onSignIn: function(credential){
-    //   console.log('ElectionWidget::onSignIn', credential);
-    // },
-
-    // onSignOut: function(){
-    //   console.log('ElectionWidget::onSignOut');
-    // }
-
-    // onPositionChange: function(){
-    //   console.log('ElectionWidget::onPositionChange');
-    // },
-
-    // resize: function(){
-    //   console.log('ElectionWidget::resize');
-    // }
-
-    //methods to communication between widgets:
-
   });
 
 });

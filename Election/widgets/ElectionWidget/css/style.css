@@ -94,17 +94,17 @@
     margin-top: 15px;
 }
 .election-widget .expandable-panel-content {
-    padding: 0px;
+    padding: 10px 10px 10px 10px;
     margin-top: -999px;
 }
-.election-widget .expandable-panel-content p {
-    padding: 0px;
+.election-widget .expandable-panel-content select {
+    padding: 4px 0 6px 0;
 }
-.election-widget .expandable-panel-content p:first-child {
-    padding-top: 0px;
+.election-widget .expandable-panel-content select:first-child {
+    padding-top: 10px;
 }
-.election-widget .expandable-panel-content p:last-child {
-    padding-bottom: 0px;
+.election-widget .expandable-panel-content select:last-child {
+    padding-bottom: 10px;
 }
 .election-widget .icon-close-open {
     width: 20px;
