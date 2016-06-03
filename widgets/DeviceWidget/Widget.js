@@ -26,6 +26,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'esri/graphicsUtils',
       'esri/symbols/TextSymbol',
       'esri/symbols/Font',
+      'esri/symbols/SimpleLineSymbol',
       'dijit/layout/BorderContainer',
       'dijit/layout/ContentPane',
       'dijit/TitlePane',
@@ -36,7 +37,7 @@ define(['dojo/_base/declare', 'jimu/BaseWidget', 'dojo/dom', 'dojo/on',
       'xstyle/css!./Resources/wijmo/wijmo.min.css'
       ],
 function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, arrayUtils, topic, domClass, cookie, Map, BasemapGallery, arcgisUtils, Search, PictureMarkerSymbol, SimpleMarkerSymbol, Graphic, Color, Point,
-         SpatialReference, GraphicsLayer, OpacitySlider, InfoTemplate, Edit, Extent, graphicsUtils, TextSymbol, Font) {
+         SpatialReference, GraphicsLayer, OpacitySlider, InfoTemplate, Edit, Extent, graphicsUtils, TextSymbol, Font, SimpleLineSymbol) {
   return declare([BaseWidget], {
     baseClass: 'device-widget',
     deviceGraphicsLayer: null,
@@ -77,6 +78,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     isMultipleBCT: null,
     labelColor: null,
     DevColorList: [],
+    colorIndex: -1,
 
     postCreate: function() {
       this.inherited(arguments);
@@ -600,7 +602,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
           index = index + 1;
       });
-      console.log(wDevices.devCheckedArray);
 
       if (document.getElementById("SingleDateSelect").checked)
       {
@@ -651,6 +652,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         invoicesGraphicsLayer.clear();
         deviceGraphicsLayer.clear();
         devTextGraphicsLayer.clear();
+        wDevices.colorIndex = -1;
         wDevices.DevColorList = [];
         if (wDevices.devCheckedArray.length > 1)
         {
@@ -758,6 +760,8 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
   },
 
     GetDevicesBreadCrumbTrailSucceeded: function(result) {
+    wDevices.colorIndex += 1;
+    var index = wDevices.colorIndex;
     if (result.GetDevicesBreadCrumbTrailResult === null)
     {
       //alert("No bread crumbs available");
@@ -771,21 +775,26 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
     }
     var resultObject = result.GetDevicesBreadCrumbTrailResult;
 
-    var ColorList = ["aliceblue", "antiquewhite", "aqua", "aquamarine", "azure", "beige", "bisque", "black", "blanchedalmond", "blue", "blueviolet", "brown", "burlywood", "cadetblue", "chartreuse", "chocolate",
-        "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkblue", "darkcyan", "darkgoldenrod", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid", "darkred",
-        "darksalmon", "darkseagreen", "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "fuchsia", "gainsboro",
-        "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred", "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral",
-        "lightcyan", "lightgoldenrodyellow", "lightgray", "lightgreen", "lightpink", "lightsalmon", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen",
-        "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream",
-        "mistyrose", "moccasin", "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff", "peru",
-        "pink", "plum", "powderblue", "purple", "red", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow", "springgreen",
-        "steelblue", "tan", "teal", "thistle", "tomato", "turquoise", "violet", "wheat", "white", "whitesmoke", "yellow", "yellowgreen"];
+    var ColorList = ["red", "orange", "yellow", "green", "blue", "indigo", "violet", "white", "gray", "brown", "aqua", "lime", "fuchsia", "navy", "olivedrab", "moccasin", "teal", "springgreen", "darkblue", "darkgoldenrod",
+      "darkseagreen", "darkred", "lightblue", "lightgray", "lightgreen", "lightpink", "lightsalmon", "mediumpurple", "mediumseagreen", "peru",
+
+        "aliceblue", "antiquewhite", "aquamarine", "azure", "beige", "bisque", "blanchedalmond", "blueviolet",  "burlywood", "cadetblue", "chartreuse", "chocolate",
+        "coral", "cornflowerblue", "cornsilk", "crimson", "cyan", "darkcyan", "darkgray", "darkgreen", "darkkhaki", "darkmagenta", "darkolivegreen", "darkorange", "darkorchid",
+        "darksalmon",  "darkslateblue", "darkslategray", "darkturquoise", "darkviolet", "deeppink", "deepskyblue", "dimgray", "dodgerblue", "firebrick", "floralwhite", "forestgreen", "gainsboro",
+        "ghostwhite", "gold", "goldenrod", "greenyellow", "honeydew", "hotpink", "indianred", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightcoral",
+        "lightcyan", "lightgoldenrodyellow", "lightseagreen", "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "limegreen", "linen",
+        "magenta", "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumslateblue", "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream",
+        "mistyrose", "navajowhite","oldlace", "olive", "orangered", "orchid", "palegoldenrod", "palegreen", "paleturquoise", "palevioletred", "papayawhip", "peachpuff",
+        "pink", "plum", "powderblue", "purple", "rosybrown", "royalblue", "saddlebrown", "salmon", "sandybrown", "seagreen", "seashell", "sienna", "silver", "skyblue", "slateblue", "slategray", "snow",
+        "steelblue", "tan", "thistle", "tomato", "turquoise", "wheat", "whitesmoke", "yellowgreen"];
 
     if (wDevices.isMultipleBCT == true)
     {
-      var randomColorIndex = Math.floor((Math.random() * 140) + 1);
-      wDevices.toColor = ColorList[randomColorIndex];
-      wDevices.fromColor = ColorList[randomColorIndex];
+      //var randomColorIndex = Math.floor((Math.random() * 140) + 1);
+      //wDevices.toColor = ColorList[randomColorIndex];
+      //wDevices.fromColor = ColorList[randomColorIndex];
+      wDevices.toColor = ColorList[index];
+      wDevices.fromColor = ColorList[index];
     }
     else
     {
@@ -1281,6 +1290,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       //var stoppedOverSize = (wDevices.devIconSize / 40) * 45;
       var stopTextSize = (wDevices.devIconSize / 40) * 12;
       var speedTextSize = (wDevices.graphicSize / 14) * 14;
+      var outlineSize = (wDevices.graphicSize / 1) + 2;
 
       while (index < resultObject.length)
       {
@@ -1292,15 +1302,12 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
         {
           var sms = new PictureMarkerSymbol("./widgets/DeviceWidget/images/TransitTruckThickHalo.png", wDevices.devIconSize, wDevices.devIconSize);
 
-          var BCTColorText = new TextSymbol("*");
           var newColor = rainbow.colourAt(colorNumber);
-          BCTColorText.setHaloColor(new Color([0, 0, 0]));
-          BCTColorText.setHaloSize(1);
-          BCTColorText.setColor(new Color("#" + newColor));
-          BCTColorText.setOffset(0, 6);
-          var font  = new Font();
-          font.setSize("18pt");
-          BCTColorText.setFont(font);
+          var BCTColorText = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 16,
+              new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+                  new Color([0,0,0]), 1),
+              new Color("#" + newColor));
+          BCTColorText.setOffset(0, 20);
 
           wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
           var BCTGraphic = new Graphic(wDevices.pt, BCTColorText);
@@ -1415,6 +1422,15 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             sms.setColor(new Color("#" + newColor));
             sms.setAngle(bearing);
             sms.setSize(wDevices.graphicSize);
+
+            var smsOL = new SimpleMarkerSymbol();
+            var bearing = resultObject[index].Bearing;
+            smsOL.setStyle(SimpleMarkerSymbol.STYLE_PATH);
+            smsOL.setPath("M150 0 L75 200 L225 200 Z");
+            var newColor = rainbow.colourAt(colorNumber);
+            smsOL.setColor(new Color("#000000"));
+            smsOL.setAngle(bearing);
+            smsOL.setSize(outlineSize);
           }
         }
         if (document.getElementById("speedOver").checked == true)
@@ -1440,6 +1456,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
           }
         }
         wDevices.pt = new Point(long, lat, new SpatialReference({wkid: 4326}));
+        var graphicOL = new Graphic(wDevices.pt, smsOL);
         var graphic = new Graphic(wDevices.pt, sms);
         var textGraphic = new Graphic(wDevices.pt, SOText);
         var stopGraphic = new Graphic(wDevices.pt, StopText);
@@ -1517,6 +1534,7 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
             wDevices.map.infoWindow.hide();
           });
 
+          deviceGraphicsLayer.add(graphicOL);
           deviceGraphicsLayer.add(graphic);
           devTextGraphicsLayer.add(textGraphic);
           devTextGraphicsLayer.add(stopGraphic);

@@ -114,7 +114,9 @@ define([
         }
         else
         {
-          alert("Incorrect Username or Password")
+          alert("Incorrect Username or Password");
+          document.getElementById("buttonLogin").innerHTML="Login";
+          document.body.style.cursor = 'default';
         }
       }
 

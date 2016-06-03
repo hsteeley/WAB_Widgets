@@ -1888,79 +1888,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           //select.id = "Contests" + wElection.URLIndex;
           //select.style.width = "310px";
           //document.getElementById('allElections').appendChild(select);
-
+          //document.getElementById('allElections').appendChild(document.createElement('br'));
+          //document.getElementById('allElections').appendChild(document.createElement('br'));
           //$('#ContestPanel' + wElection.URLIndex).on('click', function() {
           //
           //});
-
-          //$(function () {
-          //  /*-------------------- EXPANDABLE PANELS ----------------------*/
-          //  var panelSpeed = 500; //panel animate speed in milliseconds
-          //  var totalPanels = 3; //total number of collapsible panels
-          //  var defaultOpenPanel = 0; //leave 0 for no panel open
-          //  var accordian = false; //set panels to behave like an accordian, with one panel only ever open at once
-          //
-          //  var panelheight = [];
-          //  var currentpanel = defaultopenpanel;
-          //  var iconheight = parseInt($('.icon-close-open').css('height'));
-          //
-          //  //Initialise collapsible panels
-          //  function panelinit() {
-          //    for (var i = 1; i <= totalpanels; i++) {
-          //      panelheight[i] = parseInt($('#cp-' + i).find('.expandable-panel-content').css('height'));
-          //      $('#cp-' + i).find('.expandable-panel-content').css('margin-top', -panelheight[i]);
-          //      if (defaultopenpanel == i) {
-          //        $('#cp-' + i).find('.icon-close-open').css('background-position', '0px -' + iconheight + 'px');
-          //        $('#cp-' + i).find('.expandable-panel-content').css('margin-top', 0);
-          //      }
-          //    }
-          //  }
-          //
-          //
-          //
-          //  $('.expandable-panel-heading').click(function () {
-          //    var obj = $(this).next();
-          //    var objid = parseInt($(this).parent().attr('ID').substr(3, 2));
-          //    currentpanel = objid;
-          //    if (accordian == true) {
-          //      resetpanels();
-          //    }
-          //
-          //    if (parseInt(obj.css('margin-top')) <= (panelheight[objid] * -1)) {
-          //      obj.clearQueue();
-          //      obj.stop();
-          //      obj.prev().find('.icon-close-open').css('background-position', '0px -' + iconheight + 'px');
-          //      obj.animate({
-          //        'margin-top': 0
-          //      }, panelspeed);
-          //    } else {
-          //      obj.clearQueue();
-          //      obj.stop();
-          //      obj.prev().find('.icon-close-open').css('background-position', '0px 0px');
-          //      obj.animate({
-          //        'margin-top': (panelheight[objid] * -1)
-          //      }, panelspeed);
-          //    }
-          //  });
-          //
-          //  function resetpanels() {
-          //    for (var i = 1; i <= totalpanels; i++) {
-          //      if (currentpanel != i) {
-          //        $('#cp-' + i).find('.icon-close-open').css('background-position', '0px 0px');
-          //        $('#cp-' + i).find('.expandable-panel-content').animate({
-          //          'margin-top': -panelheight[i]
-          //        }, panelspeed);
-          //      }
-          //    }
-          //  }
-          //
-          //  // run once window has loaded
-          //  panelinit();
-          //
-          //});
-
-          //document.getElementById('allElections').appendChild(document.createElement('br'));
-          //document.getElementById('allElections').appendChild(document.createElement('br'));
 
           var query = new Query();
           var queryTask = new QueryTask(wElection.config.pickedElections[wElection.URLIndex].ServiceURL);
@@ -1976,6 +1908,70 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           wElection.runFirst = wElection.URLIndex;
         }
         wElection.URLIndex += 1;
+
+        $(function () {
+          /*-------------------- EXPANDABLE PANELS ----------------------*/
+          var panelSpeed = 500; //panel animate speed in milliseconds
+          var totalPanels = wElection.electionNumberList.length; //total number of collapsible panels
+          var defaultOpenPanel = 0; //leave 0 for no panel open
+          var accordian = true; //set panels to behave like an accordian, with one panel only ever open at once
+
+          var panelHeight = new Array();
+          var currentPanel = defaultOpenPanel;
+          var iconHeight = parseInt($('.icon-close-open').css('height'));
+
+          //Initialise collapsible panels
+          function panelinit() {
+            for (var i = 0; i <= totalPanels; i++) {
+              panelHeight[i] = parseInt($('#ContestPanel' + i).find('.expandable-panel-content').css('height'));
+              $('#ContestPanel' + i).find('.expandable-panel-content').css('margin-top', -panelHeight[i]);
+              if (defaultOpenPanel == i) {
+                $('#ContestPanel' + i).find('.icon-close-open').css('background-position', '0px -' + iconHeight + 'px');
+                $('#ContestPanel' + i).find('.expandable-panel-content').css('margin-top', 0);
+              }
+            }
+          }
+
+          $('.expandable-panel-heading').click(function () {
+            var obj = $(this).next();
+            var objid = parseInt($(this).parent().attr('ID').substr(12, 11));
+            currentPanel = objid;
+            if (accordian == true) {
+              resetpanels();
+            }
+
+            if (parseInt(obj.css('margin-top')) <= (panelHeight[objid] * -1)) {
+              obj.clearQueue();
+              obj.stop();
+              obj.prev().find('.icon-close-open').css('background-position', '0px -' + iconHeight + 'px');
+              obj.animate({
+                'margin-top': 0
+              }, panelSpeed);
+            } else {
+              obj.clearQueue();
+              obj.stop();
+              obj.prev().find('.icon-close-open').css('background-position', '0px 0px');
+              obj.animate({
+                'margin-top': (panelHeight[objid] * -1)
+              }, panelSpeed);
+            }
+          });
+
+          function resetpanels() {
+            for (var i = 1; i <= totalPanels; i++) {
+              if (currentPanel != i) {
+                $('#ContestPanel' + i).find('.icon-close-open').css('background-position', '0px 0px');
+                $('#ContestPanel' + i).find('.expandable-panel-content').animate({
+                  'margin-top': -panelHeight[i]
+                }, panelSpeed);
+              }
+            }
+          }
+
+          // run once window has loaded
+          panelinit();
+
+        });
       }
       document.getElementById('allElections').appendChild(document.createElement('br'));
     },
