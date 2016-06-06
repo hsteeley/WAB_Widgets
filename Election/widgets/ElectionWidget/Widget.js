@@ -52,6 +52,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       wElection = this;
       wElection.map1 = this.map;
       this.createGraphicsLayer();
+      this._bindEvents();
+    },
+
+    _bindEvents: function(){
+      this.own(on(this.TransSlider, 'input', lang.hitch(this.onChange)));
     },
 
     createGraphicsLayer: function(){
@@ -66,6 +71,11 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
         wElection.map1.infoWindow.setContent(wElection.getWindowContent(evt.graphic));
         wElection.map1.infoWindow.show(evt.screenPoint, wElection.map1.getInfoWindowAnchor(evt.screenPoint));
       });
+    },
+
+    onChange: function(){
+      var o = document.getElementById('Opacity_control').value;
+      precinctGraphicsLayer.setOpacity(o / 100);
     },
 
     populateMap: function(select){
@@ -89,6 +99,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       wElection.map1.graphics.clear();
       precinctGraphicsLayer.clear();
       document.getElementById("canAndColors").innerHTML = "";
+      precinctGraphicsLayer.setOpacity(0.7);
       var graphicIndex = 0;
       var canColor;
       var totalVotes = 0;
@@ -596,8 +607,6 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           g = new Graphic(result.features[graphicIndex].geometry, mapRing1);
 
           g.setAttributes(attributes);
-
-
 
           precinctGraphicsLayer.add(g);
         }
@@ -1361,10 +1370,18 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           {
             countyWinnerParty = "Democratic";
           }
-          countySummaryText.innerHTML = countyWinnerName + " won the " + result.features[squareIndex].attributes.ContestTitle +
+          var winnerDiv = document.createElement('div');
+          winnerDiv.innerHTML = countyWinnerName;
+          winnerDiv.style.color = "#000000";
+          winnerDiv.style.fontWeight = "900";
+          winnerDiv.className = 'winnerDiv';
+
+          countySummaryText.innerHTML = " won the " + result.features[squareIndex].attributes.ContestTitle +
               " election for the county for the " + countyWinnerParty + " Party with " + countyWinnerPercentage + " of the votes. " + countyWinnerVotes +
               " / " + totalVotes;
           countySummaryText.style.fontWeight = "900";
+
+          colDiv.appendChild(winnerDiv);
           colDiv.appendChild(countySummaryText);
         }
 

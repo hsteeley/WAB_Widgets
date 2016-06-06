@@ -790,9 +790,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
 
     if (wDevices.isMultipleBCT == true)
     {
-      //var randomColorIndex = Math.floor((Math.random() * 140) + 1);
-      //wDevices.toColor = ColorList[randomColorIndex];
-      //wDevices.fromColor = ColorList[randomColorIndex];
       wDevices.toColor = ColorList[index];
       wDevices.fromColor = ColorList[index];
     }
@@ -803,8 +800,6 @@ function(declare, BaseWidget, dom, on, jimuUtils, $, parser, lang,  query, array
       var randomColorIndex = Math.floor((Math.random() * 140) + 1);
       wDevices.fromColor = ColorList[randomColorIndex];
     }
-
-    console.log(wDevices.toColor);
 
     var colorNumber = 0;
     var rainbow = new Rainbow();

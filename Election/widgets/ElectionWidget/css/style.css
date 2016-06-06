@@ -119,4 +119,18 @@
     position: absolute;
     left: 15px;
 }
+.election-widget #Opacity_control {
+    margin-left: 100px;
+    margin-bottom: 15px;
+    margin-top: -9px;
+}
+.election-widget #sliderText {
+    margin-bottom: -8px;
+}
+.election-widget #countySummaryText {
+    display: inline;
+}
+.election-widget #winnerDiv {
+    display: inline;
+}
 /* add additional custom styles */
