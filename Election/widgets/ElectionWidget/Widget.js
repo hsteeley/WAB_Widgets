@@ -1893,6 +1893,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           document.getElementById("ContestPanel" + wElection.URLIndex).appendChild(cPanelContent);
 
           var Content = document.createElement("select");
+          Content.className = "Selects";
           Content.id = "Contests" + wElection.URLIndex;
           Content.style.width = "310px";
           document.getElementById("ContestPanelContent" + wElection.URLIndex).appendChild(Content);
