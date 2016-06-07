@@ -1364,13 +1364,13 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
               squareIndex += 1
             }
 
-          var countySummaryText = document.createElement('div');
+          var countySummaryText = document.createElement('span');
           countySummaryText.className = 'countySumText';
           if (countyWinnerParty == "Democrat")
           {
             countyWinnerParty = "Democratic";
           }
-          var winnerDiv = document.createElement('div');
+          var winnerDiv = document.createElement('span');
           winnerDiv.innerHTML = countyWinnerName;
           winnerDiv.style.color = "#000000";
           winnerDiv.style.fontWeight = "900";
@@ -1379,7 +1379,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           countySummaryText.innerHTML = " won the " + result.features[squareIndex].attributes.ContestTitle +
               " election for the county for the " + countyWinnerParty + " Party with " + countyWinnerPercentage + " of the votes. " + countyWinnerVotes +
               " / " + totalVotes;
-          countySummaryText.style.fontWeight = "900";
+          countySummaryText.style.fontWeight = "500";
 
           colDiv.appendChild(winnerDiv);
           colDiv.appendChild(countySummaryText);
@@ -1902,7 +1902,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
           query.where = "1=1";
           query.outSpatialReference = {wkid:102100};
           query.returnGeometry = false;
-          query.outFields = ["ContestTitle", "ContestNumber"];
+          query.outFields = ["ContestTitle", "ContestNumber", "PartyCode1"];
           queryTask.execute(query, this.buildContestDD);
           document.getElementById("electionName" + wElection.URLIndex).innerHTML = wElection.config.pickedElections[wElection.URLIndex].ElectionName;
           document.getElementById("Contests" + wElection.URLIndex).onchange = function(){wElection.populateMap(this)};
@@ -1977,7 +1977,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
     },
 
     buildContestDD: function(result){
-      console.log(wElection.electionNumberList);
+      console.log(result.features);
       wElection.electionIndex += 1;
       var contestIndex = 0;
       var optionList = [];
@@ -1999,6 +1999,17 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
         }
         if (isInList == false)
         {
+          if (result.features[contestIndex].attributes.ContestTitle == "GOVERNOR")
+          {
+            if (result.features[contestIndex].attributes.PartyCode1 == "REP")
+            {
+              result.features[contestIndex].attributes.ContestTitle += "(R)";
+            }
+            else if (result.features[contestIndex].attributes.PartyCode1 == "DEM")
+            {
+              result.features[contestIndex].attributes.ContestTitle += "(D)";
+            }
+          }
           var option = document.createElement("option");
           option.text = result.features[contestIndex].attributes.ContestTitle;
           option.value = result.features[contestIndex].attributes.ContestNumber;
