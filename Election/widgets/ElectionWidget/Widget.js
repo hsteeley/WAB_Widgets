@@ -1812,6 +1812,7 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
       }
       console.log(electionYearList);
 
+      electionYearList.reverse();
       listIndex = 0;
       while (listIndex < electionYearList.length) {
         var year = document.createElement('div');
