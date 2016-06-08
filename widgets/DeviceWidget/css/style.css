@@ -197,9 +197,9 @@
   position: relative;
 }
 .device-widget #loading {
-  text-align: center;
-  margin-top: 150px;
-}
+    text-align: center;
+    margin-top: 150px;
+  }
 .device-widget #theStartInputDate {
    width: 115px;
  }

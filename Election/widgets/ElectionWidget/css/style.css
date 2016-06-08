@@ -133,6 +133,26 @@
 .election-widget #winnerDiv {
     display: inline;
 }
+.election-widget #LoadingDiv {
+    display: none;
+    position: absolute;
+    left: -14px;
+    top: -32px;
+    bottom: -648px;
+    right: -14px;
+    background: #000;
+    opacity: 0.75;
+    filter: alpha(opacity=75);
+    z-index: 1000;
+    overflow: hidden;
+}
+.election-widget #overlay {
+    position: relative;
+}
+.election-widget #loading {
+    text-align: center;
+    margin-top: 150px;
+}
 @media (max-width: 600px) {
     .election-widget #yearSliderDiv {
         margin-left: 30px !important;

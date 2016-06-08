@@ -86,6 +86,8 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
     },
 
     populateMap: function(select){
+      document.getElementById("LoadingDiv").style.display = "block";
+      document.body.style.cursor = 'progress';
       wElection.map1.infoWindow.hide();
       wElection.currentDropDown = select;
       var query = new Query();
@@ -1394,6 +1396,8 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
 
         graphicIndex += 1;
       }
+      document.getElementById("LoadingDiv").style.display = "none";
+      document.body.style.cursor = 'default';
     },
 
     getWindowContent: function(sGraphic){
@@ -1817,7 +1821,6 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
         inList = false;
         yearIndex += 1;
       }
-      console.log(electionYearList);
 
       electionYearList.reverse();
       listIndex = 0;
