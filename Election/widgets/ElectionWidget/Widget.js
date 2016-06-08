@@ -3,6 +3,7 @@ define(['dijit/layout/ContentPane',
         'dojo/_base/declare',
         'dojo/_base/lang',
         'dojo/on',
+        'dojo/topic',
         'dojox/charting/Chart2D',
         'dojox/charting/plot2d/Pie',
         'dojox/charting/action2d/Highlight',
@@ -30,7 +31,7 @@ define(['dijit/layout/ContentPane',
         'xstyle/css!./Resources/slick-1.6.0/slick/slick.css',
         'xstyle/css!./Resources/slick-1.6.0/slick/slick-theme.css',
         './widgets/ElectionWidget/Resources/slick-1.6.0/slick/slick.min.js'],
-function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend, domConstruct, domClass,
+function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend, domConstruct, domClass,
          number, ready, BaseWidget, $, GraphicsLayer, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
 
   return declare([BaseWidget], {
@@ -57,6 +58,12 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
 
     _bindEvents: function(){
       this.own(on(this.TransSlider, 'input', lang.hitch(this.onChange)));
+      var handle = topic.subscribe("ElectionTimer", function (RefreshElections) {
+        if (RefreshElections == "RefreshElections") {
+          RefreshElections = "";
+          location.reload();
+        }
+      });
     },
 
     createGraphicsLayer: function(){
@@ -1979,7 +1986,6 @@ function(ContentPane, TabContainer, declare, lang, on, Chart2D, Pie, Highlight, 
     },
 
     buildContestDD: function(result){
-      console.log(result.features);
       wElection.electionIndex += 1;
       var contestIndex = 0;
       var optionList = [];

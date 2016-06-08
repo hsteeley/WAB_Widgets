@@ -1,6 +1,7 @@
 define(['dojo/_base/declare',
+        'dojo/topic',
         'jimu/BaseWidget'],
-function(declare, BaseWidget) {
+function(declare, topic, BaseWidget) {
 
   return declare([BaseWidget], {
 
@@ -28,6 +29,7 @@ function(declare, BaseWidget) {
         var minutes = Math.floor(timerWidget.count/60);
         if (timerWidget.count <= 0)
         {
+          timerWidget.refreshElections();
           timerWidget.count = timerWidget.refreshTime;
           var seconds = (timerWidget.count % 60);
           var minutes = Math.floor(timerWidget.count/60);
@@ -50,6 +52,11 @@ function(declare, BaseWidget) {
         timerWidget.count = timerWidget.count-1;
         document.getElementById("timer").innerHTML = minutes.toString() + ":" + seconds.toString();
       }, 1000);
+    },
+
+    refreshElections: function(){
+      var refreshElection = "RefreshElections";
+      topic.publish("ElectionTimer", (refreshElection));
     }
 
     // startup: function() {
