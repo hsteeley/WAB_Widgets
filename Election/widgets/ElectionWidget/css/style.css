@@ -153,6 +153,12 @@
     text-align: center;
     margin-top: 150px;
 }
+.election-widget #liveUpdate {
+    margin-left: 44px;
+    margin-top: 0px;
+    margin-bottom: 18px;
+    display: none;
+}
 @media (max-width: 600px) {
     .election-widget #yearSliderDiv {
         margin-left: 30px !important;
@@ -169,6 +175,9 @@
     .election-widget .totVotes {
         margin-left: 78px !important;
         margin-top: 0px !important;
+    }
+    .election-widget #liveUpdate {
+        margin-left: 16px;
     }
 }
 /* add additional custom styles */

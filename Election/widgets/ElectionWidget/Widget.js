@@ -4,6 +4,7 @@ define(['dijit/layout/ContentPane',
         'dojo/_base/lang',
         'dojo/on',
         'dojo/topic',
+        'dojo/cookie',
         'dojox/charting/Chart2D',
         'dojox/charting/plot2d/Pie',
         'dojox/charting/action2d/Highlight',
@@ -16,6 +17,7 @@ define(['dijit/layout/ContentPane',
         'dojo/number',
         'dojo/ready',
         'jimu/BaseWidget',
+        'jimu/utils',
         'jimu/loaderplugins/jquery-loader!https://code.jquery.com/jquery-1.11.2.min.js',
         //'jimu/loaderplugins/jquery-loader!https://code.jquery.com/jquery-migrate-1.2.1.min.js',
         'esri/layers/GraphicsLayer',
@@ -31,8 +33,8 @@ define(['dijit/layout/ContentPane',
         'xstyle/css!./Resources/slick-1.6.0/slick/slick.css',
         'xstyle/css!./Resources/slick-1.6.0/slick/slick-theme.css',
         './widgets/ElectionWidget/Resources/slick-1.6.0/slick/slick.min.js'],
-function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend, domConstruct, domClass,
-         number, ready, BaseWidget, $, GraphicsLayer, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
+function(ContentPane, TabContainer, declare, lang, on, topic, cookie, Chart2D, Pie, Highlight, MoveSlice, Tooltip, MiamiNice, Legend, domConstruct, domClass,
+         number, ready, BaseWidget, jimuUtils, $, GraphicsLayer, InfoTemplate, PopupTemplate, Color, Polygon, Query, QueryTask, Graphic, FillSymbol, SimpleFillSymbol) {
 
   return declare([BaseWidget], {
 
@@ -47,6 +49,8 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
     electionNumber: null,
     electionNumberList: [],
     electionIndex: -1,
+    liveYear: [],
+    liveActive: false,
 
     postCreate: function() {
       this.inherited(arguments);
@@ -61,9 +65,16 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
       var handle = topic.subscribe("ElectionTimer", function (RefreshElections) {
         if (RefreshElections == "RefreshElections") {
           RefreshElections = "";
-          location.reload();
+          wElection.refreshElections();
         }
       });
+    },
+
+    refreshElections: function(){
+      if (wElection.liveActive == true)
+      {
+        wElection.populateMap(wElection.currentDropDown);
+      }
     },
 
     createGraphicsLayer: function(){
@@ -1396,6 +1407,7 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
 
         graphicIndex += 1;
       }
+
       document.getElementById("LoadingDiv").style.display = "none";
       document.body.style.cursor = 'default';
     },
@@ -1807,6 +1819,7 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
       var electionYearList = [];
       var yearIndex = 0;
       var inList = false;
+      var whichLive;
       while (yearIndex < wElection.config.pickedElections.length) {
         var listIndex = 0;
         while (listIndex < (electionYearList.length + 1)) {
@@ -1817,6 +1830,12 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
         }
         if (inList == false) {
           electionYearList.push(wElection.config.pickedElections[yearIndex].ElectionYear);
+          if (wElection.config.pickedElections[yearIndex].Live == true)
+          {
+            wElection.liveYear.push(wElection.config.pickedElections[yearIndex].ElectionYear);
+            whichLive = electionYearList.length - 1;
+            whichLive = whichLive - (electionYearList.length - 1);
+          }
         }
         inList = false;
         yearIndex += 1;
@@ -1828,7 +1847,15 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
         var year = document.createElement('div');
         year.className = "yearClass";
         year.id = "yearSelect" + listIndex;
-        year.innerHTML = electionYearList[listIndex];
+        if (whichLive == listIndex)
+        {
+          year.innerHTML = "LIVE";
+        }
+        else
+        {
+          year.innerHTML = electionYearList[listIndex];
+        }
+
         year.style.padding = "3px 3px";
         document.getElementById("yearSliderDiv").appendChild(year);
         listIndex += 1;
@@ -1844,7 +1871,20 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
           focusOnSelect: true
         });
         $('#yearSelect0').addClass("selectedYear0");
-        wElection.selectedYear = document.getElementById("yearSelect0").innerHTML;
+
+        if (document.getElementById("yearSelect0").innerHTML == "LIVE")
+        {
+          wElection.selectedYear = wElection.liveYear;
+          document.getElementById("liveUpdate").style.display = "block";
+          wElection.liveActive = true;
+        }
+        else
+        {
+          wElection.selectedYear = document.getElementById("yearSelect0").innerHTML;
+          document.getElementById("liveUpdate").style.display = "none";
+          wElection.liveActive = false;
+        }
+
       });
 
       $('#yearSliderDiv').on('beforeChange', function (event, slick, currentSlide, nextSlide) {
@@ -1861,9 +1901,34 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
             $(slick.$slides[nextSlide]).addClass("selectedYear1");
           }
         }
-        wElection.selectedYear = slick.$slides[nextSlide].innerHTML;
+        if (slick.$slides[nextSlide].innerHTML == "LIVE")
+        {
+          wElection.selectedYear = wElection.liveYear;
+          document.getElementById("liveUpdate").style.display = "block";
+          wElection.liveActive = true;
+        }
+        else
+        {
+          wElection.selectedYear = slick.$slides[nextSlide].innerHTML;
+          document.getElementById("liveUpdate").style.display = "none";
+          wElection.liveActive = false;
+        }
+
+        //_saveSlickSlide(nextSlide);
         wElection.buildContestDDQuery2();
       });
+
+      //function  _saveSlickSlide  (nextSlide) {
+      //  var cookieName = "nextSlide";
+      //  removeCookie(nextSlide);
+      //  cookie(cookieName, nextSlide, {
+      //    path: '/'
+      //  });
+      //}
+      //function  removeCookie  (cookieName) {
+      //  var path = '/';
+      //  jimuUtils.removeCookie(cookieName, path);
+      //}
 
       wElection.buildContestDDQuery2();
     },
@@ -1875,6 +1940,12 @@ function(ContentPane, TabContainer, declare, lang, on, topic, Chart2D, Pie, High
       wElection.electionNumberList = [];
       wElection.electionIndex = -1;
       wElection.runFirst = 0;
+
+      //if (cookie("nextSlide") != null)
+      //{
+      //  $('#yearSliderDiv').slick('slickGoTo', cookie("nextSlide"), true);
+      //}
+
       while (wElection.URLIndex < wElection.config.pickedElections.length)
       {
         if (wElection.selectedYear == wElection.config.pickedElections[wElection.URLIndex].ElectionYear)

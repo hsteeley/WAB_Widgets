@@ -124,11 +124,21 @@ function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
           {
             URL = row.insertCell(3);
             URL.innerHTML = wElectionSetting.electionsList[electionIndex].attributes.ElectionYear;
+
+            var isLive = false;
+            if (document.getElementById("isLive").checked == true)
+            {
+              isLive = true;
+              URL = row.insertCell(4);
+              URL.innerHTML = "Live";
+            }
+
             var election = {
               ElectionID: wElectionSetting.electionsList[electionIndex].attributes.ElectionID,
               ElectionName: wElectionSetting.electionsList[electionIndex].attributes.ElectionName,
               ElectionYear: wElectionSetting.electionsList[electionIndex].attributes.ElectionYear,
-              ServiceURL: document.getElementById("serviceURL").value
+              ServiceURL: document.getElementById("serviceURL").value,
+              Live: isLive
             };
             wElectionSetting.pickedElectionList.push(election);
           }
@@ -163,11 +173,21 @@ function(declare, on, lang, BaseWidgetSetting, Query, QueryTask) {
             {
               URL = row.insertCell(3);
               URL.innerHTML = wElectionSetting.electionsList[electionIndex].attributes.ElectionYear;
+
+              var isLive = false;
+              if (document.getElementById("isLive").checked == true)
+              {
+                isLive = true;
+                URL = row.insertCell(4);
+                URL.innerHTML = "Live";
+              }
+
               var election = {
                 ElectionID: wElectionSetting.electionsList[electionIndex].attributes.ElectionID,
                 ElectionName: wElectionSetting.electionsList[electionIndex].attributes.ElectionName,
                 ElectionYear: wElectionSetting.electionsList[electionIndex].attributes.ElectionYear,
-                ServiceURL: document.getElementById("serviceURL").value
+                ServiceURL: document.getElementById("serviceURL").value,
+                Live: isLive
               };
               wElectionSetting.pickedElectionList.push(election);
             }
