@@ -74,6 +74,8 @@ function(ContentPane, TabContainer, declare, lang, on, topic, cookie, Chart2D, P
       if (wElection.liveActive == true)
       {
         wElection.populateMap(wElection.currentDropDown);
+        var date = new Date();
+        document.getElementById("liveUpdate").innerHTML = "Last Update: " + date;
       }
     },
 
@@ -1876,6 +1878,8 @@ function(ContentPane, TabContainer, declare, lang, on, topic, cookie, Chart2D, P
         {
           wElection.selectedYear = wElection.liveYear;
           document.getElementById("liveUpdate").style.display = "block";
+          var date = new Date();
+          document.getElementById("liveUpdate").innerHTML = "Last Update: " + date;
           wElection.liveActive = true;
         }
         else
@@ -1905,6 +1909,8 @@ function(ContentPane, TabContainer, declare, lang, on, topic, cookie, Chart2D, P
         {
           wElection.selectedYear = wElection.liveYear;
           document.getElementById("liveUpdate").style.display = "block";
+          var date = new Date();
+          document.getElementById("liveUpdate").innerHTML = "Last Update: " + date;
           wElection.liveActive = true;
         }
         else
